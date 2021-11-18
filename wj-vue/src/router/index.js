@@ -4,16 +4,10 @@ import Router from 'vue-router'
 import AppIndex from '../components/home/AppIndex'
 import Login from '../components/Login'
 import register from '../components/register'
-import uploadTest from '../components/test/uploadTest'
-import websocket from '../components/test/WebSocketTest'
 import AddGoods from '../components/AddGoods'
 import Person from '../components/Person'
 import Search from '../components/Search'
 import Result from '../components/Result'
-import ShoppingCart from '../components/ShoppingCart'
-import SelfStore from '../components/SelfStore'
-import Order from '../components/Order'
-import OrderDetail from '../components/OrderDetail'
 import ChatPage from '../components/chat/index'
 import userInfo from '../components/user/userInfo'
 import goodsInfo from '../components/goods/goodsInfo'
@@ -66,16 +60,6 @@ export default new Router({
       component: register
     },
     {
-      path: '/uploadTest',
-      name: 'uploadTest',
-      component: uploadTest
-    },
-    {
-      path: '/websocket',
-      name: 'websocket',
-      component: websocket
-    },
-    {
       path: '/addgoods',
       name: 'AddGoods',
       component: AddGoods
@@ -94,26 +78,6 @@ export default new Router({
       path: '/result',
       name: 'Result',
       component: Result
-    },
-    {
-      path: '/cart',
-      name: 'ShoppingCart',
-      component: ShoppingCart
-    },
-    {
-      path: '/store',
-      name: 'SelfStore',
-      component: SelfStore
-    },
-    {
-      path: '/order',
-      name: 'Order',
-      component: Order
-    },
-    {
-      path: '/orderDetail',
-      name: 'OrderDetail',
-      component: OrderDetail
     },
     {
       path: '/chatpage',

@@ -71,7 +71,7 @@ export default {
       })).then(response => {
         this.$message.info(response.data.message)
         if (response.data.status === '200') {
-          this.otherTaskVisible = false
+          this.orderTaskVisible = false
         }
       })
     }

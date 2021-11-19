@@ -94,6 +94,27 @@ export default {
       start_position: 0,
       end_position: 10
     })).then(response => {
+      let list = response.data.dialogue_info
+      let len = list.length
+      for (let i = len - 2; i >= 0; --i) {
+        if (list[i].data_type === 1) {
+          this.msgList.push({
+            name: list[i].which_say === 0 ? '我' : list[i].other_name,
+            msg: list[i].information,
+            isSelf: list[i].which_say === 0,
+            url: '',
+            isPhoto: false
+          })
+        } else {
+          this.msgList.push({
+            name: list[i].which_say === 0 ? '我' : list[i].other_name,
+            msg: '',
+            isSelf: list[i].which_say === 0,
+            url: list[i].information,
+            isPhoto: true
+          })
+        }
+      }
       console.log(response.data)
     })
     this.$global.webSocket.onmessage = this.onMessageWebSocket

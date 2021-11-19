@@ -105,7 +105,7 @@ export default {
             this.$global.setUser(this.loginForm.username)
             this.$global.setUserId(successResponse.data.user_id)
             this.$message.success(successResponse.data.message)
-            this.$global.userState = successResponse.data.user_status
+            this.$global.userStatus = successResponse.data.user_status
             this.$global.initWebSocket()
             this.$router.push('/result')
           } else {

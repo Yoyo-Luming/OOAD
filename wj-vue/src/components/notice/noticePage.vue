@@ -36,12 +36,20 @@ export default {
       let len = response.data.return_list.length
       let list = response.data.return_list
       for (let i = 0; i < len; ++i) {
+        let lastInfo = ''
+        if (list[i].last_info === null) {
+          lastInfo = ''
+        } else if (list[i].last_info.data_type === 1) {
+          lastInfo = list[i].last_info.information
+        } else {
+          lastInfo = '[图片]'
+        }
         this.noticeList.push({
           user1Id: list[i].user1_id,
           user2Id: list[i].user2_id,
           user1Name: list[i].user1_name,
           user2Name: list[i].user2_name,
-          lastInfo: list[i].last_info,
+          lastInfo: lastInfo,
           waitNumber: list[i].wait_number,
           hasNext: list[i].has_next,
           dialogueId: list[i].dialogue_id

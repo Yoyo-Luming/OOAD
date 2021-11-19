@@ -34,6 +34,17 @@
       <el-col>
         <el-divider></el-divider>
       </el-col>
+      <div v-if="active > 0">
+        <el-col>
+          支付方式：{{payInfo.payMethod}}
+          <div v-if="payInfo.payMethod === '二维码扫码支付'">
+            支付凭证：<img alt="" :src="payInfo.payProveUrl">
+          </div>
+        </el-col>
+        <el-col>
+          <el-divider></el-divider>
+        </el-col>
+      </div>
       <el-col>
         <img :src="url">
         <br/>
@@ -94,7 +105,20 @@
           <el-button @click="payFormVisible=false">取消</el-button>
           <el-button @click="buy">确认</el-button>
         </div>
-        <div v-else-if="payMethod===2"><img :src="QRCodeUrl"></div>
+        <div v-else-if="payMethod===2">
+          <img :src="QRCodeUrl">
+          上传支付凭证：
+          <el-upload
+            action="auto"
+            :http-request="uploadPaySectionFile"
+            list-type="picture-card"
+            class = "contentImgStyle"
+            :limit="1"
+            :on-exceed="handleExceed">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-button @click="submitQRPay">确认支付</el-button>
+        </div>
         <div v-else>3</div>
       </el-dialog>
       请选择支付方式
@@ -107,7 +131,7 @@
         </el-option>
       </el-select>
       <el-button @click="dialogFormVisible=false">取消</el-button>
-      <el-button @click="innerVisible=true">确定</el-button>
+      <el-button @click="choosePayMethod">确定</el-button>
     </el-dialog>
     <el-dialog :visible.sync="problemFromVisible">
       问题类型<el-select v-model="problemForm.problemType">
@@ -207,11 +231,21 @@ export default {
         value: 3,
         label: '线下支付'
       }],
+      payTypes: [
+        '线下支付',
+        '二维码扫码支付',
+        '虚拟货币支付'
+      ],
       isAdmin: true,
       handleProblemVisible: false,
       handleProblemForm: {
         superuserLog: '',
         problemRole: ''
+      },
+      uploadPayFile: [],
+      payInfo: {
+        payMethod: '',
+        payProveUrl: ''
       }
     }
   },
@@ -262,8 +296,18 @@ export default {
     if (this.info.transaction_status === 4) {
       this.commentButton = true
     }
-    this.isAdmin = (this.$global.userState === 3)
+    this.isAdmin = (this.$global.userStatus === 3)
     // TODO 获取二维码
+    this.$axios.post('login0/get_QR_Code/', this.$qs.stringify({
+      user_id: this.senderId
+    })).then(response => {
+      console.log('QRCodeUrl')
+      console.log(response.data)
+      this.QRCodeUrl = response.data.QR_code_url[0]
+    })
+    this.payInfo.payMethod = this.payTypes[this.info.pay_method - 1]
+    this.payInfo.payProveUrl = this.info.pay_prove
+    console.log(this.payInfo.payProveUrl)
   },
   methods: {
     toGoodsPage () {
@@ -298,7 +342,7 @@ export default {
         tra_id: this.orderId,
         pay_password: this.payPassword
       })).then(response => {
-        console.log(response.data)
+        this.$message.info(response.data.message)
         if (response.data.status === '200') {
           this.$router.push('/buyorder')
         }
@@ -309,6 +353,10 @@ export default {
         current_tra_id: this.orderId
       })).then(response => {
         this.$message.info(response.data.message)
+
+        if (response.data.status === '200') {
+          this.$router.push('/buyorder')
+        }
       })
     },
     confirmReceive () {
@@ -316,6 +364,9 @@ export default {
         current_tra_id: this.orderId
       })).then(response => {
         this.$message.info(response.data.message)
+        if (response.data.status === '200') {
+          this.$router.push('/buyorder')
+        }
       })
     },
     cancel () {
@@ -335,6 +386,11 @@ export default {
         comment_level_attitude: this.comment2,
         comment_level_tra: this.comment3
       })).then(response => {
+        this.$message.info(response.data.message)
+
+        if (response.data.status === '200') {
+          this.$router.push('/buyorder')
+        }
         console.log(response.data)
       })
     },
@@ -377,6 +433,49 @@ export default {
           this.$message.info(response.data.message)
         }
       })
+    },
+    handleExceed () {
+      this.$message.warning('最多只能上传一张相片！')
+    },
+    uploadPaySectionFile (param) {
+      const uploadPayFileLength = this.uploadPayFile.length
+      let fileObj = param.file
+      let file = new File([fileObj], new Date().getTime() + '.jpg', {
+        type: 'image/jpg'
+      })
+      this.uploadPayFile[uploadPayFileLength] = {'photo': file}
+    },
+    submitQRPay () {
+      let file = this.uploadPayFile[0].photo
+      let photoForm = new FormData()
+      photoForm.append('current_pay_prove ', file)
+      photoForm.append('tra_id', this.orderId)
+      this.$axios({method: 'post',
+        url: 'transaction/commit_transaction_QR_code_commit/',
+        data: photoForm}).then(response => {
+        if (response.data.status === '200') {
+          this.payFormVisible = false
+          this.$message.success(response.data.message)
+        } else {
+          this.$message.info(response.data.message)
+        }
+      })
+    },
+    choosePayMethod () {
+      if (this.payMethod < 3) {
+        this.innerVisible = true
+      } else {
+        this.$axios.post('transaction/commit_transaction_face/', this.$qs.stringify({
+          tra_id: this.orderId
+        })).then(response => {
+          if (response.data.status === '200') {
+            this.$message.success(response.data.message)
+            this.$router.push('/buyorder')
+          } else {
+            this.$message.info(response.data.message)
+          }
+        })
+      }
     }
   }
 }

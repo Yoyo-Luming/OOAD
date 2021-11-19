@@ -24,6 +24,7 @@ import favoriteGoods from '../components/favorite/favoriteGoods'
 import favoriteUsers from '../components/favorite/favoriteUsers'
 import sellingGoods from '../components/goods/sellingGoods'
 import handleProblem from '../components/problem/handleProblem'
+import home from '../components/home/home'
 
 Vue.use(Router)
 // Vue.use(Router)
@@ -42,6 +43,11 @@ export default new Router({
     {
       path: '/',
       redirect: '/login'
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: home
     },
     {
       path: '/login',

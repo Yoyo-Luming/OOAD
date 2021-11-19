@@ -1,7 +1,7 @@
 export default {
   userName: '',
   userId: '',
-  userState: '',
+  userStatus: '',
   webSocket: null,
   url: '',
   token: '',
@@ -53,8 +53,8 @@ export default {
 if (performance.navigation.type === 1) {
   let axios = require('axios')
   axios.defaults.withCredentials = true
-  axios.defaults.baseURL = 'http://10.17.63.176/api'
-  axios.post('api/dialogue/begin_websocket/').then(response => {
+  axios.defaults.baseURL = 'http://10.17.63.176/api/'
+  axios.post('dialogue/begin_websocket/').then(response => {
     this.token = response.data.token
     this.url = 'ws://10.17.102.0:8080/api/ws/chat/' + this.token + '/'
     console.log(this.url)
@@ -62,6 +62,14 @@ if (performance.navigation.type === 1) {
     this.webSocket = new WebSocket(this.url)
     this.webSocket.onmessage = this.onMessageWebSocket
     // }
+  })
+  axios.post('login0/get_current_user_info/').then(response => {
+    this.userId = response.data.info.user_id
+    this.userName = response.data.info.user_name
+    this.userStatus = response.data.info.user_status
+    console.log('current user')
+    console.log(this.userName)
+    console.log(response.data)
   })
   console.log('after reload')
 }

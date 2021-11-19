@@ -1,21 +1,68 @@
 <template>
-  <el-container>
-    <notice-box v-for="(item, index) of noticeList " :key="index+Math.random()" :user1Id="item.user1Id"
-                :user2-id="item.user2Id" :user1Name="item.user1Name" :user2Name="item.user2Name"
-                :lastInfo="item.lastInfo" :waitNumber="item.waitNumber" :dialogueId="item.dialogueId"></notice-box>
+  <el-container class="home-container">
+    <el-header class="el-header">
+      <div class="right-head">
+        <img src="../../assets/testlogo.png" class="logo" alt="">
+        <span class="title">SUSTech Store</span>
+      </div>
+      <div class="left-head">
+        <el-menu
+          class="el-menu-demo"
+          mode="horizontal"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b">
+          <el-menu-item index="1" v-on:click="homePage">Home Page</el-menu-item>
+          <el-menu-item index="2" v-on:click="searchPage">Search Page</el-menu-item>
+          <el-submenu index="3">
+            <template slot="title">用户名</template>
+            <el-menu-item index="3-1" v-on:click="myPage">Personal Page</el-menu-item>
+            <el-menu-item index="3-2" v-on:click="cartPage">Shopping Cart</el-menu-item>
+            <el-menu-item index="3-3" v-on:click="sellPage">Selling Page</el-menu-item>
+            <el-menu-item index="3-4" v-on:click="markPage">Marking Page</el-menu-item>
+          </el-submenu>
+          <el-menu-item index="4" v-on:click="logOut">Log Out</el-menu-item>
+        </el-menu>
+      </div>
+    </el-header>
+    <el-main>
+      <el-container class="mid-content">
+        <el-tabs type="border-card" v-model="activePane">
+          <!--          pay-pane-->
+          <el-tab-pane label="消息列表" class="whole-pane" name="first">
+            <el-container class="whole-notice" v-for="(item, index) in noticeList" :key="index">
+              <el-container class="message-container">
+                <div class="notice-column-user" v-if="checkUser">用户：{{item.user1Name}}</div>
+                <div class="notice-column-user" v-else>用户：{{item.user2Name}}</div>
+                <div class="notice-column-message">最后一条讯息：{{item.lastInfo}}</div>
+              </el-container>
+              <el-container class="notice-pay">
+                <el-badge :value="item.waitNumber" class="item">
+                  <el-button class="last-button" type="primary" v-on:click="toChatPage">查看详情</el-button>
+                </el-badge>
+              </el-container>
+            </el-container>
+          </el-tab-pane>
+        </el-tabs>
+      </el-container>
+    </el-main>
   </el-container>
+  <!--  <el-container>-->
+  <!--    <notice-box v-for="(item, index) of noticeList " :key="index+Math.random()" :user1Id="item.user1Id"-->
+  <!--                :user2-id="item.user2Id" :user1Name="item.user1Name" :user2Name="item.user2Name"-->
+  <!--                :lastInfo="item.lastInfo" :waitNumber="item.waitNumber" :dialogueId="item.dialogueId"></notice-box>-->
+  <!--  </el-container>-->
 </template>
 
 <script>
-import NoticeBox from './noticeBox'
 export default {
   name: 'noticePage',
-  components: {NoticeBox},
   data () {
     return {
       noticeList: [],
       start_position: 0,
-      end_position: 10
+      end_position: 10,
+      activePane: 'first'
     }
   },
   mounted () {
@@ -32,7 +79,6 @@ export default {
       end_position: this.end_position
     })).then(response => {
       console.log(response.data)
-      this.$message.info(response.data.message)
       let len = response.data.return_list.length
       let list = response.data.return_list
       for (let i = 0; i < len; ++i) {
@@ -56,10 +102,133 @@ export default {
         })
       }
     })
+  },
+  methods: {
+    toChatPage () {
+      // console.log('toChatPage!')
+      let otherName = ''
+      let otherId = ''
+      if (this.user1Name === this.$global.userName) {
+        otherName = this.user2Name
+        otherId = this.user2Id
+      } else {
+        otherName = this.user1Name
+        otherId = this.user1Id
+      }
+      // TODO 传入对应信息
+      this.$router.push({name: 'chatPage', params: {name: otherName, id: otherId, dialogueId: this.dialogueId}})
+    },
+    checkUser () {
+      return this.user1Name === this.$global.userName
+    },
+    logOut () {
+      this.$axios.post('login0/logout/ ')
+      this.$router.push('/login')
+    },
+    myPage () {
+      this.$router.push('/person')
+    },
+    homePage () {
+      this.$router.push('/')
+    },
+    searchPage () {
+      this.$router.push('/search')
+    },
+    cartPage () {
+      this.$router.go(0)
+    },
+    sellPage () {
+      this.$router.push('/store')
+    },
+    markPage () {
+      this.$router.push('/favoritegoods')
+    }
   }
 }
 </script>
 
 <style scoped>
+.home-container {
+  height: 100%;
+  width: 100%;
+  background: center no-repeat url("../../assets/back7.jpg");
+  background-size: cover;
+  display: block;
+}
 
+.el-header {
+  background: #545c64;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 0;
+  align-items: center;
+  color: #ffffff;
+  font-size: 40px;
+  opacity: 0.5;
+}
+
+.right-head {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+}
+
+.left-head {
+  display: flex;
+  align-items: center;
+}
+
+.mid-content {
+  display: block;
+  margin: 60px auto;
+  height: 100%;
+  width: 1200px;
+}
+
+.whole-pane {
+  display: block;
+}
+
+.whole-notice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #eaeaea;
+}
+
+.message-container {
+  display: flex;
+  text-align: center;
+}
+
+.notice-column-user {
+  width: 200px;
+  overflow: hidden;
+  font-size: 20px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.notice-column-message {
+  width: 700px;
+  overflow: hidden;
+  font-size: 20px;
+  align-items: center;
+  text-align: left;
+}
+
+.notice-pay {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 150px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.last-button {
+  justify-content: space-evenly;
+}
 </style>

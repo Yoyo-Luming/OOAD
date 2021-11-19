@@ -38,7 +38,7 @@
               </el-container>
               <el-container class="notice-pay">
                 <el-badge :value="item.waitNumber" class="item">
-                  <el-button class="last-button" type="primary" v-on:click="toChatPage">查看详情</el-button>
+                  <el-button class="last-button" type="primary" v-on:click="toChatPage(item)">查看详情</el-button>
                 </el-badge>
               </el-container>
             </el-container>
@@ -104,19 +104,19 @@ export default {
     })
   },
   methods: {
-    toChatPage () {
+    toChatPage (item) {
       // console.log('toChatPage!')
       let otherName = ''
       let otherId = ''
       if (this.user1Name === this.$global.userName) {
-        otherName = this.user2Name
-        otherId = this.user2Id
+        otherName = item.user2Name
+        otherId = item.user2Id
       } else {
-        otherName = this.user1Name
-        otherId = this.user1Id
+        otherName = item.user1Name
+        otherId = item.user1Id
       }
       // TODO 传入对应信息
-      this.$router.push({name: 'chatPage', params: {name: otherName, id: otherId, dialogueId: this.dialogueId}})
+      this.$router.push({name: 'chatPage', params: {name: otherName, id: otherId, dialogueId: item.dialogueId}})
     },
     checkUser () {
       return this.user1Name === this.$global.userName

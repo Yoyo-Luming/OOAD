@@ -239,7 +239,7 @@ export default {
       this.$router.push('/search')
     },
     cartPage () {
-      this.$router.go(0)
+      this.$router.push('/cart')
     },
     sellPage () {
       this.$router.push('/store')

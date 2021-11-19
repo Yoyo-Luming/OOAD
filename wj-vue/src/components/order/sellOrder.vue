@@ -235,6 +235,28 @@ export default {
       console.log('------')
       console.log(item.orderDetail)
       this.$router.push({name: 'orderInfo', params: {orderDetail: item.orderDetail}})
+    },
+    myPage () {
+      this.$router.push('/person')
+    },
+    homePage () {
+      this.$router.push('/')
+    },
+    searchPage () {
+      this.$router.push('/search')
+    },
+    cartPage () {
+      this.$router.push('/cart')
+    },
+    sellPage () {
+      this.$router.push('/store')
+    },
+    markPage () {
+      this.$router.push('/favoritegoods')
+    },
+    logOut () {
+      this.$axios.post('login0/logout/ ')
+      this.$router.push('/login')
     }
   }
 }

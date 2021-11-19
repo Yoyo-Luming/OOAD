@@ -1,6 +1,5 @@
 <template>
   <el-container class="outside-container">
-<!--    <img src="http://10.17.102.0:8080/api/commodity/download/?key=eyJtZXJfaWQiOjMzLCJkYXRlIjoiMjAyMS0xMC0wMyAyMjo0NDozOC4xMDkyNjEiLCJwYXRoIjoiQzpcXHB5Y2hhcm1cXE9PQURcXEZpbmFsX3Byb2plY3RcXFRyeTJcXGltYWdlU3RvcmVcXHVzZXJfMVxcdXBsb2FkX21lcmNoYW5kaXNlXzFfdGltZV8yMDIxLTEwLTAzXzIxNDEzNC40Mzk4MjBfaW1hZ2VfcGlja2VyMjQ5MzcwMjE1MDg3NjYwMzE3OS5qcGcifQ:1mX2jG:zT3-Mh3tw9hk_2zyomlX1YI3Q8oA7vEFNaNLE1dWnKg">-->
     <el-container class="mid-container">
       <el-form  :model="loginForm" status-icon :rules="rules" ref="loginForm" class="login-container" label-position="left" label-width="0px">
         <h3 class="login_title">SUSTech Store</h3>
@@ -13,11 +12,12 @@
                     auto-complete="off" placeholder="Password" show-password></el-input>
         </el-form-item>
         <el-form-item style="width: 100%">
-          <div>
+          <div class="buttons">
             <Vcode :show="isShow" @success="success" @close="close"/>
             <el-button type="primary" style="width: 100%;background: #505458;border: none" v-on:click="login">登录
             </el-button>
-            <el-button type="primary" style="width: 100%;background: #505458;border: none" v-on:click="forgetVisible=true">忘记密码
+            <br>
+            <el-button type="primary" style="margin-top: 20px;width: 100%;background: #505458;border: none" v-on:click="forgetPassword">忘记密码
             </el-button>
           </div>
         </el-form-item>
@@ -32,13 +32,23 @@
         </div>
       </el-container>
     </el-container>
-    <el-dialog :visible.sync="forgetVisible">
-      邮箱：<el-input v-model="mailBox">邮箱</el-input>
-      验证码：<el-input v-model="changeCode"></el-input>
-      新登录密码：<el-input v-model="newPassword"></el-input>
-      <el-button @click="fogetVisible=false">取消</el-button>
-      <el-button @click="sendCode">发送邮箱验证码</el-button>
-      <el-button @click="confirmChange">确认修改</el-button>
+    <el-dialog :visible.sync="dialogFormVisible" :modal-append-to-body="false">
+      <el-form ref="form" :model="changeForm" label-width="80px">
+        <el-form-item label="邮箱" >
+          <el-input v-model="changeForm.mailBox"></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" >
+          <el-input v-model="changeForm.newPassword"></el-input>
+        </el-form-item>
+        <el-form-item label="验证码" >
+          <el-input v-model="changeForm.changeCode"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible=false">取消</el-button>
+        <el-button type="primary" @click="sendCode">发送验证码</el-button>
+        <el-button type="success" @click="confirmChange">确认修改</el-button>
+      </div>
     </el-dialog>
   </el-container>
 </template>
@@ -58,6 +68,7 @@ export default {
     }
     return {
       isShow: false,
+      dialogFormVisible: false,
       loginForm: {
         username: '',
         password: ''
@@ -68,11 +79,12 @@ export default {
           { validator: verifyPassword, trigger: 'blur' }
         ]
       },
-      url: 'ws://192.168.68.223:9000/api/ws/chat/',
-      forgetVisible: false,
-      changeCode: '',
-      newPassword: '',
-      mailBox: ''
+      changeForm: {
+        mailBox: '',
+        newPassword: '',
+        changeCode: ''
+      },
+      url: 'ws://192.168.68.223:9000/api/ws/chat/'
     }
   },
   components: {
@@ -102,6 +114,7 @@ export default {
           // user_id: "Ng:1mn0EW:E9Q8FzjTM4_hxAT0_tgLYWz-l3F_ddIeHQ2mwxAE-kQ"
           // user_status: 2
           if (successResponse.data.status === '200' || successResponse.data.status === '300') {
+            console.log(successResponse.data)
             this.$global.setUser(this.loginForm.username)
             this.$global.setUserId(successResponse.data.user_id)
             this.$message.success(successResponse.data.message)
@@ -123,21 +136,24 @@ export default {
     register () {
       this.$router.push('/register')
     },
+    forgetPassword () {
+      this.dialogFormVisible = true
+    },
     sendCode () {
       this.$axios.post('login0/forget_password_email/', this.$qs.stringify({
-        user_email: this.mailBox
+        user_email: this.changeForm.mailBox
       })).then(response => {
         this.$message.info(response.data.message)
       })
     },
     confirmChange () {
       this.$axios.post('login0/forget_password/', this.$qs.stringify({
-        new_password: this.newPassword,
-        post_code: this.changeCode
+        new_password: this.changeForm.newPassword,
+        post_code: this.changeForm.changeCode
       })).then(response => {
         if (response.data.status === '200') {
           this.$message.success(response.data.message)
-          this.forgetVisible = false
+          this.dialogFormVisible = false
         } else {
           this.$message.info(response.data.message)
         }
@@ -159,7 +175,7 @@ export default {
 
 .mid-container {
   width: 400px;
-  height: 500px;
+  height: 450px;
   display: block;
 }
 
@@ -196,7 +212,15 @@ export default {
 }
 
 .register {
+  display: block;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-top: 10px;
   font-size: 30px;
+}
+
+.buttons {
+  display: block;
 }
 </style>
 

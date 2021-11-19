@@ -15,7 +15,6 @@
     </el-menu>
     <div class="wrapper">
       <h3>群聊</h3>
-
       <div class="message-panel">
         <msg-box v-for="(item, index) of msgList" :key="index+Math.random()" :uname="item.name" :is-photo="item.isPhoto" :url="item.url" :content="item.msg" :isSelf="item.isSelf"></msg-box>
 

@@ -1,19 +1,76 @@
 <template>
-  <div>
-    商品名称<h1>{{goodsInfo.name}}</h1>
-    商品价格<h4>{{goodsInfo.price}}</h4>
-    发布者用户名<h5>{{goodsInfo.poster}}</h5>
-    发布日期<h5>{{goodsInfo.uploadDay}}</h5>
-    邮费<h5>{{goodsInfo.deliverPrice}}</h5>
-    <img v-for="(item, index) of url" :key="index+Math.random()" :src="item">
-<!--    <img :src="this.$route.params.goodsurl" >-->
-    商品分类：{{goodsInfo.kind}}
-    商品描述<p1>{{description}}</p1>
-    <el-button type="primary" @click="collect">收藏</el-button>
-    <el-button @click="addCart">添加购物车</el-button>
-    <el-button @click="toUserPage">查看发布者</el-button>
-    <el-button @click="buy">购买</el-button>
-  </div>
+  <el-container class="home-container">
+    <el-header class="el-header">
+      <div class="right-head">
+        <img src="../../assets/testlogo.png" class="logo" alt="">
+        <span>SUSTech Store</span>
+      </div>
+      <div class="left-head">
+        <el-menu
+          class="el-menu-demo"
+          mode="horizontal"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b">
+          <el-menu-item index="1" v-on:click="homePage">Home Page</el-menu-item>
+          <el-menu-item index="2" v-on:click="searchPage">Search Page</el-menu-item>
+          <el-submenu index="3">
+            <template slot="title">用户名</template>
+            <el-menu-item index="3-1" v-on:click="myPage">Personal Page</el-menu-item>
+            <el-menu-item index="3-2" v-on:click="cartPage">Shopping Cart</el-menu-item>
+            <el-menu-item index="3-3" v-on:click="sellPage">Selling Page</el-menu-item>
+            <el-menu-item index="3-4" v-on:click="markPage">Marking Page</el-menu-item>
+          </el-submenu>
+          <el-menu-item index="4" v-on:click="logOut">Log Out</el-menu-item>
+        </el-menu>
+      </div>
+    </el-header>
+    <el-main>
+      <el-container class="mid-content">
+        <el-container class="pane-content">
+          <el-container class="good-photos">
+            <el-container class="big-photo">
+              <el-image :src="big_photo" fit="contain" :alt="goodsInfo.name"></el-image>
+            </el-container>
+            <el-container class="small-photo">
+              <el-container class="single-photo" v-for="(link, index) in goodsInfo.url" :key="index">
+                <el-image :src="link" fit="contain" style="border: 2px solid #eaeaea;" :alt="goodsInfo.name" @mousemove="mouseOver(link)"></el-image>
+              </el-container>
+            </el-container>
+            <el-container class="mark_chars" v-on:click="collect">
+              <i class="el-icon-star-on"></i>收藏商品
+            </el-container>
+          </el-container>
+          <el-container class="good-others">
+            <el-container class="contents">
+              <div class="good-name">{{goodsInfo.name}}</div>
+              <div class="good-description">{{goodsInfo.description}}</div>
+              <div>{{goodsInfo.kind}}</div>
+              <div class="good-price">售价: ¥<span style="margin-left: 5px;font-size: 30px">{{goodsInfo.price}}</span></div>
+              <div class="good-deliverPrice">邮费: ¥<span style="margin-left: 5px;font-size: 20px">{{goodsInfo.deliverPrice}}</span></div>
+              <div class="seller-name" v-on:click="toUserPage">卖家：{{goodsInfo.poster}}</div>
+              <el-button class="cart-button" v-on:click="addCart">加入购物车</el-button>
+              <el-button class="buy-button" v-on:click="buy">立即购买</el-button>
+            </el-container>
+          </el-container>
+        </el-container>
+      </el-container>
+    </el-main>
+  </el-container>
+  <!--  <div>-->
+  <!--    商品名称<h1>{{goodsInfo.name}}</h1>-->
+  <!--    商品价格<h4>{{goodsInfo.price}}</h4>-->
+  <!--    发布者用户名<h5>{{goodsInfo.poster}}</h5>-->
+  <!--    发布日期<h5>{{goodsInfo.uploadDay}}</h5>-->
+  <!--    邮费<h5>{{goodsInfo.deliverPrice}}</h5>-->
+  <!--    <img v-for="(item, index) of url" :key="index+Math.random()" :src="item">-->
+  <!--&lt;!&ndash;    <img :src="this.$route.params.goodsurl" >&ndash;&gt;-->
+  <!--    商品描述<p1>{{description}}</p1>-->
+  <!--    <el-button type="primary" @click="collect">收藏</el-button>-->
+  <!--    <el-button @click="addCart">添加购物车</el-button>-->
+  <!--    <el-button @click="toUserPage">查看发布者</el-button>-->
+  <!--    <el-button @click="buy">购买</el-button>-->
+  <!--  </div>-->
 </template>
 
 <script>
@@ -33,11 +90,11 @@ export default {
         posterId: '',
         kind: ''
       },
-      url: [],
       posterInfo: {
         name: '',
         id: ''
       },
+      big_photo: '',
       class1: [
         '运动户外',
         '生活用品',
@@ -114,8 +171,17 @@ export default {
       this.goodsInfo.description = response.data.mer_description
       this.goodsInfo.price = response.data.mer_price
       this.goodsInfo.uploadDay = response.data.mer_update.split('T')[0]
-      this.goodsInfo.url.push(response.data.mer_image1_url)
-      this.url.push(response.data.mer_image1_url)
+      this.big_photo = response.data.mer_image1_url
+      if (response.data.img_num === '1') {
+        this.goodsInfo.url.push(response.data.mer_image1_url)
+      } else if (response.data.img_num === '2') {
+        this.goodsInfo.url.push(response.data.mer_image1_url)
+        this.goodsInfo.url.push(response.data.mer_image2_url)
+      } else {
+        this.goodsInfo.url.push(response.data.mer_image1_url)
+        this.goodsInfo.url.push(response.data.mer_image2_url)
+        this.goodsInfo.url.push(response.data.mer_image3_url)
+      }
       this.goodsInfo.id = response.data.mer_id
       this.goodsInfo.deliverPrice = response.data.mer_deliver_price
       this.goodsInfo.posterId = response.data.mer_upload_user_id
@@ -167,5 +233,154 @@ export default {
 </script>
 
 <style scoped>
+.home-container {
+  height: 100%;
+  width: 100%;
+  background: center no-repeat url("../../assets/back7.jpg");
+  background-size: cover;
+  display: block;
+}
 
+.el-header {
+  background: #545c64;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 0;
+  align-items: center;
+  color: #ffffff;
+  font-size: 40px;
+  opacity: 0.5;
+}
+
+.right-head {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+}
+
+.left-head {
+  display: flex;
+  align-items: center;
+}
+
+.mid-content {
+  display: block;
+  margin: 60px auto;
+  height: 100%;
+  width: 90%;
+}
+
+.pane-content {
+  display: flex;
+  height: 100%;
+  width: 1000px;
+  border-radius: 10px;
+  border: 2px solid #eaeaea;
+  box-shadow: 0 0 15px #cac6c6;
+  background: white;
+  margin: 10px auto;
+  opacity: 0.7;
+}
+
+.good-photos {
+  width: 50%;
+  display: block;
+  margin: 20px;
+}
+
+.good-others {
+  width: 50%;
+  display: block;
+}
+
+.big-photo {
+  height: 400px;
+  width: 400px;
+  border: 2px solid #eaeaea;
+}
+
+.small-photo {
+  display: flex;
+  height: 100px;
+  width: 400px;
+  margin-top: 20px;
+}
+
+.single-photo {
+  height: 70px;
+  justify-content: space-around;
+}
+
+.mark_chars {
+  margin-left: 10px;
+  align-items: center;
+  font-size: 15px;
+}
+
+.contents {
+  display: block;
+  margin-top: 50px;
+}
+
+.good-name {
+  margin-top: 10px;
+  display: flex;
+  text-align: left;
+  font-size: 30px;
+  color: #000;
+  font-family: 黑体;
+}
+
+.good-description {
+  margin-top: 30px;
+  font-size: 20px;
+  text-align: left;
+  font-family: 黑体;
+  color: #8d99ae;
+}
+
+.good-price {
+  align-items: center;
+  margin-top: 30px;
+  font-size: 20px;
+  text-align: left;
+  display: flex;
+  color: red;
+}
+
+.good-deliverPrice {
+  align-items: center;
+  margin-top: 30px;
+  font-size: 15px;
+  text-align: left;
+  display: flex;
+  color: red;
+}
+
+.seller-name {
+  margin-top: 30px;
+  display: flex;
+  text-align: left;
+  font-size: 20px;
+  color: #000;
+}
+
+.cart-button {
+  margin-top: 50px;
+  background-color: #ffeded;
+  border: 1px solid #ff0036;
+  color: #FF0036;
+  width: 200px;
+}
+
+.buy-button {
+  margin-top: 50px;
+  background-color: #ff0036;
+  border: 1px solid #ff0036;
+  color: #fff;
+  width: 200px;
+}
 </style>

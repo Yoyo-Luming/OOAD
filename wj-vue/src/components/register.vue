@@ -1,35 +1,35 @@
 <template>
   <el-container class="outside-container">
-  <el-form :model="registerForm" status-icon :rules="rules" ref="registerForm" class="register-container" label-position="left" label-width="0px">
-    <h3 class="register_title">SUSTech Store Register</h3>
-    <el-form-item prop="username">
-      <el-input type="username" v-model="registerForm.username"
-                auto-complete="off" placeholder="Username"></el-input>
-    </el-form-item>
-    <el-form-item prop="email">
-      <el-input type="email" v-model="registerForm.email"
-                auto-complete="off" placeholder="Email"></el-input>
-    </el-form-item>
-    <el-form-item prop="pas sword">
-      <el-input type="password" v-model="registerForm.password"
-                auto-complete="off" placeholder="Password" show-password></el-input>
-    </el-form-item>
-    <el-form-item prop="verifyPassword">
-      <el-input type="password" v-model="registerForm.verifyPassword"
-                auto-complete="off" placeholder="verifyPassword" show-password>
-      </el-input>
-    </el-form-item>
-    <el-form-item prop="code">
-      <el-input type="text" v-model="registerForm.code"
-                auto-complete="off" placeholder="code" code>
-      </el-input>
-    </el-form-item>
-    <el-form-item style="width: 100%">
-      <el-button type="primary" v-on:click="register">Register</el-button>
-      <el-button v-on:click="getCode">getcode</el-button>
-      <el-button v-on:click="resetForm('registerForm')">Reset</el-button>
-    </el-form-item>
-  </el-form>
+    <el-form :model="registerForm" status-icon :rules="rules" ref="registerForm" class="register-container" label-position="left" label-width="0px">
+      <h3 class="register_title">SUSTech Store Register</h3>
+      <el-form-item prop="username">
+        <el-input type="username" v-model="registerForm.username"
+                  auto-complete="off" placeholder="Username"></el-input>
+      </el-form-item>
+      <el-form-item prop="email">
+        <el-input type="email" v-model="registerForm.email"
+                  auto-complete="off" placeholder="Email"></el-input>
+      </el-form-item>
+      <el-form-item prop="pas sword">
+        <el-input type="password" v-model="registerForm.password"
+                  auto-complete="off" placeholder="Password" show-password></el-input>
+      </el-form-item>
+      <el-form-item prop="verifyPassword">
+        <el-input type="password" v-model="registerForm.verifyPassword"
+                  auto-complete="off" placeholder="verifyPassword" show-password>
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="code">
+        <el-input type="text" v-model="registerForm.code"
+                  auto-complete="off" placeholder="code" code>
+        </el-input>
+      </el-form-item>
+      <el-form-item class="button-container">
+        <el-button type="primary" v-on:click="register">注册</el-button>
+        <el-button v-on:click="getCode">getcode</el-button>
+        <el-button v-on:click="resetForm('registerForm')">Reset</el-button>
+      </el-form-item>
+    </el-form>
   </el-container>
 </template>
 
@@ -101,15 +101,10 @@ export default {
       }))
         .then(response => {
           console.log(response.data)
-          // message: "验证码错误"
-          // status: "402"
-          // message: "用户oy3注册成功"
-          // status: "200"
           this.$message.info(response.data.message)
           if (response.data.status === '200') {
             this.$router.push('/login')
           }
-          // alert(response.data.message)
         })
       // 待完成
     },
@@ -120,11 +115,7 @@ export default {
       })).then(response => {
         console.log(response)
         console.log(response.data.message)
-        // data:
-        //   message: "邮件发送成功"
-        //   status: "200"
         this.$message.info(response.data.message)
-        // alert(response.data.message)
       })
     },
     resetForm (formName) {
@@ -135,21 +126,35 @@ export default {
 </script>
 
 <style>
+.outside-container {
+  background:url("../assets/back4.jpg");
+  width:100%;
+  height:100%;
+  padding: 0;
+  position:fixed;
+  background-size:100% 100%;
+}
+
 .register-container {
   border-radius: 15px;
   background-clip: padding-box;
   margin: 90px auto;
   width: 350px;
-  height: 500px;
+  height: 450px;
   padding: 35px 35px 15px 35px;
   background: #fff;
   border: 1px solid #eaeaea;
   box-shadow: 0 0 25px #cac6c6;
+  opacity: 0.8;
 }
 
 .register_title {
   margin: 0 auto 40px auto;
   text-align: center;
   color: #505458;
+}
+
+.button-container {
+  margin: auto;
 }
 </style>

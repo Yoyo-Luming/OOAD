@@ -24,7 +24,7 @@ import favoriteGoods from '../components/favorite/favoriteGoods'
 import favoriteUsers from '../components/favorite/favoriteUsers'
 import sellingGoods from '../components/goods/sellingGoods'
 import handleProblem from '../components/problem/handleProblem'
-import home from '../components/home/home'
+import home from '../components/home'
 
 Vue.use(Router)
 // Vue.use(Router)

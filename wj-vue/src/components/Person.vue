@@ -565,7 +565,8 @@ export default {
     }
   },
   mounted () {
-    if (this.$global.userState === 0) {
+    console.log(this.$global.userStatus)
+    if (this.$global.userStatus === 0) {
       this.activeFromVisible = true
     } else {
       this.$axios.post('/login0/get_user_details/', this.$qs.stringify({}))
@@ -833,6 +834,7 @@ export default {
             address_type: 2
           })).then(response => {
             if (response.data.status === '200') {
+              this.$global.userStatus = 2
               this.activeSellFromVisible = false
             }
           })

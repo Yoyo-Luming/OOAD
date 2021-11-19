@@ -36,6 +36,9 @@
         详细地址：{{taskReceiveAddress}}
       </el-col>
       <el-col>
+        最迟领货时间：{{ddlTime}}
+      </el-col>
+      <el-col>
         <el-button @click="getTask" v-if="getTaskButton">领取任务</el-button>
         <el-button @click="confirmGetObject" v-if="confirmGetObjectButton">确认领货</el-button>
         <el-button @click="confirmSend" v-if="confirmSendButton">确认送达</el-button>
@@ -90,6 +93,7 @@ export default {
       this.commentButton = true
     }
     this.hasOrder = (this.detail.task_type === 1)
+    this.ddlTime = this.detail.ddl_time
   },
   data () {
     return {
@@ -152,7 +156,8 @@ export default {
         '7号门',
         '8号门',
         '其它'],
-      hasOrder: false
+      hasOrder: false,
+      ddlTime: ''
     }
   },
   methods: {

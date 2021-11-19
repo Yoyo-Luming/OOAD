@@ -37,7 +37,7 @@
                 <el-image :src="link" fit="contain" style="border: 2px solid #eaeaea;" :alt="goodsInfo.name" @mousemove="mouseOver(link)"></el-image>
               </el-container>
             </el-container>
-            <el-container class="mark_chars" v-on:click="collect">
+            <el-container class="mark_chars" @click="collect">
               <i class="el-icon-star-on"></i>收藏商品
             </el-container>
           </el-container>
@@ -201,6 +201,7 @@ export default {
   },
   methods: {
     collect () {
+      console.log(1)
       this.$axios.post('commodity/add_favorite_merchandise_handler/', this.$qs.stringify({
         mer_id: this.goodsInfo.id
       })).then(response => {
@@ -227,6 +228,28 @@ export default {
       console.log(this.price)
       console.log(this.goodsInfo.url[0])
       this.$router.push({name: 'buyPage', params: {goodsName: this.goodsInfo.name, goodsPrice: this.goodsInfo.price, goodsPhoto: this.goodsInfo.url[0], goodsId: this.goodsInfo.id}})
+    },
+    myPage () {
+      this.$router.push('/person')
+    },
+    homePage () {
+      this.$router.push('/')
+    },
+    searchPage () {
+      this.$router.push('/search')
+    },
+    cartPage () {
+      this.$router.go(0)
+    },
+    sellPage () {
+      this.$router.push('/store')
+    },
+    markPage () {
+      this.$router.push('/favoritegoods')
+    },
+    logOut () {
+      this.$axios.post('login0/logout/ ')
+      this.$router.push('/login')
     }
   }
 }

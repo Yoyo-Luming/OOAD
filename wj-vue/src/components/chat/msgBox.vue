@@ -1,9 +1,8 @@
 <template>
-
   <div class="msg-wrapper" v-bind:class="{ self: isSelf }">
-    <span class="uname">{{name}}</span>
+    <span class="uname">{{uname}}</span>
     <span>：</span>
-      <img :src="url" v-if="isPhoto">
+      <img :src="url" v-if="isPhoto" alt="">
       <div v-else>{{content}}</div>
   </div>
 
@@ -14,7 +13,7 @@ export default {
   name: 'msgBox',
   props: {
     isPhoto: Boolean,
-    name: String,
+    uname: String,
     content: String,
     isSelf: Boolean,
     url: String
@@ -23,9 +22,6 @@ export default {
     return {
       isp: false
     }
-  },
-  mounted () {
-    console.log(this.url)
   },
   methods: {
 
@@ -40,11 +36,6 @@ export default {
   width: 100%;
   flex-direction: row;
   padding: 10px;
-}
-.content {
-  border: 1px solid #555;
-  border-radius: 2px;
-  padding: 3px;
 }
 .self {
   flex-direction: row-reverse;

@@ -80,6 +80,7 @@
                 </el-descriptions-item>
               </el-descriptions>
               <el-button type="primary" @click="UserInfoFormVisible = true">编辑<i class="el-icon-edit el-icon--right"></i></el-button>
+              <el-button @click="forgetVisble=true">忘记支付密码</el-button>
               <el-button @click="goSellOrder">我卖出的商品</el-button>
               <el-button @click="goBuyOrder">我买到的商品</el-button>
               <el-button @click="goFavoriteUser">我收藏的卖家</el-button>
@@ -89,6 +90,13 @@
               <el-input v-model="money"></el-input>
               <el-button @click="recharge">充值</el-button>
               <el-button @click="activeSellFromVisible=true">成为卖家</el-button>
+              <el-dialog :visible.sync="forgetVisible">
+                验证码：<el-input v-model="changeCode"></el-input>
+                新支付密码：<el-input v-model="newPayPassword"></el-input>
+                <el-button @click="fogetVisible=false">取消</el-button>
+                <el-button @click="sendCode">发送邮箱验证码</el-button>
+                <el-button @click="confirmChange">确认修改</el-button>
+              </el-dialog>
               <el-dialog title="激活卖家" :visible="activeSellFromVisible">
                 <el-form ref="form" :model="activeSellFromData" label-width="80px">
                   <el-form-item label="发件人姓名">
@@ -551,7 +559,9 @@ export default {
       newPayPassword: '',
       newLoginPassword: '',
       oldPayPassword: '',
-      oldLoginPassword: ''
+      oldLoginPassword: '',
+      forgetVisible: false,
+      changeCode: ''
     }
   },
   mounted () {
@@ -650,7 +660,8 @@ export default {
       this.$router.push('/markPage')
     },
     logOut () {
-      // Todo
+      this.$axios.post('login0/logout/ ')
+      this.$router.push('/login')
     },
     search () {
       // Todo
@@ -718,7 +729,7 @@ export default {
         })
       })
     },
-    handleExceed (files, fileList) {
+    handleExceed () {
       this.$message.warning('最多只能上传一张相片！')
     },
     uploadSectionFile (param) {
@@ -872,6 +883,24 @@ export default {
       })).then(response => {
         console.log(response.data)
         this.$message.info(response.data.message)
+      })
+    },
+    sendCode () {
+      this.$axios.post('login0/forget_pay_password_email/').then(response => {
+        this.$message.info(response.data.message)
+      })
+    },
+    confirmChange () {
+      this.$axios.post('login0/forget_pay_password/', this.$qs.stringify({
+        new_password: this.newPayPassword,
+        post_code: this.changeCode
+      })).then(response => {
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.forgetVisible = false
+        } else {
+          this.$message.info(response.data.message)
+        }
       })
     }
     // <el-button @click="goFavoriteUser">我收藏的卖家</el-button>

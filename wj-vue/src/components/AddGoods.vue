@@ -274,7 +274,7 @@ export default {
   },
   methods: {
 
-    handleExceed (files, fileList) {
+    handleExceed () {
       this.$message.warning('最多只能上传三张相片！')
     },
     uploadSectionFile (param) {

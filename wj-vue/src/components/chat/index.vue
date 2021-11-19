@@ -17,7 +17,7 @@
       <h3>群聊</h3>
 
       <div class="message-panel">
-        <msg-box v-for="(item, index) of msgList" :key="index+Math.random()" :uname="item.name" :is-photo="item.isPhoto" :url="item.url" :content="item.msg" :isself="item.isSelf"></msg-box>
+        <msg-box v-for="(item, index) of msgList" :key="index+Math.random()" :uname="item.name" :is-photo="item.isPhoto" :url="item.url" :content="item.msg" :isSelf="item.isSelf"></msg-box>
 
       </div>
       <el-button @click="uploadPhotoVisible=true">上传图片</el-button>
@@ -145,7 +145,7 @@ export default {
         })
       }
     },
-    handleExceed (files, fileList) {
+    handleExceed () {
       this.$message.warning('最多只能上传1张相片！')
     },
     uploadSectionFile (param) {
@@ -242,12 +242,6 @@ export default {
   border-radius: 4px;
   outline: none;
   padding: 5px;
-}
-.fix-top {
-  position: fixed;
-  width: 100%;
-  height: 50px;
-  top: 0;
 }
 
 </style>

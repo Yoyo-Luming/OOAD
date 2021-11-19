@@ -1,17 +1,21 @@
 <template>
-  <el-container>
-    <img :src="orderUrl">
-<!--    问题类型： {{}}-->
-<!--    问题描述：{{}}-->
+  <div>
+    <img :src="orderUrl" alt="">
+    问题类型： {{problemType}}
+    问题描述：{{problemDescription}}
     <el-button @click="goOrderPage">订单详情</el-button>
-  </el-container>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'problemBox',
   props: {
-    problemId: String
+    problemId: String,
+    orderUrl: String,
+    problemType: String,
+    problemDescription: String,
+    detail: []
   },
   data () {
     return {
@@ -19,8 +23,7 @@ export default {
   },
   methods: {
     goOrderPage () {
-      let detail = []
-      this.$router.push({name: 'orderInfo', params: {orderDetail: detail}})
+      this.$router.push({name: 'orderInfo', params: {orderDetail: this.detail}})
     }
   }
 }

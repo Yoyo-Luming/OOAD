@@ -68,6 +68,14 @@ export default {
       this.$router.push('/markPage')
     },
     logOut () {
+      this.$axios.post('logout ').then(response => {
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.$router.push('/login')
+        } else {
+          this.$message.info(response.data.message)
+        }
+      })
       // Todo
     },
     search () {

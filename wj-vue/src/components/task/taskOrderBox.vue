@@ -15,8 +15,8 @@ export default {
   name: 'taskOrderBox',
   props: {
     taskName: String,
-    sendAddress: String,
-    receiveAddress: String,
+    startRegion: String,
+    endRegion: String,
     price: String,
     detail: Array
   },

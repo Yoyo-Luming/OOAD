@@ -10,11 +10,11 @@
     </tr>
     <tr v-for="(item,index) in goodsList" :key="index+Math.random()">
       <td>{{item.name}}</td>
-      <td><img :src="item.photo"></td>
+      <td><img :src="item.photo" alt=""></td>
       <td>{{item.favouriteNumber}}</td>
       <td>{{item.price}}</td>
       <td><button @click="toGoodsPage(index)">商品详情</button></td>
-      <td><button @click="deleteFavoriteGoods(index)">下架</button></td>
+      <td><button @click="deleteGoods(index)">下架</button></td>
     </tr>
   </table>
 </template>
@@ -47,7 +47,7 @@ export default {
     toGoodsPage (index) {
       this.$router.push({name: 'goodsInfo', params: {mer_id: this.goodsList[index].goodsId}})
     },
-    deleteFavoriteGoods (index) {
+    deleteGoods (index) {
       // this.$message.info(index)
       // has_next: "False"
       // is_empty: "False"

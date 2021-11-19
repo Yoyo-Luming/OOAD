@@ -2,7 +2,7 @@
   <el-container>
     <el-row>
       <el-col>
-        <el-steps :active="active" :space="200" finish-status="success" v-if="active<6">
+        <el-steps :active="active" :space="200" finish-status="success" v-if="!hasProblem">
           <el-step title="待付款"></el-step>
           <el-step title="待发货"></el-step>
           <el-step title="待收货"></el-step>
@@ -68,6 +68,17 @@
           <el-button @click="goTaskPage">查看关联跑腿任务</el-button>
         </el-col>
       </div>
+      <el-container v-if="isAdmin && hasProblem">
+        <el-button @click="handleProblemVisible=true">处理申诉</el-button>
+        <el-dialog :visible="handleProblemVisible">
+          回复<el-input v-model="handleProblemForm.superuserLog"></el-input>
+          问题方
+          <el-radio v-model="handleProblemForm.problemRole" label="1">买方</el-radio>
+          <el-radio v-model="handleProblemForm.problemRole" label="2">卖方</el-radio>
+          <el-button @click="handleProblemVisible=false">取消</el-button>
+          <el-button @click="handleProblem">提交</el-button>
+        </el-dialog>
+      </el-container>
     </el-row>
     <el-dialog title="评价" :visible.sync="commentVisible" center>
       商品评价：<el-rate v-model="comment1"></el-rate>
@@ -151,6 +162,10 @@ export default {
       payPassword: '',
       currentUserIsSeller: false,
       hasTask: false,
+      hasProblem: false,
+      problemId: '',
+      problemDescription: '',
+      problemType: '',
       orderComment: '',
       QRCodeUrl: '',
       problemForm: {
@@ -180,8 +195,6 @@ export default {
         '恶意未发货',
         '其他'
       ],
-      problemType: '',
-      problemDescription: '',
       payMethod: '',
       innerVisible: false,
       payOptions: [{
@@ -193,7 +206,13 @@ export default {
       }, {
         value: 3,
         label: '线下支付'
-      }]
+      }],
+      isAdmin: true,
+      handleProblemVisible: false,
+      handleProblemForm: {
+        superuserLog: '',
+        problemRole: ''
+      }
     }
   },
   mounted () {
@@ -219,6 +238,12 @@ export default {
     this.orderComment = this.info.transaction_comment
     this.currentUserIsSeller = (this.sender === this.$global.userName)
     this.hasTask = this.info.has_task
+    this.hasProblem = this.info.has_problem
+    if (this.hasProblem) {
+      this.problemDescription = this.info.problem_description
+      this.problemId = this.info.problem_id
+      this.problemType = this.problemTypes[this.info.problem_type]
+    }
     // console.log(this.hasTask)
     console.log('senderName:' + this.sender)
     console.log('currentUser:' + this.$global.userName)
@@ -237,6 +262,7 @@ export default {
     if (this.info.transaction_status === 4) {
       this.commentButton = true
     }
+    this.isAdmin = (this.$global.userState === 3)
     // TODO 获取二维码
   },
   methods: {
@@ -268,7 +294,6 @@ export default {
       })
     },
     buy () {
-      // TODO
       this.$axios.post('transaction/commit_transaction_virtual/', this.$qs.stringify({
         tra_id: this.orderId,
         pay_password: this.payPassword
@@ -330,6 +355,27 @@ export default {
         problem_type: this.problemForm.problemType
       })).then(response => {
         console.log(response.data)
+        if (response.data.status === '200') {
+          this.problemFromVisible = false
+          this.$message.success(response.data.message)
+        } else {
+          this.$message.info(response.data.message)
+        }
+      })
+    },
+    handleProblem () {
+      this.$axios.post('supermanager/handle_problem/', this.$qs.stringify({
+        superuser_log: this.handleProblemForm.superuserLog,
+        problem_id: this.problemId,
+        problem_role: this.handleProblemForm.problemRole
+      })).then(response => {
+        console.log(response.data)
+        if (response.data.status === '200') {
+          this.handleProblemVisible = false
+          this.$message.success(response.data.message)
+        } else {
+          this.$message.info(response.data.message)
+        }
       })
     }
   }

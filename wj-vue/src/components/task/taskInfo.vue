@@ -11,7 +11,7 @@
       </el-steps></el-col>
       <el-col>
         发布者:{{senderName}}
-        <img :src="senderPhoto" v-if="senderHasPhoto">
+        <img :src="senderPhoto" v-if="senderHasPhoto" alt="">
         <i class="el-icon-s-custom" v-else></i>
       </el-col>
       <el-col>
@@ -89,6 +89,7 @@ export default {
     if (this.active === 5 && this.currentUserIsSender) {
       this.commentButton = true
     }
+    this.hasOrder = (this.detail.task_type === 1)
   },
   data () {
     return {
@@ -161,7 +162,13 @@ export default {
       this.$axios.post('task/get_task/', this.$qs.stringify({
         task_id: this.taskId
       })).then(response => {
-        console.log(response.data)
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.$router.push('/receivedtask')
+        } else {
+          this.$message.info(response.data.message)
+        }
+        // console.log(response.data)
       })
     },
     confirmGetObject () {
@@ -169,7 +176,12 @@ export default {
         task_id: this.taskId
       })).then(response => {
         console.log(response.data)
-        this.$message.info(response.data.message)
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.$router.push('/receivedtask')
+        } else {
+          this.$message.info(response.data.message)
+        }
       })
     },
     confirmSend () {
@@ -177,7 +189,12 @@ export default {
         task_id: this.taskId
       })).then(response => {
         console.log(response.data)
-        this.$message.info(response.data.message)
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.$router.push('/receivedtask')
+        } else {
+          this.$message.info(response.data.message)
+        }
       })
     },
     confirmReceive () {
@@ -185,7 +202,12 @@ export default {
         task_id: this.taskId
       })).then(response => {
         console.log(response.data)
-        this.$message.info(response.data.message)
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.$router.push('/releasedtask')
+        } else {
+          this.$message.info(response.data.message)
+        }
       })
     },
     submitComment () {
@@ -195,14 +217,23 @@ export default {
         comment_level: this.commentRate
       })).then(response => {
         console.log(response.data)
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.$router.push('/releasedtask')
+        } else {
+          this.$message.info(response.data.message)
+        }
       })
     },
     goChatPage () {
       if (!this.currentUserIsSender) {
-        this.$router.push({name: 'chatPage', params: {name: this.detail.send_user.user_name, id: this.detail.send_user.user_id, dialogueId: this.detail.dialogue_id}})
+        this.$router.push({name: 'chatPage', params: {name: this.detail.send_user.user_name, id: this.detail.send_user.user_id, dialogueId: this.detail.dialogue_id_up_sd}})
       } else {
-        this.$router.push({name: 'chatPage', params: {name: this.detail.upload_user.user_name, id: this.detail.upload_user.user_id, dialogueId: this.detail.dialogue_id}})
+        this.$router.push({name: 'chatPage', params: {name: this.detail.upload_user.user_name, id: this.detail.upload_user.user_id, dialogueId: this.detail.dialogue_id_up_se}})
       }
+    },
+    chatReceiver () {
+      this.$router.push({name: 'chatPage', params: {name: this.detail.receive_user.user_name, id: this.detail.receive_user.user_id, dialogueId: this.detail.dialogue_id_up_se}})
     }
   }
 }

@@ -15,7 +15,9 @@
         <el-form-item style="width: 100%">
           <div>
             <Vcode :show="isShow" @success="success" @close="close"/>
-            <el-button type="primary" style="width: 100%;background: #505458;border: none" v-on:click="login">Login
+            <el-button type="primary" style="width: 100%;background: #505458;border: none" v-on:click="login">登录
+            </el-button>
+            <el-button type="primary" style="width: 100%;background: #505458;border: none" v-on:click="forgetVisible=true">忘记密码
             </el-button>
           </div>
         </el-form-item>
@@ -25,11 +27,19 @@
           <span>Haven't got an account?</span>
           <br>
           <span>Join us right now!</span>
-          <el-button type="info" style="width: 100%;background: #505458; margin: 50px auto;border: none" v-on:click="register">Register
+          <el-button type="info" style="width: 100%;background: #505458; margin: 50px auto;border: none" v-on:click="register">注册
           </el-button>
         </div>
       </el-container>
     </el-container>
+    <el-dialog :visible.sync="forgetVisible">
+      邮箱：<el-input v-model="mailBox">邮箱</el-input>
+      验证码：<el-input v-model="changeCode"></el-input>
+      新登录密码：<el-input v-model="newPassword"></el-input>
+      <el-button @click="fogetVisible=false">取消</el-button>
+      <el-button @click="sendCode">发送邮箱验证码</el-button>
+      <el-button @click="confirmChange">确认修改</el-button>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -58,7 +68,11 @@ export default {
           { validator: verifyPassword, trigger: 'blur' }
         ]
       },
-      url: 'ws://192.168.68.223:9000/api/ws/chat/'
+      url: 'ws://192.168.68.223:9000/api/ws/chat/',
+      forgetVisible: false,
+      changeCode: '',
+      newPassword: '',
+      mailBox: ''
     }
   },
   components: {
@@ -108,6 +122,26 @@ export default {
     },
     register () {
       this.$router.push('/register')
+    },
+    sendCode () {
+      this.$axios.post('login0/forget_password_email/', this.$qs.stringify({
+        user_email: this.mailBox
+      })).then(response => {
+        this.$message.info(response.data.message)
+      })
+    },
+    confirmChange () {
+      this.$axios.post('login0/forget_password/', this.$qs.stringify({
+        new_password: this.newPassword,
+        post_code: this.changeCode
+      })).then(response => {
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.forgetVisible = false
+        } else {
+          this.$message.info(response.data.message)
+        }
+      })
     }
   }
 }

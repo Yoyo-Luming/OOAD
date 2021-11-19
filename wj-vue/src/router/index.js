@@ -25,6 +25,7 @@ import favoriteUsers from '../components/favorite/favoriteUsers'
 import sellingGoods from '../components/goods/sellingGoods'
 import handleProblem from '../components/problem/handleProblem'
 import home from '../components/home'
+import ShoppingCart from '../components/ShoppingCart'
 
 Vue.use(Router)
 // Vue.use(Router)
@@ -163,6 +164,11 @@ export default new Router({
       path: '/handleproblem',
       name: 'handleProblem',
       component: handleProblem
+    },
+    {
+      path: '/cart',
+      name: 'shoppingCart',
+      component: ShoppingCart
     }
   ]
 })

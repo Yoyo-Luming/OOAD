@@ -37,12 +37,13 @@
                 <div v-else>
                   <el-image class="user-photo" :src="defult_photo" fit="contain" alt=""></el-image>
                 </div>
+                <el-button primary>上传头像</el-button>
               </el-container>
               <el-container class="user-info">
                 <div class="user-name">用户名： {{userName}}</div>
                 <div class="user-rate">用户评分： {{rate}}</div>
-                <div>用户简介：{{selfDescription}}</div>
-                <div>用户被收藏数：{{favoriteNumber}}</div>
+                <div class="user-describe">用户简介：{{selfDescription}}</div>
+                <div class="user-describe">被{{favoriteNumber}}喜欢</div>
                 <el-button class="cart-button" v-on:click="collect">收藏用户</el-button>
                 <el-button class="buy-button" v-on:click="chatSeller">联系卖家</el-button>
               </el-container>
@@ -93,6 +94,7 @@
 <script>
 // 用户信息展示：头像、昵称、评分、已上传商品列表、收藏卖家
 export default {
+  // TODO needtocheck
   name: 'userInfo',
   data () {
     return {
@@ -281,6 +283,32 @@ export default {
   margin-top: 50px;
   text-align: left;
   display: block;
+}
+
+.user-name {
+  margin-top: 10px;
+  display: flex;
+  text-align: left;
+  font-size: 20px;
+  color: #000;
+}
+
+.user-rate {
+  margin-top: 10px;
+  display: flex;
+  text-align: left;
+  font-size: 15px;
+  color: #000;
+}
+
+.user-describe {
+  display: block;
+  height: 30px;
+  width: 100px;
+  font-size: 20px;
+  margin-top: 20px;
+  word-wrap: anywhere;
+  word-break: normal;
 }
 
 .goods-contents {

@@ -4,30 +4,30 @@
       <h3 class="register_title">SUSTech Store Register</h3>
       <el-form-item prop="username">
         <el-input type="username" v-model="registerForm.username"
-                  auto-complete="off" placeholder="Username"></el-input>
+                  auto-complete="off" placeholder="用户名"></el-input>
       </el-form-item>
       <el-form-item prop="email">
         <el-input type="email" v-model="registerForm.email"
-                  auto-complete="off" placeholder="Email"></el-input>
+                  auto-complete="off" placeholder="邮箱"></el-input>
       </el-form-item>
       <el-form-item prop="pas sword">
         <el-input type="password" v-model="registerForm.password"
-                  auto-complete="off" placeholder="Password" show-password></el-input>
+                  auto-complete="off" placeholder="密码" show-password></el-input>
       </el-form-item>
       <el-form-item prop="verifyPassword">
         <el-input type="password" v-model="registerForm.verifyPassword"
-                  auto-complete="off" placeholder="verifyPassword" show-password>
+                  auto-complete="off" placeholder="再次输入密码" show-password>
         </el-input>
       </el-form-item>
       <el-form-item prop="code">
         <el-input type="text" v-model="registerForm.code"
-                  auto-complete="off" placeholder="code" code>
+                  auto-complete="off" placeholder="验证码" code>
         </el-input>
       </el-form-item>
       <el-form-item class="button-container">
         <el-button type="primary" v-on:click="register">注册</el-button>
-        <el-button v-on:click="getCode">getcode</el-button>
-        <el-button v-on:click="resetForm('registerForm')">Reset</el-button>
+        <el-button v-on:click="getCode">发送验证码</el-button>
+        <el-button v-on:click="resetForm('registerForm')">清空</el-button>
       </el-form-item>
     </el-form>
   </el-container>

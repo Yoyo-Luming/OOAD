@@ -5,11 +5,11 @@
         <h3 class="login_title">SUSTech Store</h3>
         <el-form-item prop="username">
           <el-input type="text" v-model="loginForm.username"
-                    auto-complete="off" placeholder="username"></el-input>
+                    auto-complete="off" placeholder="用户名"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input type="password" v-model="loginForm.password"
-                    auto-complete="off" placeholder="Password" show-password></el-input>
+                    auto-complete="off" placeholder="密码" show-password></el-input>
         </el-form-item>
         <el-form-item style="width: 100%">
           <div class="buttons">
@@ -24,9 +24,9 @@
       </el-form>
       <el-container class="toRegister-container">
         <div class="register">
-          <span>Haven't got an account?</span>
+          <span>还没有账号吗？</span>
           <br>
-          <span>Join us right now!</span>
+          <span>快加入我们！</span>
           <el-button type="info" style="width: 100%;background: #505458; margin: 50px auto;border: none" v-on:click="register">注册
           </el-button>
         </div>
@@ -214,9 +214,9 @@ export default {
 
 .register {
   display: block;
-  margin-right: 10px;
-  margin-left: 10px;
-  margin-top: 10px;
+  align-items: center;
+  text-align: center;
+  margin: auto;
   font-size: 30px;
 }
 

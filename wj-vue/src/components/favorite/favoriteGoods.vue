@@ -1,23 +1,3 @@
-<!--<template>-->
-<!--  <table>-->
-<!--    <tr>-->
-<!--      <th>商品名称</th>-->
-<!--      <th>商品图片</th>-->
-<!--      <th>收藏人数</th>-->
-<!--      <th>商品价格</th>-->
-<!--      <th></th>-->
-<!--      <th></th>-->
-<!--    </tr>-->
-<!--    <tr v-for="(item,index) in goodsList" :key="index+Math.random()">-->
-<!--      <td>{{item.name}}</td>-->
-<!--      <td><img :src="item.photo"></td>-->
-<!--      <td>{{item.favouriteNumber}}</td>-->
-<!--      <td>{{item.price}}</td>-->
-<!--      <td><button @click="toGoodsPage(index)">商品详情</button></td>-->
-<!--      <td><button @click="deleteFavoriteGoods(index)">删除</button></td>-->
-<!--    </tr>-->
-<!--  </table>-->
-<!--</template>-->
 <template>
   <el-container class="home-container">
     <el-header class="el-header">
@@ -32,16 +12,15 @@
           background-color="#545c64"
           text-color="#fff"
           active-text-color="#ffd04b">
-          <el-menu-item index="1" v-on:click="homePage">Home Page</el-menu-item>
-          <el-menu-item index="2" v-on:click="searchPage">Search Page</el-menu-item>
-          <el-submenu index="3">
+          <el-menu-item index="1" v-on:click="homePage">主页</el-menu-item>
+          <el-submenu index="2">
             <template slot="title">用户名</template>
-            <el-menu-item index="3-1" v-on:click="myPage">Personal Page</el-menu-item>
-            <el-menu-item index="3-2" v-on:click="cartPage">Shopping Cart</el-menu-item>
-            <el-menu-item index="3-3" v-on:click="sellPage">Selling Page</el-menu-item>
-            <el-menu-item index="3-4" v-on:click="markPage">Marking Page</el-menu-item>
+            <el-menu-item index="2-1" v-on:click="myPage">个人主页</el-menu-item>
+            <el-menu-item index="2-2" v-on:click="cartPage">购物车</el-menu-item>
+            <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>
+            <el-menu-item index="2-4" v-on:click="markPage">收藏的商品</el-menu-item>
           </el-submenu>
-          <el-menu-item index="4" v-on:click="logOut">Log Out</el-menu-item>
+          <el-menu-item index="3" v-on:click="logOut">注销</el-menu-item>
         </el-menu>
       </div>
     </el-header>
@@ -67,7 +46,7 @@
             </el-container>
           </div>
           <div v-else>
-            <h2>Nothing Here. Go and mark those you love.</h2>
+            <h2>这里什么也没有，快去收藏一些吧~</h2>
           </div>
         </el-container>
       </el-container>

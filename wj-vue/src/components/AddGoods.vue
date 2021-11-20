@@ -182,6 +182,7 @@
 <script>
 
 export default {
+  // TODO need check
   name: 'AddGoods',
   mounted () {
     this.$axios.post('/login0/get_address_list/', this.$qs.stringify({

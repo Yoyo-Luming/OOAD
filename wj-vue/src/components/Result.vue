@@ -35,13 +35,13 @@
           </el-input>
           <el-button type="primary" style="width: 100px;background: #a0c4ff;border: none;" v-on:click="search">Search</el-button>
         </el-container>
-        <el-container>
-          商品分类：<el-cascader  :options="options"
+        <el-container class="choose-opt">
+          <el-cascader  :options="options"
                         :props="{ checkStrictly: true }"
                         v-model="labels"
                         placeholder="商品类别"
                         clearable></el-cascader>
-          使用程度：<el-select v-model="status" placeholder="请选择">
+          <el-select v-model="status" placeholder="使用程度">
             <el-option
               v-for="item in newOptions"
               :key="item.value"
@@ -49,7 +49,7 @@
               :value="item.value">
             </el-option>
           </el-select>
-          排列方法：<el-select v-model="orderMethod" placeholder="请选择">
+          <el-select v-model="orderMethod" placeholder="排列方法">
             <el-option
               v-for="item in orderOptions"
               :key="item.value"
@@ -59,9 +59,26 @@
           </el-select>
         </el-container>
         <el-container class="message-content">
-          <div>
-            <goods-box v-for="(item, index) of goodsList " :key="index+Math.random()" :name="item.name" :price="item.price" :photo="item.photo" :favourite_number="item.favourite_number" :mer_id="item.mer_id"></goods-box>
+          <div v-if="goodsList.length">
+            <el-container class="marking-goods">
+              <el-container class="single-good" v-for="(item, index) in goodsList" :key="index">
+                <el-container class="good-image">
+                  <el-image :src="item.photo" fit="contain"  v-on:click="toGoodsPage(item)" :alt="item.name"></el-image>
+                </el-container>
+                <el-container class="good-describe">
+                  <div class="good-name">{{item.name}}</div>
+                  <div class="good-price">¥{{item.price}}</div>
+                  <div class="good-number">共有{{item.favouriteNumber}}人喜欢</div>
+                </el-container>
+              </el-container>
+            </el-container>
           </div>
+          <div v-else>
+            <h2>Nothing Here. Search something else.</h2>
+          </div>
+          <!--          <div>-->
+          <!--            <goods-box v-for="(item, index) of goodsList " :key="index+Math.random()" :name="item.name" :price="item.price" :photo="item.photo" :favourite_number="item.favourite_number" :mer_id="item.mer_id"></goods-box>-->
+          <!--          </div>-->
         </el-container>
       </el-container>
     </el-main>
@@ -224,6 +241,9 @@ export default {
     }
   },
   methods: {
+    toGoodsPage (item) {
+      this.$router.push({name: 'goodsInfo', params: {mer_id: item.mer_id}})
+    },
     myPage () {
       this.$router.push('/person')
     },
@@ -356,7 +376,7 @@ export default {
 .mid-content {
   display: block;
   margin: 30px auto;
-  height: 2000px;
+  height: 100%;
   width: 1000px;
 }
 
@@ -374,8 +394,66 @@ export default {
   background: white;
   margin: 50px auto;
   opacity: 0.9;
-  /*temp*/
   width: 1000px;
-  height: 1000px;
+  height: 100%;
+}
+
+.choose-opt {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.marking-goods {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 70px;
+}
+
+.single-good {
+  display: block;
+  margin: 60px;
+  height: 100px;
+  width: 100px;
+  position: relative;
+  flex: none;
+}
+
+.good-image {
+  height: 100px;
+  width: 100px;
+  border: 2px solid #eaeaea;
+  align-items: center;
+}
+
+.good-describe {
+  text-align: center;
+  display: block;
+  height: 30px;
+  width: 100px;
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.good-name {
+  font-size: 20px;
+  color: black;
+  overflow: hidden;
+}
+
+.good-price {
+  font-size: 15px;
+  color: #ff006e;
+  overflow: hidden;
+}
+
+.good-number {
+  font-size: 15px;
+  overflow: hidden;
+}
+
+.good-button {
+  font-size: 10px;
 }
 </style>

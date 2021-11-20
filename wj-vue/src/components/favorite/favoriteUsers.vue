@@ -83,6 +83,7 @@
 
 <script>
 export default {
+  // Done
   name: 'favoriteUsers',
   mounted () {
     // has_next: "False"

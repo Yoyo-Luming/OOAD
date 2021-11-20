@@ -115,6 +115,7 @@
 
 <script>
 export default {
+  // Done
   name: 'receivedTask',
   mounted () {
     // this.$axios.post('task/task_wait_sender_list_up/').then(response => {

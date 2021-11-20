@@ -87,6 +87,7 @@
 
 <script>
 export default {
+  // Done
   name: 'ShoppingCart',
   data () {
     return {

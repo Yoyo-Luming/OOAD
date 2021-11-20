@@ -35,6 +35,7 @@
 
 <script>
 export default {
+  // Done
   name: 'register',
   data () {
     // const regEmail = /^[0-9]*$/

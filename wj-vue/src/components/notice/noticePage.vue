@@ -56,6 +56,7 @@
 
 <script>
 export default {
+  // Done
   name: 'noticePage',
   data () {
     return {

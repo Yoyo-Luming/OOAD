@@ -114,6 +114,7 @@
 <script>
 
 export default {
+  // Done
   name: 'sellOrder',
   mounted () {
     this.$axios.post('login0/wait_payment_fuc_seller/').then(response => {

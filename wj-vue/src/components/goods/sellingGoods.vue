@@ -134,6 +134,7 @@
 
 <script>
 export default {
+  // Done
   name: 'sellingGoods',
   mounted () {
     this.isSeller = (this.$global.userStatus >= 2)

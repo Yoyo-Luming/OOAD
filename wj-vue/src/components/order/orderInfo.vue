@@ -1,157 +1,292 @@
 <template>
-  <el-container>
-    <el-row>
-      <el-col>
-        <el-steps :active="active" :space="200" finish-status="success" v-if="!hasProblem">
-          <el-step title="待付款"></el-step>
-          <el-step title="待发货"></el-step>
-          <el-step title="待收货"></el-step>
-          <el-step title="待评价"></el-step>
-          <el-step title="已完成"></el-step>
-        </el-steps>
-        <div v-else>
-          订单异常
-          问题类型：{{problemType}}
-          问题描述：{{problemDescription}}
-        </div>
-      </el-col>
-      <el-col>
-        <el-divider></el-divider>
-      </el-col>
-      <el-col>
-        发货人：{{sender}}
-        <br/>
-        发货地址：{{sendAddress}}
-      </el-col>
-      <el-col>
-        <el-divider></el-divider>
-      </el-col>
-      <el-col>
-        收货人：{{receiver}}
-        <br/>
-        收货地址：{{receiveAddress}}
-      </el-col>
-      <el-col>
-        <el-divider></el-divider>
-      </el-col>
-      <div v-if="active > 0">
-        <el-col>
-          支付方式：{{payInfo.payMethod}}
-          <div v-if="payInfo.payMethod === '二维码扫码支付'">
-            支付凭证：<img alt="" :src="payInfo.payProveUrl">
-          </div>
-        </el-col>
-        <el-col>
+  <el-container class="home-container">
+    <el-header class="el-header">
+      <div class="right-head">
+        <img src="../../assets/testlogo.png" class="logo" alt="">
+        <span>SUSTech Store</span>
+      </div>
+      <div class="left-head">
+        <el-menu
+          class="el-menu-demo"
+          mode="horizontal"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b">
+          <el-menu-item index="1" v-on:click="homePage">Home Page</el-menu-item>
+          <el-menu-item index="2" v-on:click="searchPage">Search Page</el-menu-item>
+          <el-submenu index="3">
+            <template slot="title">用户名</template>
+            <el-menu-item index="3-1" v-on:click="myPage">Personal Page</el-menu-item>
+            <el-menu-item index="3-2" v-on:click="cartPage">Shopping Cart</el-menu-item>
+            <el-menu-item index="3-3" v-on:click="sellPage">Selling Page</el-menu-item>
+            <el-menu-item index="3-4" v-on:click="markPage">Marking Page</el-menu-item>
+          </el-submenu>
+          <el-menu-item index="4" v-on:click="logOut">Log Out</el-menu-item>
+        </el-menu>
+      </div>
+    </el-header>
+    <el-main>
+      <el-container class="mid-content">
+        <el-container class="pane-content">
+          <el-container class="step-container">
+            <div v-if="!hasProblem">
+              <el-steps :active="active" :space="200" :align-center="true" finish-status="success" class="steps">
+                <el-step title="待付款" class="single-step"></el-step>
+                <el-step title="待发货" class="single-step"></el-step>
+                <el-step title="待收货" class="single-step"></el-step>
+                <el-step title="待评价" class="single-step"></el-step>
+                <el-step title="已完成" class="single-step"></el-step>
+              </el-steps>
+            </div>
+            <div v-else style="display: block; margin: auto;">
+              <div style="margin: auto;">订单异常！</div>
+              <br>
+              <div style="margin: auto;">问题类型：{{problemType}}</div>
+              <br>
+              <div style="margin: auto;">问题描述：{{problemDescription}}</div>
+            </div>
+          </el-container>
+          <el-container class="user-container">
+            <el-container class="line-one">
+              <div class="task-place">商家：{{sender}}</div>
+              <div class="task-place">发货地址：{{sendAddress}}</div>
+              <div class="task-place">卖家：{{receiver}}</div>
+              <div class="task-place">收货地址：{{receiveAddress}}</div>
+            </el-container>
+          </el-container>
           <el-divider></el-divider>
-        </el-col>
-      </div>
-      <el-col>
-        <img :src="url">
-        <br/>
-        商品图片：<img :src="goodsPhoto"><br/>
-        商品名称：{{goodsName}}<br/>
-        商品价格：{{goodsPrice}}<br/>
-        邮费: {{postage}}<br/>
-        <el-button type="text" class="button" @click="toGoodsPage">查看商品</el-button>
-        <el-button type="text" class="button" @click="toSellerPage">查看卖家</el-button>
-      </el-col>
-      <el-col>
-        <el-divider></el-divider>
-      </el-col>
-
-      <el-col>
-        实际付款：{{payment}}<br/>
-        <el-button type="text" class="button" @click="callSender"><div v-if="currentUserIsSeller">联系买家</div><div v-else>联系卖家</div></el-button>
-        <el-button v-if="buyButton" type="text" class="button" @click="payFormVisible=true">付款</el-button>
-        <el-button v-if="cancelButton" type="text" class="button" @click="cancel">取消订单</el-button>
-        <el-button v-if="commentButton" type="text" class="button" @click="commentVisible=true">评价</el-button>
-<!--        <el-button @click="buyButton=true">TEST</el-button>-->
-        <el-button v-if="sendButton" @click="confirmSend">确认发货</el-button>
-        <el-button v-if="receiveButton" @click="confirmReceive">确认收货</el-button>
-      </el-col>
-      <el-col>
-        <el-button @click="problemFromVisible=true">
-          订单申诉
-        </el-button>
-      </el-col>
-      <div v-if="hasTask">
-        <el-col>
-          <el-button @click="goTaskPage">查看关联跑腿任务</el-button>
-        </el-col>
-      </div>
-      <el-container v-if="isAdmin && hasProblem">
-        <el-button @click="handleProblemVisible=true">处理申诉</el-button>
-        <el-dialog :visible="handleProblemVisible">
-          回复<el-input v-model="handleProblemForm.superuserLog"></el-input>
-          问题方
-          <el-radio v-model="handleProblemForm.problemRole" label="1">买方</el-radio>
-          <el-radio v-model="handleProblemForm.problemRole" label="2">卖方</el-radio>
-          <el-button @click="handleProblemVisible=false">取消</el-button>
-          <el-button @click="handleProblem">提交</el-button>
-        </el-dialog>
+          <el-container v-if="active > 0" class="pay-detail">
+            <div class="task-place">支付方式：{{payInfo.payMethod}}</div>
+            <div class="task-place">支付凭证：
+              <img alt="" :src="payInfo.payProveUrl">
+            </div>
+          </el-container>
+          <el-divider></el-divider>
+          <el-container class="whole-order">
+            <el-container class="order-photo">
+              <el-image :src="goodsPhoto" fit="contain" :alt="goodsName"></el-image>
+            </el-container>
+            <el-container class="order-name">{{goodsName}}</el-container>
+            <el-container class="order-price">商品价格：¥{{goodsPrice}}</el-container>
+            <el-container class="order-price">邮费：¥{{postage}}</el-container>
+            <el-container class="order-pay">
+              <el-button class="last-button" v-on:click="toGoodsPage">查看详情</el-button>
+              <br>
+              <el-button class="last-button" v-on:click="toSellerPage">查看卖家</el-button>
+            </el-container>
+          </el-container>
+          <el-divider></el-divider>
+          <el-container class="order-result">
+            <el-container class="true-payment">
+              <div>实际付款：¥{{payment}}</div>
+            </el-container>
+            <el-container class="operation-buttons">
+              <el-container class="operation-buttons-one">
+                <el-button :disabled="!currentUserIsSeller" type="primary" style="width: 200px" @click="callSender"><div v-if="currentUserIsSeller">联系买家</div><div v-else>联系卖家</div></el-button>
+                <el-button :disabled="!buyButton" type="primary" style="width: 200px" @click="payFormVisible=true">付款</el-button>
+                <el-button :disabled="!cancelButton" type="primary" style="width: 200px" @click="cancel">取消订单</el-button>
+                <el-button :disabled="!commentButton" type="primary" style="width: 200px" @click="commentVisible=true">评价</el-button>
+              </el-container>
+              <el-container class="operation-buttons-two">
+                <el-button :disabled="!sendButton" type="primary" style="width: 200px" @click="confirmSend">确认发货</el-button>
+                <el-button :disabled="!receiveButton" type="primary" style="width: 200px" @click="confirmReceive">确认收货</el-button>
+                <el-button :disabled="!hasTask" type="primary" style="width: 200px" @click="goTaskPage">关联跑腿任务</el-button>
+                <el-button type="primary" style="width: 200px" @click="problemFromVisible=true">订单申诉</el-button>
+              </el-container>
+            </el-container>
+            <el-divider></el-divider>
+            <el-container class="additional-button" v-if="isAdmin && hasProblem">
+              <el-button class="last-button" @click="handleProblemVisible=true">处理申诉</el-button>
+            </el-container>
+          </el-container>
+        </el-container>
       </el-container>
-    </el-row>
-    <el-dialog title="评价" :visible.sync="commentVisible" center>
-      商品评价：<el-rate v-model="comment1"></el-rate>
-      服务评价：<el-rate v-model="comment2"></el-rate>
-      运输评价：<el-rate v-model="comment3"></el-rate>
-      评论：<el-input v-model="commentText"></el-input>
-      <el-button @click="submitComment">提交评价</el-button>
-    </el-dialog>
-    <el-dialog :visible.sync="payFormVisible">
-      <el-dialog :visible.sync="innerVisible">
-        <div v-if="payMethod===1">
-          支付密码:<el-input v-model="payPassword"></el-input>
-          <el-button @click="payFormVisible=false">取消</el-button>
-          <el-button @click="buy">确认</el-button>
+      <el-dialog title="评价" :visible.sync="commentVisible" center>
+        <el-form ref="form" label-width="200px">
+          <el-form-item class="form-item-class" label="商品评价：" >
+            <el-rate style="align-items: center" v-model="comment1"></el-rate>
+          </el-form-item>
+          <el-form-item class="form-item-class" label="服务评价：" >
+            <el-rate style="align-items: center" v-model="comment2"></el-rate>
+          </el-form-item>
+          <el-form-item class="form-item-class" label="运输评价：" >
+            <el-rate style="align-items: center" v-model="comment3"></el-rate>
+          </el-form-item>
+          <el-form-item class="form-item-class" label="评论：" >
+            <el-input style="align-items: center" v-model="commentText"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="commentVisible=false">取消</el-button>
+          <el-button type="primary" @click="submitComment">提交评价</el-button>
         </div>
-        <div v-else-if="payMethod===2">
-          <img :src="QRCodeUrl">
-          上传支付凭证：
-          <el-upload
-            action="auto"
-            :http-request="uploadPaySectionFile"
-            list-type="picture-card"
-            class = "contentImgStyle"
-            :limit="1"
-            :on-exceed="handleExceed">
-            <i class="el-icon-plus"></i>
-          </el-upload>
-          <el-button @click="submitQRPay">确认支付</el-button>
-        </div>
-        <div v-else>3</div>
       </el-dialog>
-      请选择支付方式
-      <el-select v-model="payMethod">
-        <el-option
-          v-for="item in payOptions"
-          :label="item.label"
-          :key="item.value"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      <el-button @click="dialogFormVisible=false">取消</el-button>
-      <el-button @click="choosePayMethod">确定</el-button>
-    </el-dialog>
-    <el-dialog :visible.sync="problemFromVisible">
-      问题类型<el-select v-model="problemForm.problemType">
-        <el-option
-          v-for="item in problemOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-      问题描述<el-input v-model="problemForm.problemDescription">
-      </el-input>
-      <el-button @click="payFormVisible=false">取消</el-button>
-      <el-button @click="submitProblem">确定</el-button>
-    </el-dialog>
+      <el-dialog style="margin: auto;" :visible.sync="handleProblemVisible" :modal-append-to-body="false">
+        <el-form ref="form" label-width="200px">
+          <el-form-item label="回复:" >
+            <el-input v-model="handleProblemForm.superuserLog"></el-input>
+          </el-form-item>
+          <el-form-item label="问题方:" >
+            <el-radio v-model="handleProblemForm.problemRole" label="1">买方</el-radio>
+            <el-radio v-model="handleProblemForm.problemRole" label="2">卖方</el-radio>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="handleProblemVisible=false">取消</el-button>
+          <el-button type="primary" @click="handleProblem">确认</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog style="margin: auto;" :visible.sync="payFormVisible" :modal-append-to-body="false">
+        <el-dialog style="margin: auto;" :visible.sync="innerVisible" :modal-append-to-body="false">
+          <div v-if="payMethod===1">
+            <el-form ref="form" label-width="200px">
+              <el-form-item label="支付密码:" >
+                <el-input v-model="payPassword"></el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+          <div v-else-if="payMethod===2">
+            <el-form ref="form" label-width="200px">
+              <el-form-item label="上传支付凭证:" >
+                <img :src="QRCodeUrl">
+                <el-upload
+                  action="auto"
+                  :http-request="uploadPaySectionFile"
+                  list-type="picture-card"
+                  class = "contentImgStyle"
+                  :limit="1"
+                  :on-exceed="handleExceed">
+                  <i class="el-icon-plus"></i>
+                </el-upload>
+              </el-form-item>
+            </el-form>
+          </div>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="innerVisible=false">取消</el-button>
+            <el-button type="primary" @click="submitQRPay">确认支付</el-button>
+          </div>
+        </el-dialog>
+        <el-form ref="form" label-width="200px">
+          <el-form-item label="请选择支付方式:" >
+            <el-select v-model="payMethod">
+              <el-option
+                v-for="item in payOptions"
+                :label="item.label"
+                :key="item.value"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="payFormVisible=false">取消</el-button>
+          <el-button type="primary" @click="choosePayMethod">确认</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog style="margin: auto;" :visible.sync="problemFromVisible" :modal-append-to-body="false">
+        <el-form ref="form" label-width="200px">
+          <el-form-item class="form-item-class" label="问题类型：" >
+            <el-select v-model="problemForm.problemType">
+              <el-option
+                v-for="item in problemOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item class="form-item-class" label="问题描述：" >
+            <el-input v-model="problemForm.problemDescription"></el-input>
+          </el-form-item>
+          <el-form-item class="form-item-class" label="运输评价：" >
+            <el-rate style="align-items: center" v-model="comment3"></el-rate>
+          </el-form-item>
+          <el-form-item class="form-item-class" label="评论：" >
+            <el-input style="align-items: center" v-model="commentText"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="problemFromVisible=false">取消</el-button>
+          <el-button @click="submitProblem">确定</el-button>
+        </div>
+      </el-dialog>
+    </el-main>
   </el-container>
+  <!--  <el-container>-->
+  <!--    <el-row>-->
+  <!--      <el-col><el-steps :active="active" :space="200" finish-status="success">-->
+  <!--        <el-step title="待付款"></el-step>-->
+  <!--        <el-step title="待发货"></el-step>-->
+  <!--        <el-step title="待收货"></el-step>-->
+  <!--        <el-step title="待评价"></el-step>-->
+  <!--        <el-step title="已完成"></el-step>-->
+  <!--      </el-steps></el-col>-->
+  <!--      <el-col>-->
+  <!--        <el-divider></el-divider>-->
+  <!--      </el-col>-->
+  <!--      <el-col>-->
+  <!--        发货人：{{sender}}-->
+  <!--        <br/>-->
+  <!--        发货地址：{{sendAddress}}-->
+  <!--      </el-col>-->
+  <!--      <el-col>-->
+  <!--        <el-divider></el-divider>-->
+  <!--      </el-col>-->
+  <!--      <el-col>-->
+  <!--        收货人：{{receiver}}-->
+  <!--        <br/>-->
+  <!--        收货地址：{{receiveAddress}}-->
+  <!--      </el-col>-->
+  <!--      <el-col>-->
+  <!--        <el-divider></el-divider>-->
+  <!--      </el-col>-->
+  <!--      <el-col>-->
+  <!--        <img :src="url">-->
+  <!--        <br/>-->
+  <!--        商品图片：<img :src="goodsPhoto"><br/>-->
+  <!--        商品名称：{{goodsName}}<br/>-->
+  <!--        商品价格：{{goodsPrice}}<br/>-->
+  <!--        邮费: {{postage}}<br/>-->
+  <!--        <el-button type="text" class="button" @click="toGoodsPage">查看商品</el-button>-->
+  <!--        <el-button type="text" class="button" @click="toSellerPage">查看卖家</el-button>-->
+  <!--      </el-col>-->
+  <!--      <el-col>-->
+  <!--        <el-divider></el-divider>-->
+  <!--      </el-col>-->
+  <!--      <el-col>-->
+  <!--        实际付款：{{payment}}<br/>-->
+  <!--        <el-button type="text" class="button" @click="callSender"><div v-if="currentUserIsSeller">联系买家</div><div v-else>联系卖家</div></el-button>-->
+  <!--        <el-button v-if="buyButton" type="text" class="button" @click="payFormVisible=true">付款</el-button>-->
+  <!--        <el-button v-if="cancelButton" type="text" class="button" @click="cancel">取消订单</el-button>-->
+  <!--        <el-button v-if="commentButton" type="text" class="button" @click="commentVisible=true">评价</el-button>-->
+  <!--        <el-button v-if="sendButton" @click="confirmSend">确认发货</el-button>-->
+  <!--        <el-button v-if="receiveButton" @click="confirmReceive">确认收货</el-button>-->
+  <!--      </el-col>-->
+  <!--      <div v-if="hasTask">-->
+  <!--        222-->
+  <!--        <el-col>-->
+  <!--          <el-button @click="goTaskPage">查看关联跑腿任务</el-button>-->
+  <!--        </el-col>-->
+  <!--      </div>-->
+  <!--    </el-row>-->
+  <!--    <el-dialog title="评价" :visible.sync="commentVisible" center>-->
+  <!--      商品评价：<el-rate v-model="comment1"></el-rate>-->
+  <!--      服务评价：<el-rate v-model="comment2"></el-rate>-->
+  <!--      运输评价：<el-rate v-model="comment3"></el-rate>-->
+  <!--      评论：<el-input v-model="commentText"></el-input>-->
+  <!--      <el-button @click="submitComment">提交评价</el-button>-->
+  <!--    </el-dialog>-->
+  <!--    <el-dialog :visible="payFormVisible">-->
+  <!--      支付密码:<el-input v-model="payPassword"></el-input>-->
+  <!--      <el-button @click="payFormVisible=false">取消</el-button>-->
+  <!--      <el-button @click="buy">确认</el-button>-->
+  <!--    </el-dialog>-->
+  <!--  </el-container>-->
 </template>
 <!--查看商品、查看卖家、联系卖家、取消订单、待付款可以跳转付款页面，待评价可以跳转评价页面。-->
 <script>
 export default {
+  // TODO need check
   name: 'orderInfo',
   data () {
     return {
@@ -476,11 +611,221 @@ export default {
           }
         })
       }
+    },
+    myPage () {
+      this.$router.push('/person')
+    },
+    homePage () {
+      this.$router.push('/')
+    },
+    searchPage () {
+      this.$router.push('/search')
+    },
+    cartPage () {
+      this.$router.push('/cart')
+    },
+    sellPage () {
+      this.$router.push('/store')
+    },
+    markPage () {
+      this.$router.push('/favoritegoods')
+    },
+    logOut () {
+      this.$axios.post('login0/logout/ ')
+      this.$router.push('/login')
     }
   }
 }
 </script>
 
 <style scoped>
+.home-container {
+  height: 100%;
+  width: 100%;
+  background: center no-repeat url("../../assets/back7.jpg");
+  background-size: cover;
+  display: block;
+}
 
+.el-header {
+  background: #545c64;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 0;
+  align-items: center;
+  color: #ffffff;
+  font-size: 40px;
+  opacity: 0.5;
+}
+
+.right-head {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+}
+
+.left-head {
+  display: flex;
+  align-items: center;
+}
+
+.mid-content {
+  display: block;
+  margin: 60px auto;
+  height: 100%;
+  width: 90%;
+}
+
+.pane-content {
+  display: block;
+  height: 100%;
+  width: 1000px;
+  border-radius: 10px;
+  border: 2px solid #eaeaea;
+  box-shadow: 0 0 15px #cac6c6;
+  background: white;
+  margin: 10px auto;
+  opacity: 0.7;
+}
+
+.step-container {
+  display: block;
+  align-items: center;
+  text-align: center;
+}
+
+.steps {
+  margin: 20px 20px 20px 20px;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  border-bottom: 1px solid #cac6c6;
+}
+
+.single-step {
+  margin: 0;
+}
+
+.user-container {
+  width: 60%;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.line-one {
+  display: flex;
+  text-align: left;
+  align-items: center;
+  justify-content: space-between;
+  margin: auto;
+}
+
+.task-place {
+  margin-top: 30px;
+  font-size: 20px;
+  color: #000000;
+}
+
+.order-result {
+  display: block;
+}
+
+.true-payment {
+  display: block;
+  text-align: center;
+  align-items: center;
+  color: #ff006e;
+}
+
+.operation-buttons {
+  display: block;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.operation-buttons-one {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.operation-buttons-two {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.whole-order {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.order-photo {
+  height: 150px;
+  width: 150px;
+  margin: 10px 10px 10px 10px;
+  justify-content: space-evenly;
+}
+
+.order-name {
+  width: 150px;
+  overflow: hidden;
+  font-size: 30px;
+  align-items: center;
+  justify-content: space-evenly;
+  font-family: 黑体;
+}
+
+.order-price {
+  width: 150px;
+  font-size: 20px;
+  color: #ff006e;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.order-pay {
+  width: 150px;
+  display: block;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.last-button {
+  background-color: #ff0036;
+  border: 1px solid #ff0036;
+  color: #fff;
+  margin-top: 30px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.form-item-class {
+  align-items: center;
+}
+
+.dialog-footer {
+  text-align: right;
+}
+
+.additional-button {
+  display: block;
+  align-items: center;
+  margin-bottom: 20px;
+  justify-content: space-evenly;
+}
+
+.pay-detail {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: auto;
+  justify-content: space-evenly;
+}
 </style>

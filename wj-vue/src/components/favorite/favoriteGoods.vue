@@ -77,6 +77,7 @@
 
 <script>
 export default {
+  // Done
   name: 'favoriteGoods',
   mounted () {
     // has_next: "False"

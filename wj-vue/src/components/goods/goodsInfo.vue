@@ -77,6 +77,7 @@
 
 <script>
 export default {
+  // Done
   name: 'goodsInfo',
   data () {
     return {

@@ -130,6 +130,7 @@
 
 <script>
 export default {
+  // Done
   name: 'releasedTask',
   mounted () {
     // 待领取的任务

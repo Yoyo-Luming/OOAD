@@ -57,6 +57,7 @@
 import Vcode from 'vue-puzzle-vcode'
 
 export default {
+  // Done
   name: 'login',
   data () {
     const verifyPassword = (rule, value, callback) => {

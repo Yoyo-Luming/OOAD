@@ -237,7 +237,8 @@ export default {
         '6号门',
         '7号门',
         '8号门',
-        '其它']
+        '其它'],
+      activePane: 'first'
     }
   },
   methods: {

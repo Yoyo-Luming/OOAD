@@ -112,11 +112,9 @@
 </template>
 
 <script>
-import orderBox from './orderBox'
 
 export default {
   name: 'buyOrder',
-  components: {orderBox},
   mounted () {
     /*
     create_time: "23:05:39.273897"
@@ -266,7 +264,8 @@ export default {
         description: 'nice',
         photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
         orderDetail: []
-      }]
+      }],
+      activePane: 'first'
     }
   },
   methods: {

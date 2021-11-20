@@ -25,281 +25,141 @@
         </el-menu>
       </div>
     </el-header>
-    <el-main>
-      <el-container class="mid-content">
-        <el-tabs type="border-card" class="selection">
-          <el-tab-pane>
-            <el-container class="pane-content">
-              <el-descriptions title="用户信息" column="3" size="medium" border>
-                <el-descriptions-item>
-                  <template slot="label">
-                    <i class="el-icon-user"></i>
-                    用户名
-                  </template>
-                  {{userInfo.name}}
-                </el-descriptions-item>
-                <el-descriptions-item>
-                  <template slot="label">
-                    身份
-                  </template>
-                  {{userInfo.userType}}
-                </el-descriptions-item>
-                <el-descriptions-item>
-                  <template slot="label">
-                    <i class="el-icon-message"></i>
-                    邮箱
-                  </template>
-                  {{userInfo.email}}
-                </el-descriptions-item>
-                <el-descriptions-item>
-                  <template slot="label">
-                    简介
-                  </template>
-                  {{userInfo.description}}
-                </el-descriptions-item>
-                <el-descriptions-item>
-                  <template slot="label">
-                    真实姓名
-                  </template>
-                  {{userInfo.realName}}
-                </el-descriptions-item>
-                <el-descriptions-item>
-                  <template slot="label">
-                    账户余额
-                  </template>
-                  {{userInfo.balance}}
-                </el-descriptions-item>
-                <el-descriptions-item>
-                  <template slot="label">
-                    头像
-                  </template>
-<!--                  <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image"/>-->
-
-                  <img :src="this.userInfo.photo" v-if="hasPhoto"/>
-                  <i class="el-icon-s-custom" v-else></i>
-                </el-descriptions-item>
-              </el-descriptions>
-              <el-button type="primary" @click="UserInfoFormVisible = true">编辑<i class="el-icon-edit el-icon--right"></i></el-button>
-              <el-button @click="forgetVisble=true">忘记支付密码</el-button>
-              <el-button @click="goSellOrder">我卖出的商品</el-button>
-              <el-button @click="goBuyOrder">我买到的商品</el-button>
-              <el-button @click="goFavoriteUser">我收藏的卖家</el-button>
-              <el-button @click="goFavoriteGoods">我收藏的商品</el-button>
-              <el-button @click="goPostGoods">我发布的商品</el-button>
-<!--              <el-button @click=""></el-button>-->
-              <el-input v-model="money"></el-input>
-              <el-button @click="recharge">充值</el-button>
-              <el-button @click="activeSellFromVisible=true">成为卖家</el-button>
-              <el-dialog :visible.sync="forgetVisible">
-                验证码：<el-input v-model="changeCode"></el-input>
-                新支付密码：<el-input v-model="newPayPassword"></el-input>
-                <el-button @click="fogetVisible=false">取消</el-button>
-                <el-button @click="sendCode">发送邮箱验证码</el-button>
-                <el-button @click="confirmChange">确认修改</el-button>
-              </el-dialog>
-              <el-dialog title="激活卖家" :visible="activeSellFromVisible">
-                <el-form ref="form" :model="activeSellFromData" label-width="80px">
-                  <el-form-item label="发件人姓名">
-                    <el-input v-model="activeSellFromData.name" placeholder="请输入发件人姓名"></el-input>
-                  </el-form-item>
-                  <el-form-item label="发货区域">
-                    <el-select v-model="activeSellFromData.region" placeholder="请选择发货区域">
-                      <el-option
-                        v-for="item in areaOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="详细地址">
-                    <el-input v-model="activeSellFromData.address" placeholder="请输入详细收货地址"></el-input>
-                  </el-form-item>
-                  <el-form-item label="电话号码">
-                    <el-input v-model="activeSellFromData.phone" placeholder="请输入电话号码"></el-input>
-                  </el-form-item>
-                  <el-form-item label="收款二维码">
-                    <el-upload
-                      action="auto"
-                      :http-request="uploadQRCodeSectionFile"
-                      list-type="picture-card"
-                      :file-list="activeSellFromData.QRCode"
-                      class = "contentImgStyle"
-                      :limit="1"
-                      :on-exceed="handleExceed">
-                      <i class="el-icon-plus"></i>
-                    </el-upload>
-                  </el-form-item>
-                  <el-button type="primary" @click="activateSell">提交</el-button>
-                </el-form>
-              </el-dialog>
-              <el-dialog title="编辑用户信息" :visible.sync="UserInfoFormVisible" center width="600px">
-                <el-form ref="form" :model="fromData" label-width="80px">
-                  <el-form-item label="身份">
-                    <el-select v-model="fromData.userType" placeholder="请选择身份">
-                      <el-option
-                        v-for="item in userTypeOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="真实姓名">
-                    <el-input v-model="fromData.trueName" placeholder="请输入真实姓名"></el-input>
-                  </el-form-item>
-                  <el-form-item label="简介">
-                    <el-input v-model="fromData.description" placeholder="请输入简介"></el-input>
-                  </el-form-item>
-                  <el-form-item label="头像">
-                    <el-upload
-                      action="auto"
-                      :http-request="uploadSectionFile"
-                      list-type="picture-card"
-                      :file-list="fromData.photo"
-                      class = "contentImgStyle"
-                      :limit="1"
-                      :on-exceed="handleExceed">
-                      <i class="el-icon-plus"></i>
-                    </el-upload>
-                  </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                  <el-button @click="UserInfoFormVisible = false">取消</el-button>
-                  <el-button type="primary" @click="submit">提交</el-button>
-                </div>
-              </el-dialog>
-            </el-container>
-            <span slot="label" class="tabs">个人信息</span>
-          </el-tab-pane>
-          <el-tab-pane>
-            <el-container class="pane-content">
-<!--              This is changing password-->
-              支付密码修改：<p></p>
-              旧支付密码：<el-input v-model="oldPayPassword"></el-input>
-              新支付密码：<el-input v-model="newPayPassword"></el-input>
-              <el-button @click="changePayPassword">确认</el-button><p></p>
-              登录密码修改：<p></p>
-              旧登录密码：<el-input v-model="oldLoginPassword"></el-input>
-              新登录密码：<el-input v-model="newLoginPassword"></el-input>
-              <el-button @click="changeLoginPassword">确认</el-button>
-            </el-container>
-            <span slot="label" class="tabs">更改密码</span>
-          </el-tab-pane>
-          <el-tab-pane>
-            <span slot="label" class="tabs">收货地址</span>
-            <el-container class="pane-content">
-              <div v-if="address.length">
-                <table>
-                  <tr>
-                    <th>ID</th>
-                    <th>收件人姓名</th>
-                    <th>地区</th>
-                    <th>详细地址</th>
-                    <th>电话号码</th>
-                    <th></th>
-                  </tr>
-                  <tr v-for="(item,index) in address" :key="item.name">
-                    <td>{{index+1}}</td>
-                    <td>{{item.name}}</td>
-                    <td style="width: 300px">{{item.region}}</td>
-                    <td>{{item.address}}</td>
-                    <td>{{item.phone}}</td>
-                    <td><button v-on:click="deleteAddress(index)">删除</button></td>
-                  </tr>
-                </table>
-                <el-container class="addItem">
-                  <el-button type="primary" class="add-button" @click="addressFormVisible = true" round>Add</el-button>
+    <el-container style="display: flex;">
+      <el-aside width="200px" style="background-color: #545c64;">
+        <el-menu
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#409EFF"
+          :unique-opened="true"
+          :collapse-transition="false"
+          :router="true"
+          :default-active="activePath"
+        >
+          <el-submenu class="menu-buttons" index="1">
+            <template slot="title">
+              <i class="el-icon-user"></i>
+              <span>用户信息</span>
+            </template>
+            <el-button class="inside-button" v-on:click="UserInfoFormVisible=true">修改个人信息</el-button><br>
+            <el-button class="inside-button" v-on:click="uploadHeaderPhotoVisible=true">上传头像</el-button><br>
+            <el-button class="inside-button" v-on:click="LoginPassWordVisible=true">修改登录密码</el-button><br>
+            <el-button class="inside-button" v-on:click="PayPassWordVisible=true">修改支付密码</el-button><br>
+            <el-button class="inside-button" v-on:click="forgetVisible=true">忘记支付密码</el-button><br>
+            <el-button class="inside-button" v-on:click="recharge">充值</el-button><br>
+            <el-button class="inside-button" v-on:click="activeSellFromVisible=true">成为卖家</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="2">
+            <template slot="title">
+              <i class="el-icon-goods"></i>
+              <span>商品</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goSellOrder">卖出的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goBuyOrder">买到的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goPostGoods">发布的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goNewGoods">上架新商品</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="3">
+            <template slot="title">
+              <i class="el-icon-star-off"></i>
+              <span>收藏</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goFavoriteGoods">收藏的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goFavoriteUser">收藏的卖家</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="4">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>地址</span>
+            </template>
+            <el-button class="inside-button" v-on:click="addressFormVisible=true">新收货地址</el-button><br>
+            <el-button class="inside-button" v-on:click="sendAddressFormVisible=true">新发货地址</el-button><br>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
+      <el-main>
+        <el-container class="mid-content">
+          <el-tabs type="border-card" v-model="activePane">
+            <!--          pay-pane-->
+            <el-tab-pane label="个人信息" class="whole-pane" name="first">
+              <el-container class="user-info">
+                <el-image class="big-photo" :src="userInfo.photo" fit="contain" :alt="userInfo.name"></el-image>
+                <el-container class="contents">
+                  <div class="user-name">用户名：{{userInfo.name}}</div>
+                  <div class="user-describe">用户类型：{{userInfo.userType}}</div>
+                  <div class="user-describe">用户邮箱：{{userInfo.email}}</div>
+                  <div class="user-describe">用户描述：{{userInfo.description}}</div>
+                  <div class="user-describe">用户真名：{{userInfo.realName}}</div>
+                  <div class="user-describe">用户余额：{{userInfo.balance}}</div>
                 </el-container>
-                <el-dialog title="编辑收货地址" :visible.sync="addressFormVisible" center width="600px">
-                  <el-form ref="form" :model="fromData" label-width="80px">
-                    <el-form-item label="收件人姓名">
-                      <el-input v-model="addressFromData.name" placeholder="请输入收件人姓名"></el-input>
-                    </el-form-item>
-                    <el-form-item label="收货区域">
-                      <el-select v-model="addressFromData.region" placeholder="请选择收货区域">
-                        <el-option
-                          v-for="item in areaOptions"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
-                    <el-form-item label="详细地址">
-                      <el-input v-model="addressFromData.address" placeholder="请输入详细收货地址"></el-input>
-                    </el-form-item>
-                    <el-form-item label="电话号码">
-                      <el-input v-model="addressFromData.phone" placeholder="请输入电话号码"></el-input>
-                    </el-form-item>
-                  </el-form>
-                  <div slot="footer" class="dialog-footer">
-                    <el-button @click="addressFormVisible = false">取消</el-button>
-                    <el-button type="primary" @click="addAddress">提交</el-button>
-                  </div>
-                </el-dialog>
-              </div>
-            </el-container>
-          </el-tab-pane>
-          <el-tab-pane>
-            <span slot="label" class="tabs">发货地址</span>
-            <el-container class="pane-content">
-              <div v-if="sendAddress.length">
-                <table>
-                  <tr>
-                    <th>ID</th>
-                    <th>发件人姓名</th>
-                    <th>地区</th>
-                    <th>详细地址</th>
-                    <th>电话号码</th>
-                    <th></th>
-                  </tr>
-                  <tr v-for="(item,index) in sendAddress" :key="item.name">
-                    <td>{{index+1}}</td>
-                    <td>{{item.name}}</td>
-                    <td style="width: 300px">{{item.region}}</td>
-                    <td>{{item.address}}</td>
-                    <td>{{item.phone}}</td>
-                    <td><button v-on:click="deleteSendAddress(index)">删除</button></td>
-                  </tr>
-                </table>
-                <el-container class="addItem">
-                  <el-button type="primary" class="add-button" @click="sendAddressFormVisible = true" round>添加</el-button>
+              </el-container>
+            </el-tab-pane>
+            <!--          receive-pane-->
+            <el-tab-pane label="收货地址" class="whole-pane" name="second">
+              <el-container class="whole-order" v-for="(item, index) in address" :key="index">
+                <el-container class="order-name">{{item.name}}</el-container>
+                <el-container class="order-road">{{item.region}}</el-container>
+                <el-container class="order-detail">{{item.phone}}</el-container>
+                <el-container class="order-pay">
+                  <el-button class="last-button" v-on:click="deleteAddress">删除</el-button>
                 </el-container>
-                <el-dialog title="编辑发货地址" :visible.sync="sendAddressFormVisible" center width="600px">
-                  <el-form ref="form" :model="sendAddressFromData" label-width="80px">
-                    <el-form-item label="收件人姓名">
-                      <el-input v-model="sendAddressFromData.name" placeholder="请输入收件人姓名"></el-input>
-                    </el-form-item>
-                    <el-form-item label="收货区域">
-                      <el-select v-model="sendAddressFromData.region" placeholder="请选择收货区域">
-                        <el-option
-                          v-for="item in areaOptions"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
-                    <el-form-item label="详细地址">
-                      <el-input v-model="sendAddressFromData.address" placeholder="请输入详细收货地址"></el-input>
-                    </el-form-item>
-                    <el-form-item label="电话号码">
-                      <el-input v-model="sendAddressFromData.phone" placeholder="请输入电话号码"></el-input>
-                    </el-form-item>
-                  </el-form>
-                  <div slot="footer" class="dialog-footer">
-                    <el-button @click="sendAddressFormVisible = false">取消</el-button>
-                    <el-button type="primary" @click="addSendAddress">提交</el-button>
-                  </div>
-                </el-dialog>
-              </div>
-            </el-container>
-          </el-tab-pane>
-        </el-tabs>
-      </el-container>
-      <el-dialog title="激活用户信息" :visible.sync="activeFromVisible" center width="600px">
-        <el-form ref="form" :model="activeFromData" label-width="80px">
+              </el-container>
+            </el-tab-pane>
+            <!--          evaluate-pane-->
+            <el-tab-pane label="发货地址" class="whole-pane" name="third">
+              <el-container class="whole-order" v-for="(item, index) in sendAddress" :key="index">
+                <el-container class="order-name">{{item.name}}</el-container>
+                <el-container class="order-road">{{item.region}}</el-container>
+                <el-container class="order-detail">{{item.phone}}</el-container>
+                <el-container class="order-pay">
+                  <el-button class="last-button" v-on:click="deleteSendAddress">删除</el-button>
+                </el-container>
+              </el-container>
+            </el-tab-pane>
+          </el-tabs>
+        </el-container>
+      </el-main>
+      <el-dialog title="编辑用户信息" :visible.sync="UserInfoFormVisible" center width="700px" :modal-append-to-body="false">
+        <el-form ref="form" :model="fromData" label-width="200px">
+          <el-form-item label="身份">
+            <el-select v-model="fromData.userType" placeholder="请选择身份">
+              <el-option
+                v-for="item in userTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="真实姓名">
+            <el-input v-model="fromData.trueName" placeholder="请输入真实姓名"></el-input>
+          </el-form-item>
+          <el-form-item label="简介">
+            <el-input v-model="fromData.description" placeholder="请输入简介"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="UserInfoFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="changUserInfo">提交</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog title="上传用户头像" :visible.sync="uploadHeaderPhotoVisible">
+        <el-upload
+          action="auto"
+          :http-request="uploadHeaderSectionFile"
+          list-type="picture-card"
+          class = "contentImgStyle"
+          :limit="1"
+          :on-exceed="handleExceed">
+          <i class="el-icon-plus" ></i>
+        </el-upload>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="uploadHeaderPhotoVisible = false">取消</el-button>
+          <el-button type="primary" @click="uploadHeaderPhoto">提交</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog title="激活用户信息" :visible.sync="activeFromVisible" center width="700px" :modal-append-to-body="false">
+        <el-form ref="form" :model="activeFromData" label-width="200px" label-position="left">
           <el-form-item label="真实姓名">
             <el-input v-model="activeFromData.realName" placeholder="请输入真实姓名"></el-input>
           </el-form-item>
@@ -312,7 +172,6 @@
                 :value="item.value">
               </el-option>
             </el-select>
-<!--            <el-input v-model="activeFromData.userType" placeholder="请选择身份"></el-input>-->
           </el-form-item>
           <el-form-item label="支付密码">
             <el-input v-model="activeFromData.payPassword" placeholder="请输入支付密码"></el-input>
@@ -340,10 +199,146 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
+          <el-button @click="activeFromVisible=false">取消</el-button>
           <el-button type="primary" @click="activate">提交</el-button>
         </div>
       </el-dialog>
-    </el-main>
+      <el-dialog title="编辑收货地址" :visible.sync="addressFormVisible" center width="700px" :modal-append-to-body="false">
+        <el-form ref="form" :model="fromData" label-width="200px" label-position="left">
+          <el-form-item label="收件人姓名">
+            <el-input v-model="addressFromData.name" placeholder="请输入收件人姓名"></el-input>
+          </el-form-item>
+          <el-form-item label="收货区域">
+            <el-select v-model="addressFromData.region" placeholder="请选择收货区域">
+              <el-option
+                v-for="item in areaOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="详细地址">
+            <el-input v-model="addressFromData.address" placeholder="请输入详细收货地址"></el-input>
+          </el-form-item>
+          <el-form-item label="电话号码">
+            <el-input v-model="addressFromData.phone" placeholder="请输入电话号码"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="addressFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="addAddress">提交</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog title="编辑发货地址" :visible.sync="sendAddressFormVisible" center width="700px" :modal-append-to-body="false">
+        <el-form ref="form" :model="sendAddressFromData" label-width="200px" label-position="left">
+          <el-form-item label="发件人姓名">
+            <el-input v-model="sendAddressFromData.name" placeholder="请输入发件人姓名"></el-input>
+          </el-form-item>
+          <el-form-item label="发货区域">
+            <el-select v-model="sendAddressFromData.region" placeholder="请选择发货区域">
+              <el-option
+                v-for="item in areaOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="详细地址">
+            <el-input v-model="sendAddressFromData.address" placeholder="请输入详细收货地址"></el-input>
+          </el-form-item>
+          <el-form-item label="电话号码">
+            <el-input v-model="sendAddressFromData.phone" placeholder="请输入电话号码"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="sendAddressFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="addSendAddress">提交</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog title="忘记密码" :visible.sync="LoginPassWordVisible" center width="700px" :modal-append-to-body="false">
+        <el-form ref="form" label-width="200px" label-position="left">
+          <el-form-item label="旧登录密码">
+            <el-input v-model="oldLoginPassword" placeholder="请输入旧登录密码"></el-input>
+          </el-form-item>
+          <el-form-item label="新登录密码">
+            <el-input v-model="newLoginPassword" placeholder="请输入新登录密码"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="LoginPassWordVisible=false">取消</el-button>
+          <el-button type="primary" @click="changeLoginPassword">提交</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog title="修改支付密码" :visible.sync="PayPassWordVisible" center width="700px" :modal-append-to-body="false">
+        <el-form ref="form" label-width="200px" label-position="left">
+          <el-form-item label="旧支付密码">
+            <el-input v-model="oldPayPassword" placeholder="请输入旧支付密码"></el-input>
+          </el-form-item>
+          <el-form-item label="新支付密码">
+            <el-input v-model="newPayPassword" placeholder="请输入新支付密码"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="PayPassWordVisible=false">取消</el-button>
+          <el-button type="primary" @click="changePayPassword">提交</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog title="忘记支付密码" :visible.sync="forgetVisible" center width="700px" :modal-append-to-body="false">
+        <el-form ref="form" label-width="200px" label-position="left">
+          <el-form-item label="新支付密码">
+            <el-input v-model="newPayPassword" placeholder="请输入旧支付密码"></el-input>
+          </el-form-item>
+          <el-form-item label="验证码">
+            <el-input v-model="changeCode" placeholder="请输入新支付密码"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="forgetVisible=false">取消</el-button>
+          <el-button type="primary" @click="sendCode">发送邮箱验证码</el-button>
+          <el-button type="primary" @click="confirmChange">确认修改</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog title="激活卖家" :visible.sync="activeSellFromVisible" center width="700px" :modal-append-to-body="false">
+        <el-form ref="form" :model="activeSellFromData" label-width="200px" label-position="left">
+          <el-form-item label="卖家">
+            <el-input v-model="activeSellFromData.name" placeholder="请输入卖家姓名"></el-input>
+          </el-form-item>
+          <el-form-item label="发货区域">
+            <el-select v-model="activeSellFromData.region" placeholder="请选择发货区域">
+              <el-option
+                v-for="item in areaOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="详细地址">
+            <el-input v-model="activeSellFromData.address" placeholder="请输入详细收货地址"></el-input>
+          </el-form-item>
+          <el-form-item label="电话号码">
+            <el-input v-model="activeSellFromData.phone" placeholder="请输入电话号码"></el-input>
+          </el-form-item>
+          <el-form-item label="收款二维码">
+            <el-upload
+              action="auto"
+              :http-request="uploadQRCodeSectionFile"
+              list-type="picture-card"
+              class = "contentImgStyle"
+              :limit="1"
+              :on-exceed="handleExceed">
+              <i class="el-icon-plus"></i>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="activeSellFromVisible=false">取消</el-button>
+          <el-button type="primary" @click="activateSell">提交</el-button>
+        </div>
+      </el-dialog>
+    </el-container>
   </el-container>
 </template>
 
@@ -382,6 +377,7 @@ export default {
         trueName: '',
         photo: []
       },
+      uploadHeaderPhotoFile: [],
       uploadFile: [],
       uploadQRCodeFile: [],
       hasPhoto: false,
@@ -561,7 +557,10 @@ export default {
       oldPayPassword: '',
       oldLoginPassword: '',
       forgetVisible: false,
-      changeCode: ''
+      uploadHeaderPhotoVisible: false,
+      changeCode: '',
+      activePane: 'first',
+      activePath: ''
     }
   },
   mounted () {
@@ -576,28 +575,6 @@ export default {
             this.activeFromVisible = true
           } else {
             console.log(response.data)
-            // message: "查询成功"
-            // status: "200"
-            // user_details:
-            //   as_favorite_business_number: 0
-            //   comment_number: 0
-            //   has_header_photo: false
-            //   header_photo_url: "eyJ1c2VyX2lkIjo4LCJkYXRlIjoiMjAyMS0xMS0xNyAwMDoyMToyMS4xNjgzMjUiLCJwYXRoIjoiXFxtbnRcXGNcXHB5Y2hhcm1cXE9PQURcXEZpbmFsX3Byb2plY3RcXEZpbmFsX1Byb2plY3QxXFxpbWFnZVN0b3JlXFwifQ:1mn1Cz:W56bxGPlO0tf4fHM1J9mMyrLELB4FnaeGanIqKW_Zt4"
-            //   money: 0
-            //   self_description: null
-            //   sold_goods_number: 0
-            //   stars_for_attitude: 5
-            //   stars_for_deliver: 5
-            //   stars_for_good: 5
-            //   stars_for_task: 5
-            //   total_start: 5
-            //   uploaded_goods_number: 0
-            //   user_email: "15712070462@139.com"
-            //   user_id: "OA:1mn1Cz:Iwe-ZSzzf6_xCrjCXGLQa6a9qr3Wu1PGAJTmOmGBSX0"
-            //   user_identify: 1
-            //   user_name: "oy3"
-            //   user_real_name: "欧阳晓东"
-            //   user_status: 1
             this.userInfo.name = response.data.user_details.user_name
             this.userInfo.userType = this.userTypeList[response.data.user_details.user_identify - 1]
             this.userInfo.photo = response.data.user_details.header_photo_url
@@ -611,15 +588,6 @@ export default {
       this.$axios.post('/login0/get_address_list/', this.$qs.stringify({
       })).then(response => {
         console.log(response.data.return_list)
-        // 0:
-        //   addr_id: "NDc:1mn1Ec:oCPKsgXubui32BJ-8oTbdAyP0Ejv2ALaQ1Fcy3lf7I0"
-        //   address_type: 1 //1代表收货地址 2代表发货地址
-        //   is_default: false //不用管
-        //   user_addr: "101"
-        //   user_id: "OA:1mn1Ec:RjHwEUdyw8RIJueIqJsPiEXEt4KBQjtTTGMS6EaZ4WE"
-        //   user_name: "oyxd"
-        //   user_phone: "157120676"
-        //   user_region: 1
         for (let i = 0; i < response.data.return_list.length; ++i) {
           if (response.data.return_list[i].address_type === 1) {
             this.address.push({
@@ -699,10 +667,7 @@ export default {
         this.$message.error('至少需要保留一条发货地址')
       }
     },
-    addItem () {
-      // Todo
-    },
-    submit () {
+    changUserInfo () {
       let infoForm = new FormData()
       infoForm.append('user_identify ', this.fromData.userType)
       infoForm.append('self_description', this.fromData.description)
@@ -713,33 +678,35 @@ export default {
         url: '/login0/modify_self_info/',
         data: infoForm
       }).then(response => {
-        alert(response.data)
-        let list = this.uploadFile[0]
-        let file = list.photo
-        let photoForm = new FormData()
-        photoForm.append('header_photo', file)
-        this.$axios({method: 'post',
-          url: '/login0/upload_head_photo/',
-          data: photoForm}).then(response => {
-          console.log(response.data)
+        console.log(response.data)
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
           this.UserInfoFormVisible = false
-          this.userInfo.description = this.fromData.description
-          this.userInfo.photo = this.fromData.photo
-          this.userInfo.realName = this.fromData.trueName
-          this.userInfo.userType = this.fromData.userType
-        })
+        }
+      })
+    },
+    uploadHeaderPhoto () {
+      let headerForm = new FormData()
+      headerForm.append('header_photo', this.uploadHeaderPhotoFile[0].photo)
+      this.$axios({method: 'post', url: '/login0/upload_head_photo/', data: headerForm}).then(response => {
+        if (response.data.status === '200') {
+          // this.userInfo.photo =
+          this.$message.success(response.data.message)
+          this.uploadHeaderPhotoFile = []
+        } else {
+          this.$message.info(response.data.message)
+        }
       })
     },
     handleExceed () {
       this.$message.warning('最多只能上传一张相片！')
     },
-    uploadSectionFile (param) {
-      const uploadFileLength = this.uploadFile.length
+    uploadHeaderSectionFile (param) {
       let fileObj = param.file
       let file = new File([fileObj], new Date().getTime() + '.jpg', {
         type: 'image/jpg'
       })
-      this.uploadFile[uploadFileLength] = {'photo': file}
+      this.uploadHeaderPhotoFile.push({'photo': file})
     },
     uploadQRCodeSectionFile (param) {
       const uploadQRCodeFileLength = this.uploadQRCodeFile.length
@@ -845,25 +812,13 @@ export default {
       console.log('activateSell!')
     },
     goFavoriteUser () {
-      // TODO 展示收藏的商家
-      // this.$axios.post('login0/all_user_favorite_business/').then(response => {
-      //   console.log(response.data)
-      // })
       this.$router.push('/favoriteusers')
     },
     goFavoriteGoods () {
-      // TODO 展示收藏的商品
-      // this.$axios.post('login0/all_user_favorite_merchandise/').then(response => {
-      //   console.log(response.data)
-      // })
       this.$router.push('/favoritegoods')
     },
     goPostGoods () {
       this.$router.push('/sellinggoods')
-      // TODO 展示发布/在售的商品
-      // this.$axios.post('login0/all_user_selling_merchandise/').then(response => {
-      //   console.log(response.data)
-      // })
     },
     changePayPassword () {
       // 修改支付密码
@@ -905,9 +860,6 @@ export default {
         }
       })
     }
-    // <el-button @click="goFavoriteUser">我收藏的卖家</el-button>
-    // <el-button @click="goFavoriteGoods">我收藏的商品</el-button>
-    // <el-button @click="goPostGoods">我发布的商品</el-button>
   }
 }
 </script>
@@ -915,7 +867,8 @@ export default {
 <style scoped>
 .home-container {
   height: 100%;
-  background:0 repeat-y url("../assets/back7.jpg");
+  width: 100%;
+  background: center no-repeat url("../assets/back7.jpg");
   background-size: cover;
   display: block;
 }
@@ -949,55 +902,103 @@ export default {
   display: block;
   margin: 60px auto;
   height: 100%;
-  width: 1500px;
-  opacity: 0.8;
+  width: 1200px;
 }
 
-.selection {
+.whole-pane {
   display: block;
-  align-items: center;
-  height: 753px;
 }
 
-.tabs {
+.whole-order {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 5px;
+  border-bottom: 2px solid #eaeaea;
+}
+
+.order-name {
+  width: 150px;
+  font-size: 30px;
+  align-items: center;
+  justify-content: space-evenly;
+  font-family: 黑体;
+}
+
+.order-road {
+  width: 150px;
+  word-wrap: anywhere;
+  word-break: normal;
   font-size: 20px;
-}
-
-.pane-content {
-  display: block;
-  height: 660px;
-  width: 100%;
-  border-radius: 10px;
-  border: 2px solid #eaeaea;
-  box-shadow: 0 0 15px #cac6c6;
-  background: white;
-  margin: 10px auto;
-  opacity: 0.7;
-}
-
-table {
-  width: 100%;
-  height: 100%;
-  border: 1px solid #e9e9e9;
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-td {
-  padding: 8px 16px;
-  border: 1px solid #e9e9e9;
-  width: 100px;
-  text-align: center;
-}
-th {
-  background-color: #f7f7f7;
-  color: #5c6b77;
-}
-
-.addItem {
-  padding-top: 10px;
-  padding-right: 10px;
   align-items: center;
+  justify-content: space-evenly;
+}
+
+.order-detail {
+  width: 150px;
+  overflow: hidden;
+  font-size: 20px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.order-pay {
+  width: 150px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.last-button {
+  background-color: #ff0036;
+  border: 1px solid #ff0036;
+  color: #fff;
+  margin-bottom: 5px;
+  justify-content: space-evenly;
+}
+
+.big-photo {
+  height: 400px;
+  width: 400px;
+  border: 2px solid #eaeaea;
+}
+
+.user-info {
+  display: flex;
+}
+
+.contents {
+  display: block;
+  margin-left: 200px;
   text-align: center;
-  float: right;
+  align-items: center;
+}
+
+.user-name {
+  margin-top: 30px;
+  font-size: 20px;
+  text-align: left;
+  color: #8d99ae;
+}
+
+.user-describe {
+  margin-top: 30px;
+  font-size: 20px;
+  text-align: left;
+  color: #8d99ae;
+}
+
+.menu-buttons {
+  display: block;
+  margin: auto;
+  text-align: center;
+  align-items: center;
+}
+
+.inside-button {
+  margin-top: 5px;
+  border: 0;
+  text-align: center;
+  align-items: center;
+  background-color: #545c64;
+  color: #ffffff;
 }
 </style>

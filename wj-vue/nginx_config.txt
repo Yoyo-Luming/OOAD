@@ -1,0 +1,21 @@
+nginx config file
+client_header_buffer_size 128k;
+large_client_header_buffers 4 128k;
+client_max_body_size 16m;
+server_name _;
+location / {
+  # First attempt to serve request as file, then
+  # as directory, then fall back to displaying a 404.
+  try_files $uri $uri/ =404;
+  #add_header Access-Control-Allow-Origin *;
+}
+location /api {
+  proxy_pass http://10.17.102.0:8080;
+  #proxy_pass http://192.168.68.223:9000;
+  proxy_cookie_path / /api;
+  add_header 'Access-Control-Allow-Origin' '$http_origin' always;
+  add_header 'Access-Control-Allow-Credentials' 'true' always;
+  proxy_cookie_domain domino_server nginx_sever;
+  proxy_temp_file_write_size 5120K;
+  expires 1d;
+}

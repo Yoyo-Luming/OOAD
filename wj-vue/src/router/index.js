@@ -28,10 +28,6 @@ import home from '../components/home'
 import ShoppingCart from '../components/ShoppingCart'
 
 Vue.use(Router)
-// Vue.use(Router)
-// const router = new Router({
-//   routes
-// })
 
 const VueRouterPush = Router.prototype.push
 Router.prototype.push = function push (to) {

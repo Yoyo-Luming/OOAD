@@ -37,15 +37,17 @@
                 <el-image :src="link" fit="contain" style="border: 2px solid #eaeaea;" :alt="goodsInfo.name" @mousemove="mouseOver(link)"></el-image>
               </el-container>
             </el-container>
-            <el-container class="mark_chars" @click="collect">
-              <i class="el-icon-star-on"></i>收藏商品
+            <el-container class="mark_chars">
+              <el-button v-on:click="collect">
+                <i class="el-icon-star-on" ></i>收藏商品
+              </el-button>
             </el-container>
           </el-container>
           <el-container class="good-others">
             <el-container class="contents">
               <div class="good-name">{{goodsInfo.name}}</div>
               <div class="good-description">{{goodsInfo.description}}</div>
-              <div>{{goodsInfo.kind}}</div>
+              <div>分类：{{goodsInfo.kind}}</div>
               <div class="good-price">售价: ¥<span style="margin-left: 5px;font-size: 30px">{{goodsInfo.price}}</span></div>
               <div class="good-deliverPrice">邮费: ¥<span style="margin-left: 5px;font-size: 20px">{{goodsInfo.deliverPrice}}</span></div>
               <div class="seller-name" v-on:click="toUserPage">卖家：{{goodsInfo.poster}}</div>

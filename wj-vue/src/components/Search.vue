@@ -33,12 +33,35 @@
             prefix-icon="el-icon-search"
             v-model="searchContent" style="width: 870px">
           </el-input>
-          <el-cascader  :options="options"
-                        :props="{ checkStrictly: true }"
-                        v-model="labels"
-                        placeholder="商品类别"
-                        clearable></el-cascader>
           <el-button type="primary" style="width: 100px;background: #a0c4ff;border: none;" v-on:click="search">Search</el-button>
+        </el-container>
+        <el-container>
+          商品分类：<el-cascader  :options="options"
+                             :props="{ checkStrictly: true }"
+                             v-model="labels"
+                             placeholder="商品类别"
+                             clearable></el-cascader>
+          使用程度：<el-select v-model="status" placeholder="请选择">
+          <el-option
+            v-for="item in newOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+          排列方法：<el-select v-model="orderMethod" placeholder="请选择">
+          <el-option
+            v-for="item in orderOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        </el-container>
+        <el-container class="message-content">
+          <div>
+            <goods-box v-for="(item, index) of recommendList " :key="index+Math.random()" :name="item.name" :price="item.price" :photo="item.photo" :favourite_number="item.favourite_number" :mer_id="item.mer_id"></goods-box>
+          </div>
         </el-container>
       </el-container>
     </el-main>
@@ -46,12 +69,18 @@
 </template>
 
 <script>
+import GoodsBox from './goodsBox'
+
 export default {
   name: 'Search',
+  components: {GoodsBox},
   data () {
     return {
       searchContent: '',
-      labels: '',
+      labels: [0, 0],
+      status: '未选择',
+      orderMethod: '未选择',
+      goodsList: [],
       options: [{
         value: 1,
         label: '运动户外',
@@ -150,8 +179,58 @@ export default {
           value: 22,
           label: '手办'
         }]
-      }]
+      }],
+      newOptions: [
+        {
+          value: 1,
+          label: '全新'
+        }, {
+          value: 2,
+          label: '几乎全新'
+        }, {
+          value: 3,
+          label: '轻微使用痕迹'
+        }, {
+          value: 4,
+          label: '明显使用痕迹'
+        }
+      ],
+      orderOptions: [
+        {
+          value: 'new',
+          label: '最新商品'
+        },
+        {
+          value: 'hot',
+          label: '热度优先'
+        },
+        {
+          value: '-price',
+          label: '价格从高到低'
+        }, {
+          value: 'price',
+          label: '价格从低到高'
+        }
+      ],
+      recommendList: []
     }
+  },
+  mounted () {
+    this.$axios.post('login0/get_recommend_list/').then(response => {
+      console.log(response.data)
+      let len = response.data.return_List.length
+      let list = response.data.return_List
+      console.log(len)
+      for (let i = 0; i < len; ++i) {
+        this.recommendList.push({
+          name: list[i].mer_name,
+          price: list[i].mer_price,
+          photo: list[i].mer_img_url,
+          favourite_number: list[i].as_favourite_number,
+          mer_id: list[i].mer_id
+        })
+      }
+    })
   },
   methods: {
     myPage () {
@@ -176,14 +255,25 @@ export default {
       // Todo
     },
     search () {
-      this.$axios.post('', this.$qs.stringify({searchContent: this.searchContent}))
-        .then(successResponse => {
-          alert(successResponse.data.message)
-          this.$router.push({path: '/result', goods: successResponse.data})
+      let type = -1
+      if (this.labels[0] === 0 && this.status === '未选择' && this.orderMethod === '未选择') {
+        type = 1
+      } else if (this.searchContent === '' && this.labels[0] === 0) {
+        this.$message.error('请输入搜索内容或者选择商品分类')
+      } else {
+        type = 2
+      }
+      if (type !== -1) {
+        this.$router.push({name: 'Result',
+          params: {
+            type: type,
+            searchContent: this.searchContent,
+            labels: this.labels,
+            status: this.status,
+            orderMethod: this.orderMethod
+          }
         })
-        .catch(failResponse => {
-          alert(failResponse)
-        })
+      }
     }
   }
 }

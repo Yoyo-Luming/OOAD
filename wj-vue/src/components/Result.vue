@@ -213,6 +213,16 @@ export default {
       ]
     }
   },
+  mounted () {
+    console.log(this.$route.params)
+    if (this.$route.params != null) {
+      this.searchContent = this.$route.params.searchContent
+      this.labels = this.$route.params.labels
+      this.status = this.$route.params.status
+      this.orderMethod = this.$route.params.orderMethod
+      this.search()
+    }
+  },
   methods: {
     myPage () {
       this.$router.push('/person')

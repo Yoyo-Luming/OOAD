@@ -5,7 +5,6 @@ import Login from '../components/Login'
 import register from '../components/register'
 import AddGoods from '../components/AddGoods'
 import Person from '../components/Person'
-import Search from '../components/Search'
 import Result from '../components/Result'
 import ChatPage from '../components/chat/index'
 import userInfo from '../components/user/userInfo'
@@ -65,11 +64,6 @@ export default new Router({
       path: '/person',
       name: 'Person',
       component: Person
-    },
-    {
-      path: '/search',
-      name: 'Search',
-      component: Search
     },
     {
       path: '/result',

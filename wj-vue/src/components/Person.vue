@@ -564,8 +564,8 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$global.userStatus)
-    if (this.$global.userStatus === 0) {
+    // console.log(this.$global.userStatus)
+    if (this.$store.state.userStatus === 0) {
       this.activeFromVisible = true
     } else {
       this.$axios.post('/login0/get_user_details/', this.$qs.stringify({}))
@@ -756,14 +756,15 @@ export default {
       })).then(response => {
         console.log(response.data)
         this.$axios.post('/login0/add_address/', this.$qs.stringify({
-          current_user: this.$global.userId,
+          current_user: this.$store.state.userId,
           user_name: this.activeFromData.consigneeName,
           region_id: this.activeFromData.region,
           user_addr: this.activeFromData.address,
           user_phone: this.activeFromData.phone,
           address_type: 1
         })).then(response => {
-          this.$global.userState = 1
+          this.$store.state.userStatus = 1
+          // this.$global.userState = 1
           this.activeFromVisible = false
         })
       })
@@ -801,7 +802,8 @@ export default {
             address_type: 2
           })).then(response => {
             if (response.data.status === '200') {
-              this.$global.userStatus = 2
+              // this.$global.userStatus = 2
+              this.$store.state.userStatus = 2
               this.activeSellFromVisible = false
             }
           })

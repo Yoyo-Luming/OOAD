@@ -15,7 +15,7 @@
           <el-menu-item index="1" v-on:click="homePage">Home Page</el-menu-item>
           <el-menu-item index="2" v-on:click="searchPage">Search Page</el-menu-item>
           <el-submenu index="3">
-            <template slot="title">用户名</template>
+            <template slot="title">{{$store.state.userName}}</template>
             <el-menu-item index="3-1" v-on:click="myPage">Personal Page</el-menu-item>
             <el-menu-item index="3-2" v-on:click="cartPage">Shopping Cart</el-menu-item>
             <el-menu-item index="3-3" v-on:click="sellPage">Selling Page</el-menu-item>
@@ -45,7 +45,7 @@
                   <tr v-for="(item,index) in goods" :key="item.select">
                     <td><input type="checkbox" :checked="item.select" v-on:click="chooseOne(index)"></td>
                     <td>{{item.name}}</td>
-                    <td><img :src="item.photo"></td>
+                    <td><img :src="item.photo" alt=""></td>
                     <td>{{item.price}} 元</td>
                     <td><el-button type="danger" v-on:click="deleteItem(index)" round>Remove</el-button></td>
                   </tr>

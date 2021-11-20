@@ -74,7 +74,7 @@ export default {
     msgBox
   },
   mounted () {
-    this.userName = this.$global.user
+    this.userName = this.$store.state.userName
     this.otherName = this.$route.params.name
     this.otherId = this.$route.params.id
     this.dialogueId = this.$route.params.dialogueId

@@ -15,7 +15,7 @@
           <el-menu-item index="1" v-on:click="homePage">Home Page</el-menu-item>
           <el-menu-item index="2" v-on:click="searchPage">Search Page</el-menu-item>
           <el-submenu index="3">
-            <template slot="title">用户名</template>
+            <template slot="title">{{$store.state.userName}}</template>
             <el-menu-item index="3-1" v-on:click="myPage">Personal Page</el-menu-item>
             <el-menu-item index="3-2" v-on:click="cartPage">Shopping Cart</el-menu-item>
             <el-menu-item index="3-3" v-on:click="sellPage">Selling Page</el-menu-item>
@@ -137,7 +137,7 @@ export default {
   // Done
   name: 'sellingGoods',
   mounted () {
-    this.isSeller = (this.$global.userStatus >= 2)
+    this.isSeller = (this.$store.state.userStatus >= 2)
     console.log(this.$global.userStatus)
     this.$axios.post('login0/on_sailing/').then(response => {
       console.log(response.data)

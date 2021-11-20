@@ -3,7 +3,7 @@
     <el-header class="el-header">
       <div class="right-head">
         <img src="../../assets/testlogo.png" class="logo" alt="">
-        <span class="title">SUSTech Store</span>
+        <span>SUSTech Store</span>
       </div>
       <div class="left-head">
         <el-menu
@@ -12,16 +12,15 @@
           background-color="#545c64"
           text-color="#fff"
           active-text-color="#ffd04b">
-          <el-menu-item index="1" v-on:click="homePage">Home Page</el-menu-item>
-          <el-menu-item index="2" v-on:click="searchPage">Search Page</el-menu-item>
-          <el-submenu index="3">
-            <template slot="title">用户名</template>
-            <el-menu-item index="3-1" v-on:click="myPage">Personal Page</el-menu-item>
-            <el-menu-item index="3-2" v-on:click="cartPage">Shopping Cart</el-menu-item>
-            <el-menu-item index="3-3" v-on:click="sellPage">Selling Page</el-menu-item>
-            <el-menu-item index="3-4" v-on:click="markPage">Marking Page</el-menu-item>
+          <el-menu-item index="1" v-on:click="homePage">主页</el-menu-item>
+          <el-submenu index="2">
+            <template slot="title">{{$store.state.userName}}</template>
+            <el-menu-item index="2-1" v-on:click="myPage">个人主页</el-menu-item>
+            <el-menu-item index="2-2" v-on:click="cartPage">购物车</el-menu-item>
+            <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>
+            <el-menu-item index="2-4" v-on:click="markPage">收藏的商品</el-menu-item>
           </el-submenu>
-          <el-menu-item index="4" v-on:click="logOut">Log Out</el-menu-item>
+          <el-menu-item index="3" v-on:click="logOut">注销</el-menu-item>
         </el-menu>
       </div>
     </el-header>

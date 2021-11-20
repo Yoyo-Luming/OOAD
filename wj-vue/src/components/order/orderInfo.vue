@@ -15,7 +15,7 @@
           <el-menu-item index="1" v-on:click="homePage">Home Page</el-menu-item>
           <el-menu-item index="2" v-on:click="searchPage">Search Page</el-menu-item>
           <el-submenu index="3">
-            <template slot="title">用户名</template>
+            <template slot="title">{{ $store.state.userName }}</template>
             <el-menu-item index="3-1" v-on:click="myPage">Personal Page</el-menu-item>
             <el-menu-item index="3-2" v-on:click="cartPage">Shopping Cart</el-menu-item>
             <el-menu-item index="3-3" v-on:click="sellPage">Selling Page</el-menu-item>
@@ -405,7 +405,7 @@ export default {
     this.goodsPhoto = this.info.merchandise_info.mer_img_url
     this.payment = this.postage + this.goodsPrice
     this.orderComment = this.info.transaction_comment
-    this.currentUserIsSeller = (this.sender === this.$global.userName)
+    this.currentUserIsSeller = (this.sender === this.$store.state.userName)
     this.hasTask = this.info.has_task
     this.hasProblem = this.info.has_problem
     if (this.hasProblem) {
@@ -415,7 +415,7 @@ export default {
     }
     // console.log(this.hasTask)
     console.log('senderName:' + this.sender)
-    console.log('currentUser:' + this.$global.userName)
+    console.log('currentUser:' + this.$store.state.userName)
     if (this.info.transaction_status === 1 && !this.currentUserIsSeller) {
       this.buyButton = true
     }
@@ -431,7 +431,7 @@ export default {
     if (this.info.transaction_status === 4) {
       this.commentButton = true
     }
-    this.isAdmin = (this.$global.userStatus === 3)
+    this.isAdmin = (this.$store.state.userStatus === 3)
     // TODO 获取二维码
     this.$axios.post('login0/get_QR_Code/', this.$qs.stringify({
       user_id: this.senderId

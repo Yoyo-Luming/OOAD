@@ -14,7 +14,7 @@
           active-text-color="#ffd04b">
           <el-menu-item index="1" v-on:click="homePage">主页</el-menu-item>
           <el-submenu index="2">
-            <template slot="title">用户名</template>
+            <template slot="title">{{ $store.state.userName }}</template>
             <el-menu-item index="2-1" v-on:click="myPage">个人主页</el-menu-item>
             <el-menu-item index="2-2" v-on:click="cartPage">购物车</el-menu-item>
             <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>
@@ -108,7 +108,7 @@ export default {
       // console.log('toChatPage!')
       let otherName = ''
       let otherId = ''
-      if (this.user1Name === this.$global.userName) {
+      if (this.user1Name === this.$store.state.userName) {
         otherName = item.user2Name
         otherId = item.user2Id
       } else {
@@ -119,7 +119,7 @@ export default {
       this.$router.push({name: 'chatPage', params: {name: otherName, id: otherId, dialogueId: item.dialogueId}})
     },
     checkUser () {
-      return this.user1Name === this.$global.userName
+      return this.user1Name === this.$store.state.userName
     },
     logOut () {
       this.$axios.post('login0/logout/ ')

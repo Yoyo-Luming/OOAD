@@ -5,6 +5,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import qs from 'qs'
 import global from './components/global.js'
+import store from './components/store/store'
 // import Router from 'vue-router'
 
 // 设置反向代理，前端请求默认发送到 http://localhost:8443/api
@@ -18,6 +19,7 @@ Vue.prototype.$qs = qs
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 Vue.prototype.$global = global
+Vue.prototype.$store = store
 
 Vue.use(ElementUI)
 
@@ -30,6 +32,7 @@ Vue.use(ElementUI)
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

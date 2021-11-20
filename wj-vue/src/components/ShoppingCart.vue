@@ -13,7 +13,6 @@
           text-color="#fff"
           active-text-color="#ffd04b">
           <el-menu-item index="1" v-on:click="homePage">Home Page</el-menu-item>
-          <el-menu-item index="2" v-on:click="searchPage">Search Page</el-menu-item>
           <el-submenu index="3">
             <template slot="title">{{$store.state.userName}}</template>
             <el-menu-item index="3-1" v-on:click="myPage">Personal Page</el-menu-item>
@@ -235,25 +234,20 @@ export default {
       this.$router.push('/person')
     },
     homePage () {
-      this.$router.push('/')
-    },
-    searchPage () {
-      this.$router.push('/search')
+      this.$router.push('/home')
     },
     cartPage () {
-      this.$router.go(0)
+      this.$router.push('/cart')
     },
     sellPage () {
       this.$router.push('/store')
     },
     markPage () {
-      this.$router.push('/mark')
+      this.$router.push('/favoritegoods')
     },
     logOut () {
-      // Todo
-    },
-    search () {
-      // Todo
+      this.$axios.post('login0/logout/ ')
+      this.$router.push('/login')
     }
   }
 }

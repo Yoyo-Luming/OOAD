@@ -239,7 +239,7 @@ export default {
       this.$router.push('/person')
     },
     homePage () {
-      this.$router.push('/')
+      this.$router.push('/home')
     },
     searchPage () {
       this.$router.push('/search')

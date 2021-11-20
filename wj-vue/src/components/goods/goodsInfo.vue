@@ -228,8 +228,8 @@ export default {
       this.$router.push({name: 'userInfo', params: {userId: this.goodsInfo.posterId}})
     },
     buy () {
-      console.log(this.name)
-      console.log(this.price)
+      console.log(this.goodsInfo.name)
+      console.log(this.goodsInfo.price)
       console.log(this.goodsInfo.url[0])
       this.$router.push({name: 'buyPage', params: {goodsName: this.goodsInfo.name, goodsPrice: this.goodsInfo.price, goodsPhoto: this.goodsInfo.url[0], goodsId: this.goodsInfo.id}})
     },

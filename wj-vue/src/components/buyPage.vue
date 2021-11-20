@@ -143,8 +143,10 @@ export default {
   mounted () {
     this.goodsName = this.$route.params.goodsName
     // this.goodsPrice = this.$route.params.goodsPrice
-    this.goodsPhoto = this.$route.params.goodsPhoto
+    // this.goodsPhoto = this.$route.params.goodsPhoto
     this.goodsId = this.$route.params.goodsId
+    console.log('---------')
+    console.log(this.goodsPhoto)
     this.$axios.post('/commodity/commodity_detail/', this.$qs.stringify({
       mer_id: this.goodsId
     })).then(response => {
@@ -177,6 +179,7 @@ export default {
       this.deliverPrice = response.data.mer_deliver_price
       this.goodsPrice = response.data.mer_price
       this.totalPrice = this.deliverPrice + this.goodsPrice
+      this.goodsPhoto = response.data.mer_image1_url
     })
     this.$axios.post('/login0/get_address_list/', this.$qs.stringify({
     })).then(response => {
@@ -192,18 +195,19 @@ export default {
             phone: response.data.return_list[i].user_phone})
         }
       }
-      console.log(this.addressList)
+      // console.log(this.addressList)
     })
   },
   data () {
     return {
-      dialogFormVisible: false,
+      // dialogFormVisible: false,
+      payFormVisible: false,
       innerVisible: false,
       goodsName: '',
       goodsPrice: 0,
       payment: 0,
       goodsId: '',
-      goodsPhoto: 0,
+      goodsPhoto: '',
       addressId: '',
       addressList: [],
       deliverPrice: 0,

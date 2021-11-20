@@ -92,10 +92,7 @@ export default {
       this.$router.push('/person')
     },
     homePage () {
-      this.$router.push('/')
-    },
-    searchPage () {
-      this.$router.push('/search')
+      this.$router.push('/home')
     },
     cartPage () {
       this.$router.push('/cart')

@@ -58,10 +58,8 @@ if (performance.navigation.type === 1) {
     this.token = response.data.token
     this.url = 'ws://10.17.102.0:8080/api/ws/chat/' + this.token + '/'
     console.log(this.url)
-    // if (window.WebSocket) {
     this.webSocket = new WebSocket(this.url)
     this.webSocket.onmessage = this.onMessageWebSocket
-    // }
   })
   console.log('after reload')
 }

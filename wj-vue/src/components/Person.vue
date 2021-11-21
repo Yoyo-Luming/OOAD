@@ -763,9 +763,10 @@ export default {
           address_type: 1
         })).then(response => {
           // this.$store.state.userStatus = 1
-          this.$store.commit('setUserStatus', 1)
-          // this.$global.userState = 1
-          this.activeFromVisible = false
+          if (response.data.status === '200') {
+            this.$store.commit('setUserStatus', 1)
+            this.activeFromVisible = false
+          }
         })
       })
     },

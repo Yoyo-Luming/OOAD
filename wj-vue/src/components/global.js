@@ -20,7 +20,7 @@ export default {
     axios.defaults.baseURL = 'http://10.17.63.176/api'
     axios.post('api/dialogue/begin_websocket/').then(response => {
       this.token = response.data.token
-      this.url = 'ws://10.17.102.0:8080/api/ws/chat/' + this.token + '/'
+      this.url = 'ws://store2.sustech.xyz:8080/api/ws/chat/' + this.token + '/'
       console.log(this.url)
       // if (window.WebSocket) {
       this.webSocket = new WebSocket(this.url)
@@ -45,18 +45,18 @@ export default {
     // this.$message.info(data)
     console.log(1)
     console.log(data)
-    console.log(data.info.info.message)
-    this.$message.info(data.info.info.message)
+    // console.log(data.info.info.message)
+    // this.$message.info(data.info.info.message)
   }
 }
 
 if (performance.navigation.type === 1) {
   let axios = require('axios')
   axios.defaults.withCredentials = true
-  axios.defaults.baseURL = 'http://10.17.63.176/api/'
+  axios.defaults.baseURL = 'http://10.17.63.176/api'
   axios.post('dialogue/begin_websocket/').then(response => {
     this.token = response.data.token
-    this.url = 'ws://10.17.102.0:8080/api/ws/chat/' + this.token + '/'
+    this.url = 'ws://store2.sustech.xyz:8080/api/ws/chat/' + this.token + '/'
     console.log(this.url)
     this.webSocket = new WebSocket(this.url)
     this.webSocket.onmessage = this.onMessageWebSocket

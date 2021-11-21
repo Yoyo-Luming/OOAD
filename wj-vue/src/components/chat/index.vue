@@ -50,13 +50,11 @@ import msgBox from './msgBox.vue'
 // import headMenu from '../../components/head-menu.vue'
 export default {
   name: 'chat',
-  //   props: {
-  //     msg: String
-  //   }
   data () {
     return {
       content: 'hahhahaha',
       userName: '',
+      userId: '',
       msg: '',
       msgList: [],
       webSocket: null,
@@ -75,6 +73,7 @@ export default {
   },
   mounted () {
     this.userName = this.$store.state.userName
+    this.userId = this.$store.state.userId
     this.otherName = this.$route.params.name
     this.otherId = this.$route.params.id
     this.dialogueId = this.$route.params.dialogueId
@@ -89,26 +88,26 @@ export default {
     // has_next: false
     // wait_number: 0
     this.$axios.post('/dialogue/dialogue_detail/', this.$qs.stringify({
-      dialogue_id: this.dialogueId,
-      start_position: 0,
-      end_position: 10
+      dialogue_id: this.dialogueId
     })).then(response => {
       let list = response.data.dialogue_info
       let len = list.length
-      for (let i = len - 2; i >= 0; --i) {
+      console.log('list')
+      console.log(list)
+      for (let i = len - 1; i >= 0; --i) {
         if (list[i].data_type === 1) {
           this.msgList.push({
-            name: list[i].which_say === 0 ? '我' : list[i].other_name,
+            name: list[i].my_name === this.userName ? '我' : list[i].my_name,
             msg: list[i].information,
-            isSelf: list[i].which_say === 0,
+            isSelf: list[i].my_name === this.userName,
             url: '',
             isPhoto: false
           })
         } else {
           this.msgList.push({
-            name: list[i].which_say === 0 ? '我' : list[i].other_name,
+            name: list[i].my_name === this.userName ? '我' : list[i].my_name,
             msg: '',
-            isSelf: list[i].which_say === 0,
+            isSelf: list[i].my_name === this.userName,
             url: list[i].information,
             isPhoto: true
           })
@@ -134,32 +133,38 @@ export default {
       this.msgList.push({
         isPhoto: false,
         url: '',
-        name: data.name === this.userName ? '我' : data.name,
+        name: '我',
         msg: data.info,
-        isSelf: data.name === this.userName
+        isSelf: true
       })
       this.$global.webSocket.send(JSON.stringify(data))
       this.msg = ''
     },
-    initWebSocket () {
-    },
     onMessageWebSocket (e) {
-      // TODO
       let data = JSON.parse(e.data)
+      console.log('-------')
       console.log(data)
+      if (data.info.status === 2) {
+        return
+      }
+      if (data.info.my_name !== this.otherName) {
+        console.log('11111111111111')
+        this.$message.info('您收到其他人的消息！')
+        return
+      }
       if (data.info.data_type === 2) {
         this.msgList.push({
-          name: data.info.name === this.userName ? '我' : data.info.name,
+          name: data.info.my_name,
           msg: '',
-          isSelf: data.info.name === this.userName,
+          isSelf: false,
           url: data.info.info,
           isPhoto: true
         })
       } else {
         this.msgList.push({
-          name: data.info.name === this.userName ? '我' : data.info.name,
+          name: data.info.my_name,
           msg: data.info.info,
-          isSelf: data.info.name === this.userName,
+          isSelf: false,
           url: '',
           isPhoto: false
         })
@@ -200,7 +205,7 @@ export default {
           isPhoto: true,
           url: imgUrl,
           name: '我',
-          msg: '123',
+          msg: '',
           isSelf: true
         })
         this.uploadPhotoVisible = false

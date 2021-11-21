@@ -384,7 +384,37 @@ export default {
       payInfo: {
         payMethod: '',
         payProveUrl: ''
-      }
+      },
+      regionList: [ '荔园',
+        '创园',
+        '慧园',
+        '欣园',
+        '学生宿舍',
+        '湖畔',
+        '九华精舍',
+        '教师公寓',
+        '专家公寓',
+        '风雨操场',
+        '润扬体育馆',
+        '工学院',
+        '南科大中心',
+        '第一科研楼',
+        '第二科研楼',
+        '第一教学楼',
+        '第二教学楼',
+        '台州楼',
+        '检测中心',
+        '行政楼',
+        '琳恩图书馆',
+        '1号门',
+        '2号门',
+        '3号门',
+        '4号门',
+        '5号门',
+        '6号门',
+        '7号门',
+        '8号门',
+        '其它']
     }
   },
   mounted () {
@@ -394,6 +424,12 @@ export default {
     console.log('---------------------')
     console.log(this.$route.params.orderDetail)
     this.info = this.$route.params.orderDetail
+    // console.log(info)
+    this.$axios.post('commodity/commodity_detail/', this.$qs.stringify({
+      mer_id: this.info.merchandise_id
+    })).then(response => {
+      this.goodsPhoto = response.data.mer_image1_url
+    })
     this.orderId = this.info.transaction_id
     // alert(this.buyButton)
     console.log(this.info.transaction_status)
@@ -405,7 +441,7 @@ export default {
     this.goodsName = this.info.merchandise_info.mer_name
     this.goodsPrice = this.info.merchandise_info.mer_price
     this.postage = this.info.merchandise_info.deliver_price
-    this.goodsPhoto = this.info.merchandise_info.mer_img_url
+    // this.goodsPhoto = this.info.merchandise_info.mer_img_url
     this.payment = this.postage + this.goodsPrice
     this.orderComment = this.info.transaction_comment
     this.currentUserIsSeller = (this.sender === this.$store.state.userName)
@@ -435,7 +471,6 @@ export default {
       this.commentButton = true
     }
     this.isAdmin = (this.$store.state.userStatus === 3)
-    // TODO 获取二维码
     this.$axios.post('login0/get_QR_Code/', this.$qs.stringify({
       user_id: this.senderId
     })).then(response => {
@@ -446,6 +481,9 @@ export default {
     this.payInfo.payMethod = this.payTypes[this.info.pay_method - 1]
     this.payInfo.payProveUrl = this.info.pay_prove
     console.log(this.payInfo.payProveUrl)
+    this.sendAddress = this.regionList[this.info.sender_location.user_region] + ' ' + this.info.sender_location.user_addr
+    this.receiveAddress = this.regionList[this.info.receiver_location.user_region] + ' ' + this.info.receiver_location.user_addr
+    this.goodsId = this.info.merchandise_id
   },
   methods: {
     toGoodsPage () {

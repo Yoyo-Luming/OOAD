@@ -241,14 +241,11 @@ export default {
     homePage () {
       this.$router.push('/home')
     },
-    searchPage () {
-      this.$router.push('/search')
-    },
     cartPage () {
       this.$router.push('/cart')
     },
     sellPage () {
-      this.$router.push('/store')
+      this.$router.push('/sellinggoods')
     },
     markPage () {
       this.$router.push('/favoritegoods')

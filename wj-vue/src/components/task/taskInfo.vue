@@ -313,6 +313,25 @@ export default {
     },
     chatReceiver () {
       this.$router.push({name: 'chatPage', params: {name: this.detail.receive_user.user_name, id: this.detail.receive_user.user_id, dialogueId: this.detail.dialogue_id_up_se}})
+    },
+    myPage () {
+      this.$router.push('/person')
+    },
+    homePage () {
+      this.$router.push('/')
+    },
+    cartPage () {
+      this.$router.push('/cart')
+    },
+    sellPage () {
+      this.$router.push('/sellinggoods')
+    },
+    markPage () {
+      this.$router.push('/favoritegoods')
+    },
+    logOut () {
+      this.$axios.post('login0/logout/ ')
+      this.$router.push('/login')
     }
   }
 }

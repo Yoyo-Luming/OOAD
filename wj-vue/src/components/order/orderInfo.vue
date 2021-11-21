@@ -143,11 +143,15 @@
                 <el-input v-model="payPassword"></el-input>
               </el-form-item>
             </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="innerVisible=false">取消</el-button>
+              <el-button type="primary" @click="buy">确认支付</el-button>
+            </div>
           </div>
           <div v-else-if="payMethod===2">
             <el-form ref="form" label-width="200px">
+              <img :src="QRCodeUrl">
               <el-form-item label="上传支付凭证:" >
-                <img :src="QRCodeUrl">
                 <el-upload
                   action="auto"
                   :http-request="uploadPaySectionFile"
@@ -159,10 +163,10 @@
                 </el-upload>
               </el-form-item>
             </el-form>
-          </div>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="innerVisible=false">取消</el-button>
-            <el-button type="primary" @click="submitQRPay">确认支付</el-button>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="innerVisible=false">取消</el-button>
+              <el-button type="primary" @click="submitQRPay">确认支付</el-button>
+            </div>
           </div>
         </el-dialog>
         <el-form ref="form" label-width="200px">

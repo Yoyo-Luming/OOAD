@@ -2,7 +2,7 @@
   <el-container class="home-container">
     <el-header class="el-header">
       <div class="right-head">
-        <img src="../assets/testlogo.png" class="logo" alt="">
+<!--        <img src="../assets/testlogo.png" class="logo" alt="">-->
         <span>SUSTech Store</span>
       </div>
       <div class="left-head">

@@ -15,7 +15,6 @@
           <el-menu-item index="1" v-on:click="homePage">主页</el-menu-item>
           <el-submenu index="2">
             <template slot="title">{{ $store.state.userName }}</template>
-
             <el-menu-item index="2-1" v-on:click="myPage">个人主页</el-menu-item>
             <el-menu-item index="2-2" v-on:click="cartPage">购物车</el-menu-item>
             <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>

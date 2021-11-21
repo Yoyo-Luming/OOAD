@@ -69,10 +69,30 @@
                 <el-input v-model="payPassword"></el-input>
               </el-form-item>
             </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="innerVisible=false">取消</el-button>
+              <el-button type="primary" @click="pay">确认支付</el-button>
+            </div>
           </div>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="innerVisible=false">取消</el-button>
-            <el-button type="primary" @click="pay">确认支付</el-button>
+          <div v-else>
+            <el-form ref="form" label-width="200px">
+              <img :src="QRCodeUrl">
+              <el-form-item label="上传支付凭证:" >
+                <el-upload
+                  action="auto"
+                  :http-request="uploadPaySectionFile"
+                  list-type="picture-card"
+                  class = "contentImgStyle"
+                  :limit="1"
+                  :on-exceed="handleExceed">
+                  <i class="el-icon-plus"></i>
+                </el-upload>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="innerVisible=false">取消</el-button>
+              <el-button type="primary" @click="submitQRPay">确认支付</el-button>
+            </div>
           </div>
         </el-dialog>
         <el-form ref="form" label-width="200px">
@@ -89,7 +109,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="payFormVisible=false">取消</el-button>
-          <el-button type="primary" @click="innerVisible=true">确认</el-button>
+          <el-button type="primary" @click="choosePayMethod">确认</el-button>
         </div>
       </el-dialog>
     </el-main>
@@ -180,6 +200,12 @@ export default {
       this.goodsPrice = response.data.mer_price
       this.totalPrice = this.deliverPrice + this.goodsPrice
       this.goodsPhoto = response.data.mer_image1_url
+      this.senderId = response.data.mer_upload_user_id
+      this.$axios.post('login0/get_QR_Code/', this.$qs.stringify({
+        user_id: this.senderId
+      })).then(response => {
+        this.QRCodeUrl = response.data.QR_code_url[0]
+      })
     })
     this.$axios.post('/login0/get_address_list/', this.$qs.stringify({
     })).then(response => {
@@ -255,7 +281,11 @@ export default {
       }, {
         value: 3,
         label: '线下支付'
-      }]
+      }],
+      QRCodeUrl: '',
+      senderId: '',
+      uploadPayFile: [],
+      orderId: ''
     }
   },
   methods: {
@@ -269,7 +299,7 @@ export default {
         this.transactionId = response.data.transaction_id
         if (response.data.status === '200') {
           // this.$router.push('/order')
-          this.dialogFormVisible = true
+          this.payFormVisible = true
         }
       })
     },
@@ -288,6 +318,50 @@ export default {
     cancel () {
       console.log('cancel')
       this.$router.push({name: 'goodsInfo', params: {mer_id: this.goodsId}})
+    },
+    uploadPaySectionFile (param) {
+      const uploadPayFileLength = this.uploadPayFile.length
+      let fileObj = param.file
+      let file = new File([fileObj], new Date().getTime() + '.jpg', {
+        type: 'image/jpg'
+      })
+      this.uploadPayFile[uploadPayFileLength] = {'photo': file}
+    },
+    submitQRPay () {
+      let file = this.uploadPayFile[0].photo
+      let photoForm = new FormData()
+      photoForm.append('current_pay_prove ', file)
+      photoForm.append('tra_id', this.transactionId)
+      this.$axios({method: 'post',
+        url: 'transaction/commit_transaction_QR_code_commit/',
+        data: photoForm}).then(response => {
+        if (response.data.status === '200') {
+          this.payFormVisible = false
+          this.$message.success(response.data.message)
+          this.$router.push('/buyorder')
+        } else {
+          this.$message.info(response.data.message)
+        }
+      })
+    },
+    handleExceed () {
+      this.$message.warning('最多只能上传一张相片！')
+    },
+    choosePayMethod () {
+      if (this.payMethod < 3) {
+        this.innerVisible = true
+      } else {
+        this.$axios.post('transaction/commit_transaction_face/', this.$qs.stringify({
+          tra_id: this.orderId
+        })).then(response => {
+          if (response.data.status === '200') {
+            this.$message.success(response.data.message)
+            this.$router.push('/buyorder')
+          } else {
+            this.$message.info(response.data.message)
+          }
+        })
+      }
     },
     myPage () {
       this.$router.push('/person')

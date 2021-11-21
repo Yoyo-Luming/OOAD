@@ -63,13 +63,5 @@ if (performance.navigation.type === 1) {
     this.webSocket.onmessage = this.onMessageWebSocket
     // }
   })
-  axios.post('login0/get_current_user_info/').then(response => {
-    this.userId = response.data.info.user_id
-    this.userName = response.data.info.user_name
-    this.userStatus = response.data.info.user_status
-    console.log('current user')
-    console.log(this.userName)
-    console.log(response.data)
-  })
   console.log('after reload')
 }

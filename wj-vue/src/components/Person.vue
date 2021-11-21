@@ -12,14 +12,13 @@
           background-color="#545c64"
           text-color="#fff"
           active-text-color="#ffd04b">
-          <el-menu-item index="1" v-on:click="homePage">Home Page</el-menu-item>
-          <el-menu-item index="2" v-on:click="searchPage">Search Page</el-menu-item>
-          <el-submenu index="3">
-            <template slot="title">用户名</template>
-            <el-menu-item index="3-1" v-on:click="myPage">Personal Page</el-menu-item>
-            <el-menu-item index="3-2" v-on:click="cartPage">Shopping Cart</el-menu-item>
-            <el-menu-item index="3-3" v-on:click="sellPage">Selling Page</el-menu-item>
-            <el-menu-item index="3-4" v-on:click="markPage">Marking Page</el-menu-item>
+          <el-menu-item index="1" v-on:click="homePage">主页</el-menu-item>
+          <el-submenu index="2">
+            <template slot="title">{{$store.state.userName}}</template>
+            <el-menu-item index="2-1" v-on:click="myPage">个人主页</el-menu-item>
+            <el-menu-item index="2-2" v-on:click="cartPage">购物车</el-menu-item>
+            <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>
+            <el-menu-item index="2-4" v-on:click="markPage">收藏的商品</el-menu-item>
           </el-submenu>
           <el-menu-item index="4" v-on:click="logOut">Log Out</el-menu-item>
         </el-menu>
@@ -359,7 +358,6 @@ export default {
         balance: 123
       },
       // 激活卖家功能表单数据
-      // TODO 需要加二维码
       activeSellFromData: {
         name: '',
         region: '',
@@ -550,7 +548,7 @@ export default {
         '7号门',
         '8号门',
         '其它'],
-      money: 0,
+      money: 10000,
       activeSellFromVisible: false,
       newPayPassword: '',
       newLoginPassword: '',
@@ -558,6 +556,7 @@ export default {
       oldLoginPassword: '',
       forgetVisible: false,
       uploadHeaderPhotoVisible: false,
+      LoginPassWordVisible: false,
       changeCode: '',
       activePane: 'first',
       activePath: ''
@@ -565,6 +564,7 @@ export default {
   },
   mounted () {
     // console.log(this.$global.userStatus)
+    console.log(this.$store.state.userStatus)
     if (this.$store.state.userStatus === 0) {
       this.activeFromVisible = true
     } else {
@@ -605,7 +605,6 @@ export default {
               phone: response.data.return_list[i].user_phone})
           }
         }
-        console.log(this.addressList)
       })
     }
   },
@@ -763,7 +762,8 @@ export default {
           user_phone: this.activeFromData.phone,
           address_type: 1
         })).then(response => {
-          this.$store.state.userStatus = 1
+          // this.$store.state.userStatus = 1
+          this.$store.commit('setUserStatus', 1)
           // this.$global.userState = 1
           this.activeFromVisible = false
         })
@@ -803,7 +803,8 @@ export default {
           })).then(response => {
             if (response.data.status === '200') {
               // this.$global.userStatus = 2
-              this.$store.state.userStatus = 2
+              this.$store.commit('setUserStatus', 2)
+              // this.$store.state.userStatus = 2
               this.activeSellFromVisible = false
             }
           })

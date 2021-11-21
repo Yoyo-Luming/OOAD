@@ -245,6 +245,25 @@ export default {
           this.otherTaskVisible = false
         }
       })
+    },
+    myPage () {
+      this.$router.push('/person')
+    },
+    homePage () {
+      this.$router.push('/')
+    },
+    cartPage () {
+      this.$router.push('/cart')
+    },
+    sellPage () {
+      this.$router.push('/sellinggoods')
+    },
+    markPage () {
+      this.$router.push('/favoritegoods')
+    },
+    logOut () {
+      this.$axios.post('login0/logout/ ')
+      this.$router.push('/login')
     }
   }
 }

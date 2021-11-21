@@ -32,39 +32,119 @@
             prefix-icon="el-icon-search"
             v-model="searchContent" style="width: 870px">
           </el-input>
-          <el-button type="primary" style="width: 100px;background: #a0c4ff;border: none;" v-on:click="search">Search</el-button>
+          <el-button type="primary" style="width: 100px;background: #a0c4ff;border: none;" v-on:click="search">搜索</el-button>
         </el-container>
-        <el-container>
-          商品分类：<el-cascader  :options="options"
-                             :props="{ checkStrictly: true }"
-                             v-model="labels"
-                             placeholder="商品类别"
-                             clearable></el-cascader>
-          使用程度：<el-select v-model="status" placeholder="请选择">
-          <el-option
-            v-for="item in newOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-          排列方法：<el-select v-model="orderMethod" placeholder="请选择">
-          <el-option
-            v-for="item in orderOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
+        <el-container class="choose-opt">
+          <el-cascader  :options="options"
+                        :props="{ checkStrictly: true }"
+                        v-model="labels"
+                        placeholder="商品类别"
+                        clearable></el-cascader>
+          <el-select v-model="status" placeholder="使用程度">
+            <el-option
+              v-for="item in newOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <el-select v-model="orderMethod" placeholder="排列方法">
+            <el-option
+              v-for="item in orderOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-container>
         <el-container class="message-content">
-          <div>
-            <goods-box v-for="(item, index) of recommendList " :key="index+Math.random()" :name="item.name" :price="item.price" :photo="item.photo" :favourite_number="item.favourite_number" :mer_id="item.mer_id"></goods-box>
+          <div v-if="recommendList.length">
+            <el-container class="marking-goods">
+              <el-container class="single-good" v-for="(item, index) in recommendList" :key="index">
+                <el-container class="good-image">
+                  <el-image :src="item.photo" fit="contain"  v-on:click="toGoodsPage(item)" :alt="item.name"></el-image>
+                </el-container>
+                <el-container class="good-describe">
+                  <div class="good-name">{{item.name}}</div>
+                  <div class="good-price">¥{{item.price}}</div>
+                  <div class="good-number">共有{{item.favouriteNumber}}人喜欢</div>
+                </el-container>
+              </el-container>
+            </el-container>
+          </div>
+          <div v-else>
+            <h2>这里还没有结果！</h2>
           </div>
         </el-container>
       </el-container>
     </el-main>
   </el-container>
+<!--  <el-container class="home-container">-->
+<!--    <el-header class="el-header">-->
+<!--      <div class="right-head">-->
+<!--        <img src="../assets/testlogo.png" class="logo" alt="">-->
+<!--        <span>SUSTech Store</span>-->
+<!--      </div>-->
+<!--      <div class="left-head">-->
+<!--        <el-menu-->
+<!--          class="el-menu-demo"-->
+<!--          mode="horizontal"-->
+<!--          background-color="#545c64"-->
+<!--          text-color="#fff"-->
+<!--          active-text-color="#ffd04b">-->
+<!--          <el-menu-item index="1" v-on:click="homePage">主页</el-menu-item>-->
+<!--          <el-submenu index="2">-->
+<!--            <template slot="title">{{$store.state.userName}}</template>-->
+<!--            <el-menu-item index="2-1" v-on:click="myPage">个人主页</el-menu-item>-->
+<!--            <el-menu-item index="2-2" v-on:click="cartPage">购物车</el-menu-item>-->
+<!--            <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>-->
+<!--            <el-menu-item index="2-4" v-on:click="markPage">收藏的商品</el-menu-item>-->
+<!--          </el-submenu>-->
+<!--          <el-menu-item index="3" v-on:click="logOut">注销</el-menu-item>-->
+<!--        </el-menu>-->
+<!--      </div>-->
+<!--    </el-header>-->
+<!--    <el-main>-->
+<!--      <el-container class="mid-content">-->
+<!--        <el-container class="search-column">-->
+<!--          <el-input-->
+<!--            placeholder="Please input information"-->
+<!--            prefix-icon="el-icon-search"-->
+<!--            v-model="searchContent" style="width: 870px">-->
+<!--          </el-input>-->
+<!--          <el-button type="primary" style="width: 100px;background: #a0c4ff;border: none;" v-on:click="search">Search</el-button>-->
+<!--        </el-container>-->
+<!--        <el-container>-->
+<!--          商品分类：<el-cascader  :options="options"-->
+<!--                             :props="{ checkStrictly: true }"-->
+<!--                             v-model="labels"-->
+<!--                             placeholder="商品类别"-->
+<!--                             clearable></el-cascader>-->
+<!--          使用程度：<el-select v-model="status" placeholder="请选择">-->
+<!--          <el-option-->
+<!--            v-for="item in newOptions"-->
+<!--            :key="item.value"-->
+<!--            :label="item.label"-->
+<!--            :value="item.value">-->
+<!--          </el-option>-->
+<!--        </el-select>-->
+<!--          排列方法：<el-select v-model="orderMethod" placeholder="请选择">-->
+<!--          <el-option-->
+<!--            v-for="item in orderOptions"-->
+<!--            :key="item.value"-->
+<!--            :label="item.label"-->
+<!--            :value="item.value">-->
+<!--          </el-option>-->
+<!--        </el-select>-->
+<!--        </el-container>-->
+<!--        <el-container class="message-content">-->
+<!--          <div>-->
+<!--            <goods-box v-for="(item, index) of recommendList " :key="index+Math.random()" :name="item.name" :price="item.price" :photo="item.photo" :favourite_number="item.favourite_number" :mer_id="item.mer_id"></goods-box>-->
+<!--          </div>-->
+<!--        </el-container>-->
+<!--      </el-container>-->
+<!--    </el-main>-->
+<!--  </el-container>-->
 </template>
 
 <script>
@@ -232,6 +312,9 @@ export default {
     })
   },
   methods: {
+    toGoodsPage (item) {
+      this.$router.push({name: 'goodsInfo', params: {mer_id: item.mer_id}})
+    },
     myPage () {
       this.$router.push('/person')
     },
@@ -279,13 +362,13 @@ export default {
 <style scoped>
 .home-container {
   height: 100%;
-  background:0 repeat-y url("../assets/back1.jpg");
+  background:0 repeat-y url("../assets/back7.jpg");
   background-size: cover;
   display: block;
 }
 
 .el-header {
-  background: #ffc8dd;
+  background: #545c64;
   display: flex;
   justify-content: space-between;
   padding-left: 0;
@@ -312,13 +395,80 @@ export default {
 .mid-content {
   display: block;
   margin: 30px auto;
-  height: 545px;
+  height: 100%;
   width: 1000px;
 }
 
 .search-column {
-  margin-top: 30%;
+  margin-top: 50px;
   display: flex;
   justify-content: space-between;
+}
+
+.message-content {
+  display: block;
+  border-radius: 20px;
+  border: 3px solid #eaeaea;
+  box-shadow: 0 0 25px #cac6c6;
+  background: white;
+  margin: 50px auto;
+  opacity: 0.9;
+  width: 1000px;
+  height: 100%;
+}
+
+.choose-opt {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.marking-goods {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 70px;
+}
+
+.single-good {
+  display: block;
+  margin: 60px;
+  height: 100px;
+  width: 100px;
+  position: relative;
+  flex: none;
+}
+
+.good-image {
+  height: 100px;
+  width: 100px;
+  border: 2px solid #eaeaea;
+  align-items: center;
+}
+
+.good-describe {
+  text-align: center;
+  display: block;
+  height: 30px;
+  width: 100px;
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.good-name {
+  font-size: 20px;
+  color: black;
+  overflow: hidden;
+}
+
+.good-price {
+  font-size: 15px;
+  color: #ff006e;
+  overflow: hidden;
+}
+
+.good-number {
+  font-size: 15px;
+  overflow: hidden;
 }
 </style>

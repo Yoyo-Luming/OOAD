@@ -63,6 +63,7 @@ export default {
   components: {taskBox},
   data () {
     return {
+      activePane: 'first',
       taskId: '',
       taskList: [],
       regionList: [ '荔园',

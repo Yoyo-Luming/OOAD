@@ -10,7 +10,7 @@
         <el-input type="email" v-model="registerForm.email"
                   auto-complete="off" placeholder="邮箱"></el-input>
       </el-form-item>
-      <el-form-item prop="pas sword">
+      <el-form-item prop="password">
         <el-input type="password" v-model="registerForm.password"
                   auto-complete="off" placeholder="密码" show-password></el-input>
       </el-form-item>
@@ -38,22 +38,27 @@ export default {
   // Done
   name: 'register',
   data () {
-    // const regEmail = /^[0-9]*$/
-    // const regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+    // const regEmail = r'[0-9a-zA-Z_]{0,19}@sustech.edu.cn'
+    const regEmail = /^\w{1,10}@\.(mail.sustech.edu.cn)|(sustech.edu.cn)$/
+    const verifyUsername = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入用户名'))
+      }
+      callback()
+    }
     const verifyEmail = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('Please input your username'))
+        callback(new Error('请输入邮箱'))
+      } else {
+        if (!regEmail.test(this.registerForm.username)) {
+          callback(new Error('Please input right email format'))
+        }
+        callback()
       }
-      // else {
-      //   if (!regEmail.test(this.registerForm.username)) {
-      //     callback(new Error('Please input right email format'))
-      //   }
-      //   callback()
-      // }
     }
     const verifyPassword1 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('Please input your password'))
+        callback(new Error('请输入密码'))
       } else {
         if (this.registerForm.verifyPassword !== '') {
           this.$refs.registerForm.validateField('checkPass')
@@ -63,9 +68,9 @@ export default {
     }
     const verifyPassword2 = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('Please input your password again'))
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.registerForm.password) {
-        callback(new Error('Your password are different!'))
+        callback(new Error('两次输入的密码必须相同'))
       } else {
         callback()
       }
@@ -79,6 +84,9 @@ export default {
         code: ''
       },
       rules: {
+        username: [
+          { validator: verifyUsername, trigger: 'blur' }
+        ],
         email: [
           { validator: verifyEmail, trigger: 'blur' }
         ],

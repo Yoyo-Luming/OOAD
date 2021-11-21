@@ -46,25 +46,25 @@
             </el-container>
           </div>
           <div v-else>
-            <h2>Nothing Here. Want to sell something?</h2>
+            <h2>这里什么也没有，快去卖点什么吧</h2>
           </div>
         </el-container>
       </el-container>
       <el-dialog :visible.sync="dialogFormVisible">
         <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="商品名称">
+          <el-form-item label="商品名称" prop="goodName">
             <el-input v-model="form.goods_title" placeholder="请输入商品名称"></el-input>
           </el-form-item>
-          <el-form-item label="商品价格">
+          <el-form-item label="商品价格" prop="goodPrice">
             <el-input v-model="form.goods_price" placeholder="请输入商品价格"></el-input>
           </el-form-item>
-          <el-form-item label="商品分类">
+          <el-form-item label="商品分类" prop="goodType">
             <el-cascader  :options="options"
                           :props="{ checkStrictly: true }"
                           v-model="form.goods_kind"
                           clearable></el-cascader>
           </el-form-item>
-          <el-form-item label="使用程度">
+          <el-form-item label="使用程度" prop="goodStatus">
             <el-select v-model="form.goods_status" placeholder="请选择">
               <el-option
                 v-for="item in newOptions"
@@ -74,10 +74,10 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="商品描述">
+          <el-form-item label="商品描述" prop="goodDescription">
             <el-input v-model="form.goods_description" placeholder="请输入商品分类"></el-input>
           </el-form-item>
-          <el-form-item label="商品图片">
+          <el-form-item label="商品图片" prop="goodImage">
             <el-upload
               action="auto"
               :http-request="uploadSectionFile"
@@ -89,7 +89,7 @@
               <i class="el-icon-plus"></i>
             </el-upload>
           </el-form-item>
-          <el-form-item label="发货地址">
+          <el-form-item label="发货地址" prop="sendAddress">
             <el-select v-model="form.goods_address_id" placeholder="请选择">
               <el-option
                 v-for="item in addressList"
@@ -100,7 +100,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="邮费">
+          <el-form-item label="邮费" prop="postage">
             <el-input v-model="form.goods_postage"></el-input>
           </el-form-item>
           <el-form-item>
@@ -313,7 +313,33 @@ export default {
           label: '明显使用痕迹'
         }
       ],
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      rules: {
+        goodName: [
+          { required: true, message: '请输入商品名字', trigger: 'blur' }
+        ],
+        goodPrice: [
+          { required: true, message: '请输入商品价格', trigger: 'blur' }
+        ],
+        goodType: [
+          { required: true, message: '请输入商品类型', trigger: 'blur' }
+        ],
+        goodStatus: [
+          { required: true, message: '请输入商品状态', trigger: 'blur' }
+        ],
+        goodDescription: [
+          { required: true, message: '请输入商品描述', trigger: 'blur' }
+        ],
+        goodImage: [
+          { required: true, message: '请输入商品图像', trigger: 'blur' }
+        ],
+        sendAddress: [
+          { required: true, message: '请输入发货地址', trigger: 'blur' }
+        ],
+        postage: [
+          { required: true, message: '请输入邮费', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {

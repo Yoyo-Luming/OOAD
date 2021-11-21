@@ -60,6 +60,13 @@ export default {
   // Done
   name: 'login',
   data () {
+    const verifyUsername = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入用户名'))
+      } else {
+        callback()
+      }
+    }
     const verifyPassword = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('Please input your password'))
@@ -76,6 +83,9 @@ export default {
       },
       responseResult: [],
       rules: {
+        username: [
+          { validator: verifyUsername, trigger: 'blur' }
+        ],
         password: [
           { validator: verifyPassword, trigger: 'blur' }
         ]

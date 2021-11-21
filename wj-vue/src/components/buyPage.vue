@@ -41,7 +41,7 @@
             </el-container>
             <el-container class="follow-contents">
               <div>选择收货地址：
-                <el-select v-model="addressId" placeholder="请选择">
+                <el-select v-model="addressId" placeholder="请选择" prop="address">
                   <el-option
                     v-for="item in addressList"
                     :label="item.name + item.region+item.address+item.phone"
@@ -64,7 +64,7 @@
         <el-dialog style="margin: auto;" :visible.sync="innerVisible" :modal-append-to-body="false">
           <div v-if="payMethod===1">
             <el-form ref="form" label-width="200px">
-              <el-form-item label="支付密码:" >
+              <el-form-item label="支付密码:" prop="payPassword">
                 <el-input v-model="payPassword"></el-input>
               </el-form-item>
             </el-form>
@@ -76,7 +76,7 @@
           <div v-else>
             <el-form ref="form" label-width="200px">
               <img :src="QRCodeUrl">
-              <el-form-item label="上传支付凭证:" >
+              <el-form-item label="上传支付凭证:" prop="payCheck">
                 <el-upload
                   action="auto"
                   :http-request="uploadPaySectionFile"
@@ -96,7 +96,7 @@
         </el-dialog>
         <el-form ref="form" label-width="200px">
           <el-form-item label="请选择支付方式:" >
-            <el-select v-model="payMethod">
+            <el-select v-model="payMethod" prop="payMethod">
               <el-option
                 v-for="item in payOptions"
                 :label="item.label"
@@ -284,7 +284,21 @@ export default {
       QRCodeUrl: '',
       senderId: '',
       uploadPayFile: [],
-      orderId: ''
+      orderId: '',
+      rules: {
+        address: [
+          { required: true, message: '请选择收货地址', trigger: 'blur' }
+        ],
+        payPassword: [
+          { required: true, message: '请输入支付密码', trigger: 'blur' }
+        ],
+        payCheck: [
+          { required: true, message: '请上传支付凭证', trigger: 'blur' }
+        ],
+        payMethod: [
+          { required: true, message: '请选择支付方式', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {

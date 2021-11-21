@@ -120,7 +120,7 @@
       </el-main>
       <el-dialog title="编辑用户信息" :visible.sync="UserInfoFormVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" :model="fromData" label-width="200px">
-          <el-form-item label="身份">
+          <el-form-item label="身份" prop="userType">
             <el-select v-model="fromData.userType" placeholder="请选择身份">
               <el-option
                 v-for="item in userTypeOptions"
@@ -130,10 +130,10 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="真实姓名">
+          <el-form-item label="真实姓名" prop="trueName">
             <el-input v-model="fromData.trueName" placeholder="请输入真实姓名"></el-input>
           </el-form-item>
-          <el-form-item label="简介">
+          <el-form-item label="简介" prop="description">
             <el-input v-model="fromData.description" placeholder="请输入简介"></el-input>
           </el-form-item>
         </el-form>
@@ -159,10 +159,10 @@
       </el-dialog>
       <el-dialog title="激活用户信息" :visible.sync="activeFromVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" :model="activeFromData" label-width="200px" label-position="left">
-          <el-form-item label="真实姓名">
+          <el-form-item label="真实姓名" prop="realName">
             <el-input v-model="activeFromData.realName" placeholder="请输入真实姓名"></el-input>
           </el-form-item>
-          <el-form-item label="身份">
+          <el-form-item label="身份" prop="userName2">
             <el-select v-model="activeFromData.userType" placeholder="请选择身份">
               <el-option
                 v-for="item in userTypeOptions"
@@ -172,14 +172,14 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="支付密码">
+          <el-form-item label="支付密码" prop="payPassword">
             <el-input v-model="activeFromData.payPassword" placeholder="请输入支付密码"></el-input>
           </el-form-item>
           <el-form-item label="默认收货地址">
-            <el-form-item label="收货人姓名">
+            <el-form-item label="收货人姓名" prop="consigneeName">
               <el-input v-model="activeFromData.consigneeName" placeholder="请输入收货人姓名"></el-input>
             </el-form-item>
-            <el-form-item label="收货区域">
+            <el-form-item label="收货区域" prop="region">
               <el-select v-model="activeFromData.region" placeholder="请选择收货区域">
                 <el-option
                   v-for="item in areaOptions"
@@ -189,10 +189,10 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="详细地址">
+            <el-form-item label="详细地址" prop="address">
               <el-input v-model="activeFromData.address" placeholder="请输入详细地址"></el-input>
             </el-form-item>
-            <el-form-item label="收货人电话号码">
+            <el-form-item label="收货人电话号码" prop="phone">
               <el-input v-model="activeFromData.phone" placeholder="请输入收货人电话号码"></el-input>
             </el-form-item>
           </el-form-item>
@@ -204,10 +204,10 @@
       </el-dialog>
       <el-dialog title="编辑收货地址" :visible.sync="addressFormVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" :model="fromData" label-width="200px" label-position="left">
-          <el-form-item label="收件人姓名">
+          <el-form-item label="收件人姓名" prop="recName">
             <el-input v-model="addressFromData.name" placeholder="请输入收件人姓名"></el-input>
           </el-form-item>
-          <el-form-item label="收货区域">
+          <el-form-item label="收货区域" prop="recRegion">
             <el-select v-model="addressFromData.region" placeholder="请选择收货区域">
               <el-option
                 v-for="item in areaOptions"
@@ -217,10 +217,10 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="详细地址">
+          <el-form-item label="详细地址" prop="recAddress">
             <el-input v-model="addressFromData.address" placeholder="请输入详细收货地址"></el-input>
           </el-form-item>
-          <el-form-item label="电话号码">
+          <el-form-item label="电话号码" prop="recPhone">
             <el-input v-model="addressFromData.phone" placeholder="请输入电话号码"></el-input>
           </el-form-item>
         </el-form>
@@ -231,10 +231,10 @@
       </el-dialog>
       <el-dialog title="编辑发货地址" :visible.sync="sendAddressFormVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" :model="sendAddressFromData" label-width="200px" label-position="left">
-          <el-form-item label="发件人姓名">
+          <el-form-item label="发件人姓名" prop="senName">
             <el-input v-model="sendAddressFromData.name" placeholder="请输入发件人姓名"></el-input>
           </el-form-item>
-          <el-form-item label="发货区域">
+          <el-form-item label="发货区域" prop="senRegion">
             <el-select v-model="sendAddressFromData.region" placeholder="请选择发货区域">
               <el-option
                 v-for="item in areaOptions"
@@ -244,10 +244,10 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="详细地址">
+          <el-form-item label="详细地址" prop="senAddress">
             <el-input v-model="sendAddressFromData.address" placeholder="请输入详细收货地址"></el-input>
           </el-form-item>
-          <el-form-item label="电话号码">
+          <el-form-item label="电话号码" prop="senPhone">
             <el-input v-model="sendAddressFromData.phone" placeholder="请输入电话号码"></el-input>
           </el-form-item>
         </el-form>
@@ -258,10 +258,10 @@
       </el-dialog>
       <el-dialog title="忘记密码" :visible.sync="LoginPassWordVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" label-width="200px" label-position="left">
-          <el-form-item label="旧登录密码">
+          <el-form-item label="旧登录密码"  prop="oldLoginPassword">
             <el-input v-model="oldLoginPassword" placeholder="请输入旧登录密码"></el-input>
           </el-form-item>
-          <el-form-item label="新登录密码">
+          <el-form-item label="新登录密码" prop="newLoginPassword">
             <el-input v-model="newLoginPassword" placeholder="请输入新登录密码"></el-input>
           </el-form-item>
         </el-form>
@@ -272,10 +272,10 @@
       </el-dialog>
       <el-dialog title="修改支付密码" :visible.sync="PayPassWordVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" label-width="200px" label-position="left">
-          <el-form-item label="旧支付密码">
+          <el-form-item label="旧支付密码" prop="oldPayPassword">
             <el-input v-model="oldPayPassword" placeholder="请输入旧支付密码"></el-input>
           </el-form-item>
-          <el-form-item label="新支付密码">
+          <el-form-item label="新支付密码" prop="newPayPassword">
             <el-input v-model="newPayPassword" placeholder="请输入新支付密码"></el-input>
           </el-form-item>
         </el-form>
@@ -286,10 +286,10 @@
       </el-dialog>
       <el-dialog title="忘记支付密码" :visible.sync="forgetVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" label-width="200px" label-position="left">
-          <el-form-item label="新支付密码">
+          <el-form-item label="新支付密码" prop="newPayPassword2">
             <el-input v-model="newPayPassword" placeholder="请输入旧支付密码"></el-input>
           </el-form-item>
-          <el-form-item label="验证码">
+          <el-form-item label="验证码" prop="checkCode">
             <el-input v-model="changeCode" placeholder="请输入新支付密码"></el-input>
           </el-form-item>
         </el-form>
@@ -301,10 +301,10 @@
       </el-dialog>
       <el-dialog title="激活卖家" :visible.sync="activeSellFromVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" :model="activeSellFromData" label-width="200px" label-position="left">
-          <el-form-item label="卖家">
+          <el-form-item label="卖家" prop="sellerName">
             <el-input v-model="activeSellFromData.name" placeholder="请输入卖家姓名"></el-input>
           </el-form-item>
-          <el-form-item label="发货区域">
+          <el-form-item label="发货区域" prop="sellerRegion">
             <el-select v-model="activeSellFromData.region" placeholder="请选择发货区域">
               <el-option
                 v-for="item in areaOptions"
@@ -314,13 +314,13 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="详细地址">
+          <el-form-item label="详细地址" prop="sellerAddress">
             <el-input v-model="activeSellFromData.address" placeholder="请输入详细收货地址"></el-input>
           </el-form-item>
-          <el-form-item label="电话号码">
+          <el-form-item label="电话号码" prop="sellerPhone">
             <el-input v-model="activeSellFromData.phone" placeholder="请输入电话号码"></el-input>
           </el-form-item>
-          <el-form-item label="收款二维码">
+          <el-form-item label="收款二维码" prop="sellerQR">
             <el-upload
               action="auto"
               :http-request="uploadQRCodeSectionFile"
@@ -559,7 +559,96 @@ export default {
       LoginPassWordVisible: false,
       changeCode: '',
       activePane: 'first',
-      activePath: ''
+      activePath: '',
+      rules: {
+        userType: [
+          { required: true, message: '请输入用户类型', trigger: 'blur' }
+        ],
+        trueName: [
+          { required: true, message: '请输入真名', trigger: 'blur' }
+        ],
+        description: [
+          { required: true, message: '请输入个性签名', trigger: 'blur' }
+        ],
+        realName: [
+          { required: true, message: '请输入真名', trigger: 'blur' }
+        ],
+        userType2: [
+          { required: true, message: '请输入用户类型', trigger: 'blur' }
+        ],
+        payPassword: [
+          { required: true, message: '请输入支付密码', trigger: 'blur' }
+        ],
+        consigneeName: [
+          { required: true, message: '请输入收货人姓名', trigger: 'blur' }
+        ],
+        region: [
+          { required: true, message: '请输入收货区域', trigger: 'blur' }
+        ],
+        address: [
+          { required: true, message: '请输入收货地址', trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, message: '请输入收货人电话', trigger: 'blur' }
+        ],
+        recName: [
+          { required: true, message: '请输入收货人姓名', trigger: 'blur' }
+        ],
+        recRegion: [
+          { required: true, message: '请输入收货人区域', trigger: 'blur' }
+        ],
+        recAddress: [
+          { required: true, message: '请输入收货人地址', trigger: 'blur' }
+        ],
+        recPhone: [
+          { required: true, message: '请输入收货人电话', trigger: 'blur' }
+        ],
+        senName: [
+          { required: true, message: '请输入发货人姓名', trigger: 'blur' }
+        ],
+        senRegion: [
+          { required: true, message: '请输入发货人区域', trigger: 'blur' }
+        ],
+        senAddress: [
+          { required: true, message: '请输入发货人地址', trigger: 'blur' }
+        ],
+        senPhone: [
+          { required: true, message: '请输入发货人电话', trigger: 'blur' }
+        ],
+        oldLoginPassword: [
+          { required: true, message: '请输入旧登录密码', trigger: 'blur' }
+        ],
+        newLoginPassword: [
+          { required: true, message: '请输入新登录密码', trigger: 'blur' }
+        ],
+        oldPayPassword: [
+          { required: true, message: '请输入旧支付密码', trigger: 'blur' }
+        ],
+        newPayPassword: [
+          { required: true, message: '请输入新支付密码', trigger: 'blur' }
+        ],
+        newPayPassword2: [
+          { required: true, message: '请输入新支付密码', trigger: 'blur' }
+        ],
+        checkCode: [
+          { required: true, message: '请输入验证码', trigger: 'blur' }
+        ],
+        sellerName: [
+          { required: true, message: '请输入卖家姓名', trigger: 'blur' }
+        ],
+        sellerRegion: [
+          { required: true, message: '请输入卖家区域', trigger: 'blur' }
+        ],
+        sellerAddress: [
+          { required: true, message: '请输入卖家地址', trigger: 'blur' }
+        ],
+        sellerPhone: [
+          { required: true, message: '请输入卖家电话', trigger: 'blur' }
+        ],
+        sellerQR: [
+          { required: true, message: '请输入卖家收款二维码', trigger: 'blur' }
+        ]
+      }
     }
   },
   mounted () {

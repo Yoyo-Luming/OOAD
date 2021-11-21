@@ -107,16 +107,16 @@
       </el-container>
       <el-dialog title="评价" :visible.sync="commentVisible" center>
         <el-form ref="form" label-width="200px">
-          <el-form-item class="form-item-class" label="商品评价：" >
+          <el-form-item class="form-item-class" label="商品评价：" prop="rating">
             <el-rate style="align-items: center" v-model="comment1"></el-rate>
           </el-form-item>
-          <el-form-item class="form-item-class" label="服务评价：" >
+          <el-form-item class="form-item-class" label="服务评价：" prop="comment1">
             <el-rate style="align-items: center" v-model="comment2"></el-rate>
           </el-form-item>
-          <el-form-item class="form-item-class" label="运输评价：" >
+          <el-form-item class="form-item-class" label="运输评价：" prop="comment2">
             <el-rate style="align-items: center" v-model="comment3"></el-rate>
           </el-form-item>
-          <el-form-item class="form-item-class" label="评论：" >
+          <el-form-item class="form-item-class" label="评论：" prop="comment3">
             <el-input style="align-items: center" v-model="commentText"></el-input>
           </el-form-item>
         </el-form>
@@ -127,10 +127,10 @@
       </el-dialog>
       <el-dialog style="margin: auto;" :visible.sync="handleProblemVisible" :modal-append-to-body="false">
         <el-form ref="form" label-width="200px">
-          <el-form-item label="回复:" >
+          <el-form-item label="回复:" prop="reply">
             <el-input v-model="handleProblemForm.superuserLog"></el-input>
           </el-form-item>
-          <el-form-item label="问题方:" >
+          <el-form-item label="问题方:" prop="question">
             <el-radio v-model="handleProblemForm.problemRole" label="1">买方</el-radio>
             <el-radio v-model="handleProblemForm.problemRole" label="2">卖方</el-radio>
           </el-form-item>
@@ -144,7 +144,7 @@
         <el-dialog style="margin: auto;" :visible.sync="innerVisible" :modal-append-to-body="false">
           <div v-if="payMethod===1">
             <el-form ref="form" label-width="200px">
-              <el-form-item label="支付密码:" >
+              <el-form-item label="支付密码:" prop="payPassword">
                 <el-input v-model="payPassword"></el-input>
               </el-form-item>
             </el-form>
@@ -156,7 +156,7 @@
           <div v-else-if="payMethod===2">
             <el-form ref="form" label-width="200px">
               <img :src="QRCodeUrl">
-              <el-form-item label="上传支付凭证:" >
+              <el-form-item label="上传支付凭证:" prop="payCheck">
                 <el-upload
                   action="auto"
                   :http-request="uploadPaySectionFile"
@@ -175,7 +175,7 @@
           </div>
         </el-dialog>
         <el-form ref="form" label-width="200px">
-          <el-form-item label="请选择支付方式:" >
+          <el-form-item label="请选择支付方式:" prop="payMethod">
             <el-select v-model="payMethod">
               <el-option
                 v-for="item in payOptions"
@@ -193,7 +193,7 @@
       </el-dialog>
       <el-dialog style="margin: auto;" :visible.sync="problemFromVisible" :modal-append-to-body="false">
         <el-form ref="form" label-width="200px">
-          <el-form-item class="form-item-class" label="问题类型：" >
+          <el-form-item class="form-item-class" label="问题类型：" prop="questionType">
             <el-select v-model="problemForm.problemType">
               <el-option
                 v-for="item in problemOptions"
@@ -203,14 +203,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item class="form-item-class" label="问题描述：" >
+          <el-form-item class="form-item-class" label="问题描述：" prop="description">
             <el-input v-model="problemForm.problemDescription"></el-input>
-          </el-form-item>
-          <el-form-item class="form-item-class" label="运输评价：" >
-            <el-rate style="align-items: center" v-model="comment3"></el-rate>
-          </el-form-item>
-          <el-form-item class="form-item-class" label="评论：" >
-            <el-input style="align-items: center" v-model="commentText"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -420,7 +414,48 @@ export default {
         '6号门',
         '7号门',
         '8号门',
-        '其它']
+        '其它'],
+      rules: {
+        rating: [
+          { required: true, message: '请打分', trigger: 'blur' }
+        ],
+        comment1: [
+          { required: true, message: '请选择评价', trigger: 'blur' }
+        ],
+        comment2: [
+          { required: true, message: '请选择评价', trigger: 'blur' }
+        ],
+        comment3: [
+          { required: true, message: '请选择评价', trigger: 'blur' }
+        ],
+        reply: [
+          { required: true, message: '请输入回复', trigger: 'blur' }
+        ],
+        question: [
+          { required: true, message: '请输入问题', trigger: 'blur' }
+        ],
+        payPassword: [
+          { required: true, message: '请输入支付密码', trigger: 'blur' }
+        ],
+        payCheck: [
+          { required: true, message: '请输入支付凭证', trigger: 'blur' }
+        ],
+        payMethod: [
+          { required: true, message: '请选择支付方式', trigger: 'blur' }
+        ],
+        questionType: [
+          { required: true, message: '请输入问题类型', trigger: 'blur' }
+        ],
+        description: [
+          { required: true, message: '请输入描述', trigger: 'blur' }
+        ],
+        transport: [
+          { required: true, message: '请选择评价', trigger: 'blur' }
+        ],
+        comment4: [
+          { required: true, message: '请输入评价', trigger: 'blur' }
+        ]
+      }
     }
   },
   mounted () {

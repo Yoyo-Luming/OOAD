@@ -48,19 +48,19 @@
       </el-container>
       <el-dialog style="margin: auto;" :visible.sync="otherTaskVisible" :modal-append-to-body="false">
         <el-form :model="otherTaskForm" label-width="200px" label-position="left">
-          <el-form-item label="任务名称">
+          <el-form-item label="任务名称" prop="taskName">
             <el-input v-model="otherTaskForm.name"></el-input>
           </el-form-item>
-          <el-form-item label="价格">
+          <el-form-item label="价格" prop="taskPrice">
             <el-input v-model="otherTaskForm.price"></el-input>
           </el-form-item>
-          <el-form-item label="最晚取货时间">
+          <el-form-item label="最晚取货时间" prop="taskDDL">
             <el-date-picker v-model="otherTaskForm.ddlTime" type="datetime" placeholder="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionLater" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
           </el-form-item>
-          <el-form-item label="任务描述">
+          <el-form-item label="任务描述" prop="taskDes">
             <el-input v-model="otherTaskForm.description"></el-input>
           </el-form-item>
-          <el-form-item label="发货地址">
+          <el-form-item label="发货地址" prop="taskSendAddress">
             <el-select v-model="otherTaskForm.senderAddressId" placeholder="请选择收货区域">
               <el-option
                 v-for="item in sendAddressList"
@@ -70,7 +70,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="收货地址">
+          <el-form-item label="收货地址" prop="taskReceAddress">
             <el-select v-model="otherTaskForm.receiveAddressId" placeholder="请选择收货区域">
               <el-option
                 v-for="item in receiveAddressList"
@@ -255,6 +255,38 @@ export default {
         disabledDate (time) {
           return time.getTime() < Date.now()
         }
+      },
+      rules: {
+        taskName: [
+          { required: true, message: '请输入任务名字', trigger: 'blur' }
+        ],
+        taskPrice: [
+          { required: true, message: '请输入任务价格', trigger: 'blur' }
+        ],
+        taskDDL: [
+          { required: true, message: '请输入任务DDL', trigger: 'blur' }
+        ],
+        taskDes: [
+          { required: true, message: '请输入任务描述', trigger: 'blur' }
+        ],
+        taskSendAddress: [
+          { required: true, message: '请输入任务起始地点', trigger: 'blur' }
+        ],
+        taskReceAddress: [
+          { required: true, message: '请输入任务目标地点', trigger: 'blur' }
+        ],
+        taskName2: [
+          { required: true, message: '请输入任务名字', trigger: 'blur' }
+        ],
+        taskPrice2: [
+          { required: true, message: '请输入任务价格', trigger: 'blur' }
+        ],
+        taskDDL2: [
+          { required: true, message: '请输入任务DDL', trigger: 'blur' }
+        ],
+        taskDes2: [
+          { required: true, message: '请输入任务描述', trigger: 'blur' }
+        ]
       }
     }
   },

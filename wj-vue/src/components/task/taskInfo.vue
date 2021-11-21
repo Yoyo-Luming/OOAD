@@ -56,7 +56,7 @@
               <el-button type="primary" class="other-button" @click="confirmGetObject" v-if="confirmGetObjectButton">确认领货</el-button>
               <el-button type="primary" class="other-button" @click="confirmSend" v-if="confirmSendButton">确认送达</el-button>
               <el-button type="primary" class="other-button" @click="confirmReceive" v-if="confirmReceiveButton">确认收货</el-button>
-              <el-button type="primary" class="other-button" @click="comments" v-if="commentButton">评论</el-button>
+              <el-button type="primary" class="other-button" @click="commentVisible=true" v-if="commentButton">评论</el-button>
             </el-container>
           </el-container>
           <el-divider></el-divider>
@@ -75,6 +75,20 @@
           </el-container>
         </el-container>
       </el-container>
+      <el-dialog style="margin: auto;" :visible.sync="commentVisible" :modal-append-to-body="false">
+        <el-form ref="form" label-width="200px">
+          <el-form-item class="form-item-class" label="服务评分：" prop="rating">
+            <el-rate v-model="commentRate"></el-rate>
+          </el-form-item>
+          <el-form-item class="form-item-class" label="评论：" prop="comments">
+            <el-input v-model="commentText"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="commentVisible=false">取消</el-button>
+          <el-button @click="submitComment">确认</el-button>
+        </div>
+      </el-dialog>
     </el-main>
   </el-container>
   <!--  <el-container>-->
@@ -120,11 +134,11 @@
   <!--        <el-button @click="commentVisible=true" v-if="commentButton">评论</el-button>-->
   <!--      </el-col>-->
   <!--    </el-row>-->
-  <!--    <el-dialog title="评价" :visible.sync="commentVisible" center>-->
-  <!--      服务评分：<el-rate v-model="commentRate"></el-rate>-->
-  <!--      评论：<el-input v-model="commentText"></el-input>-->
-  <!--      <el-button @click="submitComment">提交评价</el-button>-->
-  <!--    </el-dialog>-->
+<!--      <el-dialog title="评价" :visible.sync="commentVisible" center>-->
+<!--        服务评分：<el-rate v-model="commentRate"></el-rate>-->
+<!--        评论：<el-input v-model="commentText"></el-input>-->
+<!--        <el-button @click="submitComment">提交评价</el-button>-->
+<!--      </el-dialog>-->
   <!--  </el-container>-->
 </template>
 
@@ -231,7 +245,15 @@ export default {
         '8号门',
         '其它'],
       hasOrder: false,
-      ddlTime: ''
+      ddlTime: '',
+      rules: {
+        rating: [
+          { required: true, message: '请打分', trigger: 'blur' }
+        ],
+        comments: [
+          { required: true, message: '请评论', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {

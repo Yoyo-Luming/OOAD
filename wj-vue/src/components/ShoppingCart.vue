@@ -34,11 +34,11 @@
                 <table>
                   <tr>
                     <th>
-                      <el-button type="text" class="choose-all" v-on:click="checkAll" round>Choose All</el-button>
+                      <el-button type="text" class="choose-all" v-on:click="checkAll" round>选择全部</el-button>
                     </th>
-                    <th>Name</th>
-                    <th>photo</th>
-                    <th>Price</th>
+                    <th>名字</th>
+                    <th>图片</th>
+                    <th>价格</th>
                     <th></th>
                   </tr>
                   <tr v-for="(item,index) in goods" :key="item.select">
@@ -46,40 +46,51 @@
                     <td>{{item.name}}</td>
                     <td><img :src="item.photo" alt=""></td>
                     <td>{{item.price}} 元</td>
-                    <td><el-button type="danger" v-on:click="deleteItem(index)" round>Remove</el-button></td>
+                    <td><el-button type="danger" v-on:click="deleteItem(index)" round>移除</el-button></td>
                   </tr>
                 </table>
                 <el-container class="totalCost">
                   <span>总计：{{totalCost}} 元</span>
-                  <el-button type="primary" class="submit-button" v-on:click="chooseAddressVisible=true" round>Submit</el-button>
+                  <el-button type="primary" class="submit-button" v-on:click="chooseAddressVisible=true" round>提交</el-button>
                 </el-container>
-                <el-dialog :visible.sync="chooseAddressVisible">
-                  收货地址：
-                  <el-select v-model="addressId" placeholder="请选择">
-                  <el-option
-                    v-for="item in addressList"
-                    :label="item.name + item.region+item.address+item.phone"
-                    :key="item.id"
-                    :value="item.id"
-                  >
-                  </el-option>
-                </el-select>
-                  <el-button @click="chooseAddressVisible=false">取消</el-button>
-                  <el-button @click="submit">确认订单</el-button>
-                </el-dialog>
-                <el-dialog :visible.sync="payVisible">
-                  支付密码:<el-input v-model="payPassword"></el-input>
-                  <el-button @click="dialogFormVisible=false">取消</el-button>
-                  <el-button @click="pay">确认</el-button>
-                </el-dialog>
               </div>
               <div v-else>
-                <h2>Nothing in your cart</h2>
+                <h2>你的购物车里哦什么都没有</h2>
               </div>
             </el-container>
           </el-tab-pane>
         </el-tabs>
       </el-container>
+      <el-dialog style="margin: auto;" :visible.sync="chooseAddressVisible" :modal-append-to-body="false">
+        <el-form ref="form" label-width="200px">
+          <el-form-item class="form-item-class" label="收货地址：" prop="recAddress">
+            <el-select v-model="addressId">
+              <el-option
+                v-for="item in addressList"
+                :label="item.name + item.region+item.address+item.phone"
+                :key="item.id"
+                :value="item.id"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="chooseAddressVisible=false">取消</el-button>
+          <el-button @click="submit">确认订单</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog style="margin: auto;" :visible.sync="chooseAddressVisible" :modal-append-to-body="false">
+        <el-form ref="form" label-width="200px">
+          <el-form-item class="form-item-class" label="支付密码：" prop="password">
+            <el-input v-model="payPassword"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible=false">取消</el-button>
+          <el-button @click="pay">确认</el-button>
+        </div>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -89,6 +100,18 @@ export default {
   // Done
   name: 'ShoppingCart',
   data () {
+    const verifyPassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      }
+      callback()
+    }
+    const verifyAddress = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      }
+      callback()
+    }
     return {
       goods: [
         // {name: 'name', photo: '', price: '', select: false}
@@ -129,7 +152,15 @@ export default {
         '其它'],
       addressList: [],
       identifyCode: '',
-      payPassword: ''
+      payPassword: '',
+      rules: {
+        password: [
+          { validator: verifyPassword, trigger: 'blur' }
+        ],
+        recAddress: [
+          { validator: verifyAddress, trigger: 'blur' }
+        ]
+      }
     }
   },
   mounted () {

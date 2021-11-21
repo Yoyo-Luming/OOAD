@@ -32,7 +32,7 @@
             prefix-icon="el-icon-search"
             v-model="searchContent" style="width: 870px">
           </el-input>
-          <el-button type="primary" style="width: 100px;background: #a0c4ff;border: none;" v-on:click="search">Search</el-button>
+          <el-button type="primary" style="width: 100px;background: #a0c4ff;border: none;" v-on:click="search">搜索</el-button>
         </el-container>
         <el-container class="choose-opt">
           <el-cascader  :options="options"
@@ -73,7 +73,7 @@
             </el-container>
           </div>
           <div v-else>
-            <h2>Nothing Here. Search something else.</h2>
+            <h2>这里还没有结果！</h2>
           </div>
           <!--          <div>-->
           <!--            <goods-box v-for="(item, index) of goodsList " :key="index+Math.random()" :name="item.name" :price="item.price" :photo="item.photo" :favourite_number="item.favourite_number" :mer_id="item.mer_id"></goods-box>-->
@@ -449,5 +449,4 @@ export default {
   font-size: 15px;
   overflow: hidden;
 }
-
 </style>

@@ -20,7 +20,7 @@
             <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>
             <el-menu-item index="2-4" v-on:click="markPage">收藏的商品</el-menu-item>
           </el-submenu>
-          <el-menu-item index="4" v-on:click="logOut">Log Out</el-menu-item>
+          <el-menu-item index="3" v-on:click="logOut">注销</el-menu-item>
         </el-menu>
       </div>
     </el-header>
@@ -615,17 +615,14 @@ export default {
     homePage () {
       this.$router.push('/')
     },
-    searchPage () {
-      this.$router.push('/search')
-    },
     cartPage () {
       this.$router.push('/cart')
     },
     sellPage () {
-      this.$router.push('/store')
+      this.$router.push('/sellinggoods')
     },
     markPage () {
-      this.$router.push('/markPage')
+      this.$router.push('/favoritegoods')
     },
     logOut () {
       this.$axios.post('login0/logout/ ')
@@ -823,6 +820,9 @@ export default {
     },
     goPostGoods () {
       this.$router.push('/sellinggoods')
+    },
+    goNewGoods () {
+      this.$router.push('/addgoods')
     },
     changePayPassword () {
       // 修改支付密码

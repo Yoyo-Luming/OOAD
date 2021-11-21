@@ -81,7 +81,7 @@
             </el-container>
             <el-container class="operation-buttons">
               <el-container class="operation-buttons-one">
-                <el-button :disabled="!currentUserIsSeller" type="primary" style="width: 200px" @click="callSender"><div v-if="currentUserIsSeller">联系买家</div><div v-else>联系卖家</div></el-button>
+                <el-button type="primary" style="width: 200px" @click="callSender"><div v-if="currentUserIsSeller">联系买家</div><div v-else>联系卖家</div></el-button>
                 <el-button :disabled="!buyButton" type="primary" style="width: 200px" @click="payFormVisible=true">付款</el-button>
                 <el-button :disabled="!cancelButton" type="primary" style="width: 200px" @click="cancel">取消订单</el-button>
                 <el-button :disabled="!commentButton" type="primary" style="width: 200px" @click="commentVisible=true">评价</el-button>
@@ -419,7 +419,7 @@ export default {
   },
   mounted () {
     // this.buyButton = true
-    this.commentButton = true
+    // this.commentButton = true
     // console.log(this.buyButton)
     console.log('---------------------')
     console.log(this.$route.params.orderDetail)
@@ -529,9 +529,8 @@ export default {
         current_tra_id: this.orderId
       })).then(response => {
         this.$message.info(response.data.message)
-
         if (response.data.status === '200') {
-          this.$router.push('/buyorder')
+          this.$router.push('/sellorder')
         }
       })
     },

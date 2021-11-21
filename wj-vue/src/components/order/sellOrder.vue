@@ -191,41 +191,19 @@ export default {
   },
   data () {
     return {
-      payList: [{
-        goodsName: '汉堡1',
-        price: 1,
-        description: 'nice',
-        photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
-        orderDetail: []
-      }],
-      shipList: [{
-        goodsName: '汉堡2',
-        price: 2,
-        description: 'nice',
-        photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
-        orderDetail: []
-      }],
-      receiveList: [{
-        goodsName: '汉堡3',
-        price: 3,
-        description: 'nice',
-        photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
-        orderDetail: []
-      }],
-      evaluateList: [{
-        goodsName: '汉堡4',
-        price: 4,
-        description: 'nice',
-        photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
-        orderDetail: []
-      }],
-      completeList: [{
-        goodsName: '汉堡5',
-        price: 5,
-        description: 'nice',
-        photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
-        orderDetail: []
-      }],
+      payList: [
+      //   {
+      //   goodsName: '汉堡1',
+      //   price: 1,
+      //   description: 'nice',
+      //   photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+      //   orderDetail: []
+      // }
+      ],
+      shipList: [],
+      receiveList: [],
+      evaluateList: [],
+      completeList: [],
       activePane: 'first'
     }
   },

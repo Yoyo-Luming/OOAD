@@ -122,9 +122,11 @@ export default {
           // user_status: 2
           if (successResponse.data.status === '200' || successResponse.data.status === '300') {
             console.log(successResponse.data)
-            this.$store.commit('setUserName', this.loginForm.username)
-            this.$store.commit('setUserId', successResponse.data.user_id)
-            this.$store.commit('setUserStatus', successResponse.data.user_status)
+            if (successResponse.data.status === '200') {
+              this.$store.commit('setUserName', this.loginForm.username)
+              this.$store.commit('setUserId', successResponse.data.user_id)
+              this.$store.commit('setUserStatus', successResponse.data.user_status)
+            }
             // this.$global.setUser(this.loginForm.username)
             // this.$global.setUserId(successResponse.data.user_id)
             this.$message.success(successResponse.data.message)

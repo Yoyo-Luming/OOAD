@@ -28,7 +28,7 @@
       <el-container class="mid-content">
         <el-tabs type="border-card" v-model="activePane">
           <!--          pay-pane-->
-          <el-tab-pane label="待付款" class="whole-pane" name="first">
+          <el-tab-pane label="待处理问题列表" class="whole-pane" name="first">
             <el-container class="whole-order" v-for="(item, index) in problemList" :key="index">
               <el-container class="order-photo">
                 <el-image :src="item.orderUrl" fit="contain" :alt="item.problemType"></el-image>
@@ -86,7 +86,7 @@ export default {
   },
   methods: {
     toOrderPage (item) {
-      this.$router.push({name: 'orderInfo', params: {orderDetail: item.detail}})
+      this.$router.push({name: 'orderInfo', params: {orderDetail: item.detail, from: 'handleProblem'}})
     },
     myPage () {
       this.$router.push('/person')
@@ -112,5 +112,93 @@ export default {
 </script>
 
 <style scoped>
+.home-container {
+  height: 100%;
+  width: 100%;
+  background: center no-repeat url("../../assets/back7.jpg");
+  background-size: cover;
+  display: block;
+}
 
+.el-header {
+  background: #545c64;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 0;
+  align-items: center;
+  color: #ffffff;
+  font-size: 40px;
+  opacity: 0.5;
+}
+
+.right-head {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+}
+
+.left-head {
+  display: flex;
+  align-items: center;
+}
+
+.mid-content {
+  display: block;
+  margin: 60px auto;
+  height: 100%;
+  width: 1200px;
+}
+
+.whole-pane {
+  display: block;
+}
+
+.whole-order {
+  display: flex;
+  justify-content: space-evenly;
+  border: 2px solid #eaeaea;
+}
+
+.order-photo {
+  height: 150px;
+  width: 150px;
+  margin: 10px 10px 10px 10px;
+  justify-content: space-evenly;
+}
+
+.order-name {
+  width: 150px;
+  overflow: hidden;
+  font-size: 30px;
+  align-items: center;
+  font-family: 黑体;
+  justify-content: left;
+}
+
+.order-detail {
+  width: 150px;
+  margin-left: 20px;
+  margin-right: 20px;
+  font-size: 20px;
+  word-wrap: anywhere;
+  word-break: normal;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-pay {
+  width: 150px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.last-button {
+  background-color: #ff0036;
+  border: 1px solid #ff0036;
+  color: #fff;
+  justify-content: space-evenly;
+}
 </style>

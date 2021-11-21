@@ -14,7 +14,7 @@
           active-text-color="#ffd04b">
           <el-menu-item index="1" v-on:click="homePage">主页</el-menu-item>
           <el-submenu index="2">
-            <template slot="title">用户名</template>
+            <template slot="title">{{$store.state.userName}}</template>
             <el-menu-item index="2-1" v-on:click="myPage">个人主页</el-menu-item>
             <el-menu-item index="2-2" v-on:click="cartPage">购物车</el-menu-item>
             <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>
@@ -90,7 +90,12 @@
                 <el-button :disabled="!sendButton" type="primary" style="width: 200px" @click="confirmSend">确认发货</el-button>
                 <el-button :disabled="!receiveButton" type="primary" style="width: 200px" @click="confirmReceive">确认收货</el-button>
                 <el-button :disabled="!hasTask" type="primary" style="width: 200px" @click="goTaskPage">关联跑腿任务</el-button>
-                <el-button type="primary" style="width: 200px" @click="problemFromVisible=true">订单申诉</el-button>
+                <div v-if="isHandleProblem">
+                  <el-button type="primary" style="width: 200px" @click="handleProblemVisible=true">申诉处理</el-button>
+                </div>
+                <div v-else>
+                  <el-button type="primary" style="width: 200px" @click="problemFromVisible=true">订单申诉</el-button>
+                </div>
               </el-container>
             </el-container>
             <el-divider></el-divider>
@@ -376,6 +381,7 @@ export default {
       ],
       isAdmin: true,
       handleProblemVisible: false,
+      isHandleProblem: false,
       handleProblemForm: {
         superuserLog: '',
         problemRole: ''
@@ -423,6 +429,10 @@ export default {
     // console.log(this.buyButton)
     console.log('---------------------')
     console.log(this.$route.params.orderDetail)
+    if (this.$route.params.from === 'handleProblem') {
+      this.isHandleProblem = true
+      // console.log('handlePromblem')
+    }
     this.info = this.$route.params.orderDetail
     // console.log(info)
     this.$axios.post('commodity/commodity_detail/', this.$qs.stringify({

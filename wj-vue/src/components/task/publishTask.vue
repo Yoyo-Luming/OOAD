@@ -35,11 +35,12 @@
                 <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
               </el-container>
               <el-container class="order-name">{{item.goodsName}}</el-container>
-              <el-container class="order-detail">发货地点：{{item.sendAddress}}</el-container>
-              <el-container class="order-detail">收货地点：{{item.receiveAddress}}</el-container>
-              <el-container class="order-detail">{{item.orderDetail}}</el-container>
+              <el-container class="order-detail">发货地址：{{item.sendAddress}}</el-container>
+              <el-container class="order-detail">收货地址：{{item.receiveAddress}}</el-container>
+<!--              <el-container class="order-detail">{{item.orderDetail}}</el-container>-->
               <el-container class="order-pay">
-                <el-button class="last-button" v-on:click="toOrderPage">查看详情</el-button>
+                <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
+                <el-button type="text" class="button" @click="clickPostTaskOrder(item)">发布任务</el-button>
               </el-container>
             </el-container>
           </el-tab-pane>
@@ -82,6 +83,24 @@
         </el-form>
         <el-button @click="otherTaskVisible=false">取消</el-button>
         <el-button type="primary" @click="postOtherTask">发布跑腿任务</el-button>
+      </el-dialog>
+      <el-dialog :visible.sync="orderTaskVisible">
+        <el-form :model="orderTaskForm">
+          <el-form-item label="任务名称" prop="taskName2">
+            <el-input v-model="orderTaskForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="价格" prop="taskPrice2">
+            <el-input v-model="orderTaskForm.price"></el-input>
+          </el-form-item>
+          <el-form-item label="最晚取货时间" prop="taskDDL2">
+            <el-date-picker v-model="orderTaskForm.ddlTime" type="datetime" placeholder="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionLater" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="任务描述" prop="taskDes2">
+            <el-input v-model="orderTaskForm.description"></el-input>
+          </el-form-item>
+        </el-form>
+        <el-button @click="orderTaskForm=false">取消</el-button>
+        <el-button @click="postTaskOrder">发布跑腿任务</el-button>
       </el-dialog>
     </el-main>
   </el-container>
@@ -182,6 +201,7 @@ export default {
   data () {
     return {
       otherTaskVisible: false,
+      orderTaskVisible: false,
       otherTaskForm: {
         name: '',
         price: '',
@@ -189,6 +209,12 @@ export default {
         description: '',
         senderAddressId: '',
         receiveAddressId: ''
+      },
+      orderTaskForm: {
+        name: '',
+        price: '',
+        ddlTime: '',
+        description: ''
       },
       sendAddressList: [],
       receiveAddressList: [],
@@ -223,6 +249,8 @@ export default {
         '7号门',
         '8号门',
         '其它'],
+      activePane: 'first',
+      current_transaction_id: '',
       pickerOptionLater: {
         disabledDate (time) {
           return time.getTime() < Date.now()
@@ -243,6 +271,32 @@ export default {
         this.$message.info(response.data.message)
         if (response.data.status === '200') {
           this.otherTaskVisible = false
+        }
+      })
+    },
+    toOrderPage (item) {
+      console.log(item.detail)
+      this.$router.push({name: 'orderInfo', params: {orderDetail: item.orderDetail}})
+    },
+    clickPostTaskOrder (item) {
+      this.current_transaction_id = item.orderDetail.transaction_id
+      this.orderTaskVisible = true
+    },
+    postTaskOrder () {
+      this.$axios.post('/task/release_task_transaction/', this.$qs.stringify({
+        tra_id: this.current_transaction_id,
+        ddl_time: this.orderTaskForm.ddlTime,
+        price: this.orderTaskForm.price,
+        description: this.orderTaskForm.description,
+        name: this.orderTaskForm.name
+      })).then(response => {
+        this.$message.info(response.data.message)
+        if (response.data.status === '200') {
+          this.orderTaskForm.ddlTime = ''
+          this.orderTaskForm.name = ''
+          this.orderTaskForm.description = ''
+          this.orderTaskForm.price = ''
+          this.orderTaskVisible = false
         }
       })
     },

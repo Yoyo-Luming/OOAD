@@ -293,7 +293,7 @@ export default {
   name: 'orderInfo',
   data () {
     return {
-      active: 2,
+      active: 0,
       sender: 'z3',
       senderId: '',
       sendAddress: '荔园',

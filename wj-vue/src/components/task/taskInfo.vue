@@ -136,7 +136,7 @@ export default {
     this.detail = this.$route.params.detail
     console.log(this.detail)
     this.taskId = this.detail.task_id
-    this.active = this.activeDict[this.detail.task_status]
+    this.active = this.activeDict[this.detail.task_status] - 1
     this.senderName = this.detail.upload_user.user_name
     this.senderHasPhoto = this.detail.upload_user.has_header_photo
     this.taskPrice = this.detail.price
@@ -151,19 +151,19 @@ export default {
     console.log(this.$store.state.userName)
     console.log(this.detail.upload_user.user_name)
     this.currentUserIsSender = this.$store.state.userName === this.detail.upload_user.user_name
-    if (this.active === 1 && !this.currentUserIsSender) {
+    if (this.active === 0 && !this.currentUserIsSender) {
       this.getTaskButton = true
     }
-    if (this.active === 2 && !this.currentUserIsSender) {
+    if (this.active === 1 && !this.currentUserIsSender) {
       this.confirmGetObjectButton = true
     }
-    if (this.active === 3 && !this.currentUserIsSender) {
+    if (this.active === 2 && !this.currentUserIsSender) {
       this.confirmSendButton = true
     }
-    if (this.active === 4 && this.currentUserIsSender) {
+    if (this.active === 3 && this.currentUserIsSender) {
       this.confirmReceiveButton = true
     }
-    if (this.active === 5 && this.currentUserIsSender) {
+    if (this.active === 4 && this.currentUserIsSender) {
       this.commentButton = true
     }
     this.hasOrder = (this.detail.task_type === 1)

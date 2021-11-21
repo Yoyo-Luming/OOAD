@@ -37,11 +37,11 @@
                 <el-container class="order-detail">从{{item.startRegion}}到{{item.endRegion}}</el-container>
                 <el-container class="order-price">¥{{item.price}}</el-container>
                 <el-container class="order-pay">
-                  <el-button class="last-button" v-on:click="goTaskInfo">查看详情</el-button>
+                  <el-button class="last-button" v-on:click="goTaskInfo(item)">查看详情</el-button>
                 </el-container>
               </el-container>
               <el-container style="display: flex;">
-                <el-container style="margin-top: 5px;" class="order-detail">{{item.detail}}</el-container>
+                <el-container style="margin-top: 5px;" class="order-detail">{{item.description}}</el-container>
               </el-container>
             </el-container>
           </el-tab-pane>
@@ -117,6 +117,7 @@ export default {
           ddlTime: returnList[i].ddl_time,
           startRegion: this.regionList[returnList[i].sender_addr.user_region],
           endRegion: this.regionList[returnList[i].receive_addr.user_region],
+          description: returnList[i].description,
           taskId: returnList[i].task_id,
           detail: returnList[i]
         })
@@ -124,6 +125,9 @@ export default {
     })
   },
   methods: {
+    goTaskInfo (item) {
+      this.$router.push({name: 'taskInfo', params: {detail: item.detail}})
+    },
     goPublishTask () {
       this.$router.push('publishTask')
     },

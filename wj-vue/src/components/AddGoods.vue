@@ -439,9 +439,8 @@ export default {
         url: '/login0/upload_commodity/',
         data: param
       }).then(function (response) {
-        alert(response.data.message)
-      }).catch(error => {
-        alert(error)
+        console.log(response)
+        // alert(response.data.message)
       })
     },
     myPage () {

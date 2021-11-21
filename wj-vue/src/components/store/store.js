@@ -8,7 +8,8 @@ export default new Vuex.Store({
   state: {
     userName: '',
     userId: '',
-    userStatus: 0
+    userStatus: 0,
+    isChatting: false
   },
   mutations: {
     setUserName (state, name) {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     },
     setUserStatus (state, status) {
       state.userStatus = status
+    },
+    setIsChatting (state, currentStatus) {
+      this.state.isChatting = currentStatus
     }
   },
   actions: {

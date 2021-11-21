@@ -77,7 +77,7 @@ export default {
     this.otherName = this.$route.params.name
     this.otherId = this.$route.params.id
     this.dialogueId = this.$route.params.dialogueId
-
+    this.$store.commit('setIsChatting', true)
     console.log(this.dialogueId)
     // dialogue_info: []
     // dialogue_type: 1
@@ -121,6 +121,7 @@ export default {
     // 离开路由之后断开 webSocket 连接
     // this.webSocket.close()
     this.$global.webSocket.onmessage = this.$global.onMessageWebSocket
+    this.$store.commit('setIsChatting', false)
   },
   methods: {
     handleSelect (key, keyPath) {},
@@ -149,7 +150,8 @@ export default {
       }
       if (data.info.my_name !== this.otherName) {
         console.log('11111111111111')
-        this.$message.info('您收到其他人的消息！')
+        this.$message.info('您有来自' + data.info.my_name + '的消息！')
+        // this.$message.info('您收到其他人的消息！')
         return
       }
       if (data.info.data_type === 2) {

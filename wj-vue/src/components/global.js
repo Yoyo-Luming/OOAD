@@ -5,15 +5,6 @@ export default {
   webSocket: null,
   url: '',
   token: '',
-  setUser (user) {
-    this.userName = user
-  },
-  setUserState (state) {
-    this.userState = state
-  },
-  setUserId (userId) {
-    this.userId = userId
-  },
   initWebSocket () {
     let axios = require('axios')
     axios.defaults.withCredentials = true
@@ -45,6 +36,13 @@ export default {
     // this.$message.info(data)
     console.log(1)
     console.log(data)
+    if (data.info.from_id === -1) {
+      alert(data.info.info)
+    } else {
+      // if (this.isChatting === false) {
+      alert('您有来自' + data.info.my_name + '的消息！')
+      // }
+    }
     // console.log(data.info.info.message)
     // this.$message.info(data.info.info.message)
   }

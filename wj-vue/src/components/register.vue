@@ -38,8 +38,7 @@ export default {
   // Done
   name: 'register',
   data () {
-    // const regEmail = r'[0-9a-zA-Z_]{0,19}@sustech.edu.cn'
-    const regEmail = /^\w{1,10}@\.(mail.sustech.edu.cn)|(sustech.edu.cn)$/
+    const regEmail = /^([a-zA-Z0-9_-])+@((mail.sustech.edu.cn)|(sustech.edu.cn))+$/
     const verifyUsername = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入用户名'))
@@ -50,8 +49,8 @@ export default {
       if (value === '') {
         callback(new Error('请输入邮箱'))
       } else {
-        if (!regEmail.test(this.registerForm.username)) {
-          callback(new Error('Please input right email format'))
+        if (!regEmail.test(this.registerForm.email)) {
+          callback(new Error('请输入正确格式'))
         }
         callback()
       }

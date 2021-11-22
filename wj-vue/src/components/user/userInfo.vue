@@ -36,7 +36,6 @@
                 <div v-else>
                   <el-image class="user-photo" :src="defult_photo" fit="contain" alt=""></el-image>
                 </div>
-                <el-button primary>上传头像</el-button>
               </el-container>
               <el-container class="user-info">
                 <div class="user-name">用户名： {{userName}}</div>
@@ -64,30 +63,68 @@
                 </el-container>
               </el-container>
             </el-container>
+            <el-divider></el-divider>
+            <el-container class="selling-title">
+              <span style="margin-left: 50px">历史评价</span>
+            </el-container>
+            <el-divider></el-divider>
+            <el-table :data="commentList" style="width: 100%">
+              <el-table-column label="日期" width="180" >
+                <template slot-scope="scope">
+                  <i class="el-icon-time"></i>
+                  <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="评价" width="360" prop="comment">
+              </el-table-column>
+              <el-table-column label="态度评价">
+                <template slot-scope="scope">
+                  <el-rate
+                    disabled
+                    v-model="scope.row.attitudeComment"
+                    :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                    >
+                  </el-rate>
+                </template>
+              </el-table-column>
+              <el-table-column label="商品评价">
+                <template slot-scope="scope">
+                  <el-rate
+                    disabled
+                    v-model="scope.row.goodsComment"
+                    :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                  >
+                  </el-rate>
+                </template>
+              </el-table-column>
+              <el-table-column label="运输评价">
+                <template slot-scope="scope">
+                  <el-rate
+                    disabled
+                    v-model="scope.row.deliverComment"
+                    :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                  >
+                  </el-rate>
+                </template>
+              </el-table-column>
+<!--              <el-table-column prop="comment"></el-table-column>-->
+            </el-table>
+<!--            <div  v-for="(item, index) in commentList" :key="index">-->
+<!--              {{item.comment}}-->
+<!--            </div>-->
+<!--            <el-container class="whole-notice" v-for="(item, index) in commentList" :key="index">-->
+<!--                <el-container class="message-container">-->
+<!--                  <div class="notice-column-user" >{{item.comment}}</div>-->
+<!--                </el-container>-->
+<!--                <el-container class="notice-pay">-->
+<!--                  <div class="notice-column-message">{{item.comment_level_attitude}}</div>-->
+<!--                </el-container>-->
+<!--            </el-container>-->
           </el-container>
         </el-container>
       </el-container>
     </el-main>
   </el-container>
-  <!--  <el-container>-->
-  <!--    <el-row>-->
-  <!--      <el-col>-->
-  <!--        用户头像：<img :src="photo" v-if="hasPhoto"><i class="el-icon-s-custom" v-else></i>-->
-  <!--      </el-col>-->
-  <!--        用户名：{{userName}}-->
-  <!--        用户评分：{{rate}}-->
-  <!--    </el-row>-->
-  <!--    <el-row>-->
-  <!--      <el-button @click="collect">收藏卖家</el-button>-->
-  <!--    </el-row>-->
-  <!--    <el-row>-->
-  <!--      <el-button @click="chatSeller">联系卖家</el-button>-->
-  <!--    </el-row>-->
-  <!--    <el-row>-->
-  <!--      TA的宝贝：-->
-  <!--      <goods-box v-for="(item, index) of sellingList " :key="index+Math.random()" :name="item.name" :price="item.price" :photo="item.photo" :favourite_number="item.favourite_number" :mer_id="item.mer_id"></goods-box>-->
-  <!--    </el-row>-->
-  <!--  </el-container>-->
 </template>
 
 <script>
@@ -105,6 +142,7 @@ export default {
       favoriteNumber: '',
       upload_number: '',
       sellingList: [],
+      commentList: [],
       hasPhoto: false,
       defult_photo: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     }
@@ -139,6 +177,23 @@ export default {
         })
       }
     })
+    this.$axios.post('/login0/get_all_comments/', this.$qs.stringify({
+      target_user_id: this.userId
+    })).then(response => {
+      console.log('--------------')
+      let len = response.data.return_List.length
+      let list = response.data.return_List
+      console.log(list)
+      for (let i = 0; i < len; ++i) {
+        this.commentList.push({
+          date: list[i].comment_date.split(' ')[0],
+          comment: list[i].comment_content,
+          attitudeComment: list[i].comment_level_attitude,
+          goodsComment: list[i].comment_level_mer,
+          deliverComment: list[i].comment_level_tra
+        })
+      }
+    })
   },
   methods: {
     collect () {
@@ -168,9 +223,6 @@ export default {
     },
     homePage () {
       this.$router.push('/')
-    },
-    searchPage () {
-      this.$router.push('/search')
     },
     cartPage () {
       this.$router.push('/cart')

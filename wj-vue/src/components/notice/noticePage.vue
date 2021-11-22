@@ -29,7 +29,7 @@
         <el-tabs type="border-card" v-model="activePane">
           <!--          pay-pane-->
           <el-tab-pane label="消息列表" class="whole-pane" name="first">
-            <el-container class="whole-notice" v-for="(item, index) in noticeList" :key="index">
+            <el-container class="whole-notice" v-for="(item, index) in chatList" :key="index">
               <el-container class="message-container">
                 <div class="notice-column-user" v-if="checkUser">用户：{{item.user1Name}}</div>
                 <div class="notice-column-user" v-else>用户：{{item.user2Name}}</div>
@@ -40,6 +40,22 @@
                   <el-button class="last-button" type="primary" v-on:click="toChatPage(item)">查看详情</el-button>
                 </el-badge>
               </el-container>
+            </el-container>
+          </el-tab-pane>
+          <el-tab-pane label="通知列表" class="whole-pane" name="second">
+            <el-container class="whole-notice" v-for="(item, index) in noticeList" :key="index">
+              <el-badge is-dot :hidden="item.type === 1">
+                <el-container class="message-container">
+                <div class="notice-column-user" v-if="checkUser">{{item.date}}</div>
+              </el-container>
+                <el-container class="notice-pay">
+                  <div class="notice-column-message">{{item.information}}</div>
+
+<!--                <el-badge :value="item.waitNumber" class="item">-->
+<!--                  <el-button class="last-button" type="primary" v-on:click="toChatPage(item)">查看详情</el-button>-->
+<!--                </el-badge>-->
+              </el-container>
+              </el-badge>
             </el-container>
           </el-tab-pane>
         </el-tabs>
@@ -59,10 +75,11 @@ export default {
   name: 'noticePage',
   data () {
     return {
+      chatList: [],
       noticeList: [],
       start_position: 0,
       end_position: 10,
-      activePane: 'first'
+      activePane: 'second'
     }
   },
   mounted () {
@@ -74,10 +91,27 @@ export default {
     //   lastInfo: 'hhh',
     //   waitNumber: 3
     // })
-    this.$axios.post('dialogue/dialogue_list/', this.$qs.stringify({
-      start_position: this.start_position,
-      end_position: this.end_position
-    })).then(response => {
+    this.$axios.post('login0/get_notification_list/').then(response => {
+      let unReadLen = response.data.notification_list.length
+      let len = response.data.notice_list.length
+      let list = response.data.notice_list
+      for (let i = 0; i < unReadLen; ++i) {
+        this.noticeList.push({
+          type: 2,
+          date: list[i].date,
+          information: list[i].information
+        })
+      }
+      for (let i = unReadLen; i < len; ++i) {
+        this.noticeList.push({
+          type: 1,
+          date: list[i].date,
+          information: list[i].information
+        })
+      }
+      console.log(this.noticeList)
+    })
+    this.$axios.post('dialogue/dialogue_list/').then(response => {
       console.log(response.data)
       let len = response.data.return_list.length
       let list = response.data.return_list
@@ -90,7 +124,7 @@ export default {
         } else {
           lastInfo = '[图片]'
         }
-        this.noticeList.push({
+        this.chatList.push({
           user1Id: list[i].user1_id,
           user2Id: list[i].user2_id,
           user1Name: list[i].user1_name,
@@ -115,7 +149,6 @@ export default {
         otherName = item.user1Name
         otherId = item.user1Id
       }
-      // TODO 传入对应信息
       this.$router.push({name: 'chatPage', params: {name: otherName, id: otherId, dialogueId: item.dialogueId}})
     },
     checkUser () {

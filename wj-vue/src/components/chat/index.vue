@@ -56,7 +56,6 @@ export default {
       webSocket: null,
       dialogue_id: '',
       token: '',
-      url: 'ws://192.168.68.223:9000/api/ws/chat/',
       otherName: '',
       dialogueId: '',
       uploadPhotoVisible: false,

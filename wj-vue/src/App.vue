@@ -8,7 +8,12 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  created () {
+    if (this.$store.state.userName !== '') {
+      this.$global.initWebSocket()
+    }
+  }
 }
 </script>
 

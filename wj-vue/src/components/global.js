@@ -48,16 +48,16 @@ export default {
   }
 }
 
-if (performance.navigation.type === 1) {
-  let axios = require('axios')
-  axios.defaults.withCredentials = true
-  axios.defaults.baseURL = 'http://10.17.63.176/api'
-  axios.post('dialogue/begin_websocket/').then(response => {
-    this.token = response.data.token
-    this.url = 'ws://store2.sustech.xyz:8080/api/ws/chat/' + this.token + '/'
-    console.log(this.url)
-    this.webSocket = new WebSocket(this.url)
-    this.webSocket.onmessage = this.onMessageWebSocket
-  })
-  console.log('after reload')
-}
+// if (performance.navigation.type === 1) {
+//   let axios = require('axios')
+//   axios.defaults.withCredentials = true
+//   axios.defaults.baseURL = 'http://10.17.63.176/api'
+//   axios.post('dialogue/begin_websocket/').then(response => {
+//     this.token = response.data.token
+//     this.url = 'ws://store2.sustech.xyz:8080/api/ws/chat/' + this.token + '/'
+//     console.log(this.url)
+//     this.webSocket = new WebSocket(this.url)
+//     this.webSocket.onmessage = this.onMessageWebSocket
+//   })
+//   console.log('after reload')
+// }

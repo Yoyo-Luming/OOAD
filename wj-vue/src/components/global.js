@@ -8,8 +8,9 @@ export default {
   initWebSocket () {
     let axios = require('axios')
     axios.defaults.withCredentials = true
-    axios.defaults.baseURL = 'http://10.17.63.176/api'
-    axios.post('api/dialogue/begin_websocket/').then(response => {
+    // axios.defaults.baseURL = 'http://10.17.63.176/api'
+    axios.defaults.baseURL = 'http://10.21.115.126/api'
+    axios.post('dialogue/begin_websocket/').then(response => {
       this.token = response.data.token
       this.url = 'ws://store2.sustech.xyz:8080/api/ws/chat/' + this.token + '/'
       console.log(this.url)

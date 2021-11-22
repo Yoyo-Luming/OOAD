@@ -34,6 +34,7 @@ Router.prototype.push = function push (to) {
 }
 
 export default new Router({
+  mode: 'history',
   routes: [
     // 下面都是固定的写法
     {
@@ -48,7 +49,10 @@ export default new Router({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {
+        requireAuth: false
+      }
     },
     {
       path: '/register',
@@ -58,7 +62,10 @@ export default new Router({
     {
       path: '/addgoods',
       name: 'AddGoods',
-      component: AddGoods
+      component: AddGoods,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/person',

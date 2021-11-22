@@ -110,6 +110,8 @@ export default {
     mounted () {
     },
     success () {
+      // this.$store.commit('setUserName', this.loginForm.username)
+      // this.$router.push('/result')
       // this.$store.commit('setUserName', 'vuexoyxd')
       // this.$global.username = 'globaloyxd'
       // this.$store.commit('setUserId', '1111')

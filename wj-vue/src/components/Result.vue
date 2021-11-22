@@ -3,7 +3,7 @@
     <el-header class="el-header">
       <div class="right-head">
         <img src="../assets/testlogo.png" class="logo" alt="">
-        <span>SUSTech Store</span>
+        <span class="title">SUSTech Store</span>
       </div>
       <div class="left-head">
         <el-menu
@@ -24,63 +24,111 @@
         </el-menu>
       </div>
     </el-header>
-    <el-main>
-      <el-container class="mid-content">
-        <el-container class="search-column">
-          <el-input
-            placeholder="Please input information"
-            prefix-icon="el-icon-search"
-            v-model="searchContent" style="width: 870px">
-          </el-input>
-          <el-button type="primary" style="width: 100px;background: #a0c4ff;border: none;" v-on:click="search">搜索</el-button>
-        </el-container>
-        <el-container class="choose-opt">
-          <el-cascader  :options="options"
-                        :props="{ checkStrictly: true }"
-                        v-model="labels"
-                        placeholder="商品类别"
-                        clearable></el-cascader>
-          <el-select v-model="status" placeholder="使用程度">
-            <el-option
-              v-for="item in newOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <el-select v-model="orderMethod" placeholder="排列方法">
-            <el-option
-              v-for="item in orderOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-container>
-        <el-container class="message-content">
-          <div v-if="goodsList.length">
-            <el-container class="marking-goods">
-              <el-container class="single-good" v-for="(item, index) in goodsList" :key="index">
-                <el-container class="good-image">
-                  <el-image :src="item.photo" fit="contain"  v-on:click="toGoodsPage(item)" :alt="item.name"></el-image>
-                </el-container>
-                <el-container class="good-describe">
-                  <div class="good-name">{{item.name}}</div>
-                  <div class="good-price">¥{{item.price}}</div>
-                  <div class="good-number">共有{{item.favouriteNumber}}人喜欢</div>
+    <el-container style="display: flex;height: 100%;">
+      <el-aside width="200px" style="background-color: #545c64;opacity: 0.5;">
+        <el-menu
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#409EFF"
+          :unique-opened="true"
+          :collapse-transition="false"
+          :router="true"
+        >
+          <el-submenu class="menu-buttons" index="1">
+            <template slot="title">
+              <i class="el-icon-user"></i>
+              <span>用户信息</span>
+            </template>
+            <el-button class="inside-button" v-on:click="myPage">个人主页</el-button><br>
+            <el-button class="inside-button" v-on:click="cartPage">购物车</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="2">
+            <template slot="title">
+              <i class="el-icon-goods"></i>
+              <span>商品</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goSellOrder">卖出的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goBuyOrder">买到的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goPostGoods">发布的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goNewGoods">上架新商品</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="3">
+            <template slot="title">
+              <i class="el-icon-star-off"></i>
+              <span>收藏</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goFavoriteGoods">收藏的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goFavoriteUser">收藏的卖家</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="4">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>跑腿</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goTaskHall">任务大厅</el-button><br>
+            <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
+            <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
+      <el-main style="height: 100%;padding: 0;">
+        <el-container class="mid-content">
+          <el-container class="search-column">
+            <el-input
+              placeholder="请输入搜索信息"
+              prefix-icon="el-icon-search"
+              v-model="searchContent" style="width: 870px">
+            </el-input>
+            <el-button type="primary" style="width: 100px;background: #a0c4ff;border: none;" v-on:click="search">搜索</el-button>
+          </el-container>
+          <el-container class="choose-opt">
+            <el-cascader  :options="options"
+                          :props="{ checkStrictly: true }"
+                          v-model="labels"
+                          placeholder="商品类别"
+                          clearable></el-cascader>
+            <el-select v-model="status" placeholder="使用程度">
+              <el-option
+                v-for="item in newOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <el-select v-model="orderMethod" placeholder="排列方法">
+              <el-option
+                v-for="item in orderOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-container>
+          <el-container class="message-content">
+            <div v-if="goodsList.length">
+              <el-container class="marking-goods">
+                <el-container class="single-good" v-for="(item, index) in goodsList" :key="index">
+                  <el-container class="good-image">
+                    <el-image :src="item.photo" fit="contain"  v-on:click="toGoodsPage(item)" :alt="item.name"></el-image>
+                  </el-container>
+                  <el-container class="good-describe">
+                    <div class="good-name">{{item.name}}</div>
+                    <div class="good-price">¥{{item.price}}</div>
+                    <div class="good-number">共有{{item.favouriteNumber}}人喜欢</div>
+                  </el-container>
                 </el-container>
               </el-container>
-            </el-container>
-          </div>
-          <div v-else>
-            <h2>这里还没有结果！</h2>
-          </div>
-          <!--          <div>-->
-          <!--            <goods-box v-for="(item, index) of goodsList " :key="index+Math.random()" :name="item.name" :price="item.price" :photo="item.photo" :favourite_number="item.favourite_number" :mer_id="item.mer_id"></goods-box>-->
-          <!--          </div>-->
+            </div>
+            <div v-else>
+              <h2>这里还没有结果！</h2>
+            </div>
+            <!--          <div>-->
+            <!--            <goods-box v-for="(item, index) of goodsList " :key="index+Math.random()" :name="item.name" :price="item.price" :photo="item.photo" :favourite_number="item.favourite_number" :mer_id="item.mer_id"></goods-box>-->
+            <!--          </div>-->
+          </el-container>
         </el-container>
-      </el-container>
-    </el-main>
+      </el-main>
+    </el-container>
   </el-container>
 </template>
 
@@ -247,7 +295,7 @@ export default {
       this.$router.push('/person')
     },
     homePage () {
-      this.$router.push('/')
+      this.$router.push('/home')
     },
     cartPage () {
       this.$router.push('/cart')
@@ -257,6 +305,33 @@ export default {
     },
     markPage () {
       this.$router.push('/favoritegoods')
+    },
+    goReleasedTask () {
+      this.$router.push('/releasedtask')
+    },
+    goReceivedTask () {
+      this.$router.push('/receivedtask')
+    },
+    goTaskHall () {
+      this.$router.push('/taskhall')
+    },
+    goFavoriteUser () {
+      this.$router.push('/favoriteusers')
+    },
+    goFavoriteGoods () {
+      this.$router.push('/favoritegoods')
+    },
+    goSellOrder () {
+      this.$router.push('/sellorder')
+    },
+    goBuyOrder () {
+      this.$router.push('/buyorder')
+    },
+    goPostGoods () {
+      this.$router.push('/sellinggoods')
+    },
+    goNewGoods () {
+      this.$router.push('/addgoods')
     },
     logOut () {
       this.$axios.post('login0/logout/')
@@ -272,11 +347,7 @@ export default {
       //   price: 22,
       //   photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'
       // })
-      console.log('-----')
-      console.log(this.searchContent)
-      console.log(this.labels)
-      console.log(this.status)
-      console.log(this.orderMethod)
+      console.log(this.labels[0])
       this.goodsList = []
       if (this.labels === undefined && this.status === undefined && this.orderMethod === undefined && this.searchContent !== undefined) {
         let url = 'search/?q=' + this.searchContent
@@ -350,7 +421,6 @@ export default {
   height: 100%;
   background:0 repeat-y url("../assets/back7.jpg");
   background-size: cover;
-  display: block;
 }
 
 .el-header {
@@ -361,7 +431,7 @@ export default {
   align-items: center;
   color: #ffffff;
   font-size: 40px;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .right-head {
@@ -456,5 +526,21 @@ export default {
 .good-number {
   font-size: 15px;
   overflow: hidden;
+}
+
+.menu-buttons {
+  display: block;
+  margin: auto;
+  text-align: center;
+  align-items: center;
+}
+
+.inside-button {
+  margin-top: 5px;
+  border: 0;
+  text-align: center;
+  align-items: center;
+  background-color: #545c64;
+  color: #ffffff;
 }
 </style>

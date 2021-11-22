@@ -3,7 +3,15 @@
     <el-header class="el-header">
       <div class="right-head">
         <img src="../../assets/testlogo.png" class="logo" alt="">
-        <span>SUSTech Store</span>
+        <span class="title">SUSTech Store</span>
+      </div>
+      <div class="mid-head">
+        <el-input
+          placeholder="请输入搜索信息"
+          prefix-icon="el-icon-search"
+          v-model="searchContent" style="width: 870px"
+          @keyup.enter.native="searchTop">
+        </el-input>
       </div>
       <div class="left-head">
         <el-menu
@@ -24,72 +32,120 @@
         </el-menu>
       </div>
     </el-header>
-    <el-main>
-      <el-container class="mid-content">
-        <el-container class="pane-content">
-          <el-container class="step-container">
-            <el-steps :active="active" :space="200" :align-center="true" finish-status="success" class="steps">
-              <el-step title="待接受" class="single-step"></el-step>
-              <el-step title="待领货" class="single-step"></el-step>
-              <el-step title="待送达" class="single-step"></el-step>
-              <el-step title="待收货" class="single-step"></el-step>
-              <el-step title="待评价" class="single-step"></el-step>
-              <el-step title="已完成" class="single-step"></el-step>
-            </el-steps>
-          </el-container>
-          <el-container class="user-container">
-            <el-container class="user-photo-container">
-              <div v-if="senderHasPhoto">
-                <el-image class="user-photo" :src="senderPhoto" fit="contain" :alt="senderName"></el-image>
-              </div>
-              <div v-else>
-                <el-image class="user-photo" :src="defult_photo" fit="contain" alt=""></el-image>
-              </div>
-              <div class="user-name">{{senderName}}</div>
+    <el-container style="display: flex;height: 100%;">
+      <el-aside width="200px" style="background-color: #545c64;opacity: 0.5;">
+        <el-menu
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#409EFF"
+          :unique-opened="true"
+          :collapse-transition="false"
+          :router="true"
+        >
+          <el-submenu class="menu-buttons" index="1">
+            <template slot="title">
+              <i class="el-icon-user"></i>
+              <span>用户信息</span>
+            </template>
+            <el-button class="inside-button" v-on:click="myPage">个人主页</el-button><br>
+            <el-button class="inside-button" v-on:click="cartPage">购物车</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="2">
+            <template slot="title">
+              <i class="el-icon-goods"></i>
+              <span>商品</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goSellOrder">卖出的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goBuyOrder">买到的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goPostGoods">发布的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goNewGoods">上架新商品</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="3">
+            <template slot="title">
+              <i class="el-icon-star-off"></i>
+              <span>收藏</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goFavoriteGoods">收藏的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goFavoriteUser">收藏的卖家</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="4">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>跑腿</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goTaskHall">任务大厅</el-button><br>
+            <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
+            <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
+      <el-main style="height: 100%;padding: 0;">
+        <el-container class="mid-content">
+          <el-container class="pane-content">
+            <el-container class="step-container">
+              <el-steps :active="active" :space="200" :align-center="true" finish-status="success" class="steps">
+                <el-step title="待接受" class="single-step"></el-step>
+                <el-step title="待领货" class="single-step"></el-step>
+                <el-step title="待送达" class="single-step"></el-step>
+                <el-step title="待收货" class="single-step"></el-step>
+                <el-step title="待评价" class="single-step"></el-step>
+                <el-step title="已完成" class="single-step"></el-step>
+              </el-steps>
             </el-container>
-            <el-container class="user-buttons">
-              <el-button v-on:click="goChatPage" class="the-button">
-                <div v-if="currentUserIsSender">联系跑腿员</div>
-                <div v-else>联系发布者</div>
-              </el-button>
-              <el-button type="primary" class="other-button" @click="getTask" v-if="getTaskButton">领取任务</el-button>
-              <el-button type="primary" class="other-button" @click="confirmGetObject" v-if="confirmGetObjectButton">确认领货</el-button>
-              <el-button type="primary" class="other-button" @click="confirmSend" v-if="confirmSendButton">确认送达</el-button>
-              <el-button type="primary" class="other-button" @click="confirmReceive" v-if="confirmReceiveButton">确认收货</el-button>
-              <el-button type="primary" class="other-button" @click="commentVisible=true" v-if="commentButton">评论</el-button>
-            </el-container>
-          </el-container>
-          <el-divider></el-divider>
-          <el-container class="task-container">
-            <el-container class="line-one">
-              <div class="task-price">价格：¥{{taskPrice}}</div>
-              <div class="task-description">描述：{{taskDescription}}</div>
+            <el-container class="user-container">
+              <el-container class="user-photo-container">
+                <div v-if="senderHasPhoto">
+                  <el-image class="user-photo" :src="senderPhoto" fit="contain" :alt="senderName"></el-image>
+                </div>
+                <div v-else>
+                  <el-image class="user-photo" :src="defult_photo" fit="contain" alt=""></el-image>
+                </div>
+                <div class="user-name">{{senderName}}</div>
+              </el-container>
+              <el-container class="user-buttons">
+                <el-button v-on:click="goChatPage" class="the-button">
+                  <div v-if="currentUserIsSender">联系跑腿员</div>
+                  <div v-else>联系发布者</div>
+                </el-button>
+                <el-button type="primary" class="other-button" @click="getTask" v-if="getTaskButton">领取任务</el-button>
+                <el-button type="primary" class="other-button" @click="confirmGetObject" v-if="confirmGetObjectButton">确认领货</el-button>
+                <el-button type="primary" class="other-button" @click="confirmSend" v-if="confirmSendButton">确认送达</el-button>
+                <el-button type="primary" class="other-button" @click="confirmReceive" v-if="confirmReceiveButton">确认收货</el-button>
+                <el-button type="primary" class="other-button" @click="commentVisible=true" v-if="commentButton">评论</el-button>
+              </el-container>
             </el-container>
             <el-divider></el-divider>
-            <el-container class="line-two">
-              <div class="task-place">发货区域：{{taskSendRegion}}</div>
-              <div class="task-place">发货详细地址：{{taskSendAddress}}</div>
-              <div class="task-place">收货区域：{{taskReceiveRegion}}</div>
-              <div class="task-place">收货详细地址：{{taskReceiveAddress}}</div>
+            <el-container class="task-container">
+              <el-container class="line-one">
+                <div class="task-price">价格：¥{{taskPrice}}</div>
+                <div class="task-description">描述：{{taskDescription}}</div>
+              </el-container>
+              <el-divider></el-divider>
+              <el-container class="line-two">
+                <div class="task-place">发货区域：{{taskSendRegion}}</div>
+                <div class="task-place">发货详细地址：{{taskSendAddress}}</div>
+                <div class="task-place">收货区域：{{taskReceiveRegion}}</div>
+                <div class="task-place">收货详细地址：{{taskReceiveAddress}}</div>
+              </el-container>
             </el-container>
           </el-container>
         </el-container>
-      </el-container>
-      <el-dialog style="margin: auto;" :visible.sync="commentVisible" :modal-append-to-body="false">
-        <el-form ref="form" label-width="200px">
-          <el-form-item class="form-item-class" label="服务评分：" prop="rating">
-            <el-rate v-model="commentRate"></el-rate>
-          </el-form-item>
-          <el-form-item class="form-item-class" label="评论：" prop="comments">
-            <el-input v-model="commentText"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="commentVisible=false">取消</el-button>
-          <el-button @click="submitComment">确认</el-button>
-        </div>
-      </el-dialog>
-    </el-main>
+        <el-dialog style="margin: auto;" :visible.sync="commentVisible" :modal-append-to-body="false">
+          <el-form ref="form" label-width="200px">
+            <el-form-item class="form-item-class" label="服务评分：" prop="rating">
+              <el-rate v-model="commentRate"></el-rate>
+            </el-form-item>
+            <el-form-item class="form-item-class" label="评论：" prop="comments">
+              <el-input v-model="commentText"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="commentVisible=false">取消</el-button>
+            <el-button @click="submitComment">确认</el-button>
+          </div>
+        </el-dialog>
+      </el-main>
+    </el-container>
   </el-container>
   <!--  <el-container>-->
   <!--    <el-row>-->
@@ -193,6 +249,7 @@ export default {
       confirmReceiveButton: false,
       commentButton: false,
       commentVisible: false,
+      defult_photo: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       commentRate: 1,
       commentText: '',
       activeDict: {
@@ -246,6 +303,7 @@ export default {
         '其它'],
       hasOrder: false,
       ddlTime: '',
+      searchContent: undefined,
       rules: {
         rating: [
           { required: true, message: '请打分', trigger: 'blur' }
@@ -354,6 +412,43 @@ export default {
     logOut () {
       this.$axios.post('login0/logout/ ')
       this.$router.push('/login')
+    },
+    goReleasedTask () {
+      this.$router.push('/releasedtask')
+    },
+    goReceivedTask () {
+      this.$router.push('/receivedtask')
+    },
+    goTaskHall () {
+      this.$router.push('/taskhall')
+    },
+    goFavoriteUser () {
+      this.$router.push('/favoriteusers')
+    },
+    goFavoriteGoods () {
+      this.$router.push('/favoritegoods')
+    },
+    goSellOrder () {
+      this.$router.push('/sellorder')
+    },
+    goBuyOrder () {
+      this.$router.push('/buyorder')
+    },
+    goPostGoods () {
+      this.$router.push('/sellinggoods')
+    },
+    goNewGoods () {
+      this.$router.push('/addgoods')
+    },
+    searchTop () {
+      this.$router.push({name: 'Result',
+        params: {
+          searchContent: this.searchContent,
+          labels: undefined,
+          status: undefined,
+          orderMethod: undefined
+        }
+      })
     }
   }
 }
@@ -363,9 +458,8 @@ export default {
 .home-container {
   height: 100%;
   width: 100%;
-  background: center no-repeat url("../../assets/back7.jpg");
+  background: center repeat url("../../assets/back7.jpg");
   background-size: cover;
-  display: block;
 }
 
 .el-header {
@@ -376,7 +470,7 @@ export default {
   align-items: center;
   color: #ffffff;
   font-size: 40px;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .right-head {
@@ -386,6 +480,27 @@ export default {
 
 .logo {
   height: 60px;
+}
+
+.mid-head {
+  display: flex;
+  align-items: center;
+}
+
+.menu-buttons {
+  display: block;
+  margin: auto;
+  text-align: center;
+  align-items: center;
+}
+
+.inside-button {
+  margin-top: 5px;
+  border: 0;
+  text-align: center;
+  align-items: center;
+  background-color: #545c64;
+  color: #ffffff;
 }
 
 .left-head {

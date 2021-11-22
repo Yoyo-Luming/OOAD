@@ -3,7 +3,15 @@
     <el-header class="el-header">
       <div class="right-head">
         <img src="../../assets/testlogo.png" class="logo" alt="">
-        <span>SUSTech Store</span>
+        <span class="title">SUSTech Store</span>
+      </div>
+      <div class="mid-head">
+        <el-input
+          placeholder="请输入搜索信息"
+          prefix-icon="el-icon-search"
+          v-model="searchContent" style="width: 870px"
+          @keyup.enter.native="searchTop">
+        </el-input>
       </div>
       <div class="left-head">
         <el-menu
@@ -24,39 +32,87 @@
         </el-menu>
       </div>
     </el-header>
-    <el-main>
-      <el-container class="mid-content">
-        <el-container class="pane-content">
-          <el-container class="good-photos">
-            <el-container class="big-photo">
-              <el-image :src="big_photo" fit="contain" :alt="goodsInfo.name"></el-image>
-            </el-container>
-            <el-container class="small-photo">
-              <el-container class="single-photo" v-for="(link, index) in goodsInfo.url" :key="index">
-                <el-image :src="link" fit="contain" style="border: 2px solid #eaeaea;" :alt="goodsInfo.name" @mousemove="mouseOver(link)"></el-image>
+    <el-container style="display: flex;height: 100%;">
+      <el-aside width="200px" style="background-color: #545c64;opacity: 0.5;">
+        <el-menu
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#409EFF"
+          :unique-opened="true"
+          :collapse-transition="false"
+          :router="true"
+        >
+          <el-submenu class="menu-buttons" index="1">
+            <template slot="title">
+              <i class="el-icon-user"></i>
+              <span>用户信息</span>
+            </template>
+            <el-button class="inside-button" v-on:click="myPage">个人主页</el-button><br>
+            <el-button class="inside-button" v-on:click="cartPage">购物车</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="2">
+            <template slot="title">
+              <i class="el-icon-goods"></i>
+              <span>商品</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goSellOrder">卖出的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goBuyOrder">买到的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goPostGoods">发布的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goNewGoods">上架新商品</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="3">
+            <template slot="title">
+              <i class="el-icon-star-off"></i>
+              <span>收藏</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goFavoriteGoods">收藏的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goFavoriteUser">收藏的卖家</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="4">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>跑腿</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goTaskHall">任务大厅</el-button><br>
+            <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
+            <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
+      <el-main style="height: 100%;padding: 0;">
+        <el-container class="mid-content">
+          <el-container class="pane-content">
+            <el-container class="good-photos">
+              <el-container class="big-photo">
+                <el-image :src="big_photo" fit="contain" :alt="goodsInfo.name"></el-image>
+              </el-container>
+              <el-container class="small-photo">
+                <el-container class="single-photo" v-for="(link, index) in goodsInfo.url" :key="index">
+                  <el-image :src="link" fit="contain" style="border: 2px solid #eaeaea;" :alt="goodsInfo.name" @mousemove="mouseOver(link)"></el-image>
+                </el-container>
+              </el-container>
+              <el-container class="mark_chars">
+                <el-button v-on:click="collect">
+                  <i class="el-icon-star-on" ></i>收藏商品
+                </el-button>
               </el-container>
             </el-container>
-            <el-container class="mark_chars">
-              <el-button v-on:click="collect">
-                <i class="el-icon-star-on" ></i>收藏商品
-              </el-button>
-            </el-container>
-          </el-container>
-          <el-container class="good-others">
-            <el-container class="contents">
-              <div class="good-name">{{goodsInfo.name}}</div>
-              <div class="good-description">{{goodsInfo.description}}</div>
-              <div class="good-description">分类：{{goodsInfo.kind}}</div>
-              <div class="good-price">售价: ¥<span style="margin-left: 5px;font-size: 30px">{{goodsInfo.price}}</span></div>
-              <div class="good-deliverPrice">邮费: ¥<span style="margin-left: 5px;font-size: 20px">{{goodsInfo.deliverPrice}}</span></div>
-              <div class="seller-name" v-on:click="toUserPage">卖家：{{goodsInfo.poster}}</div>
-              <el-button class="cart-button" v-on:click="addCart">加入购物车</el-button>
-              <el-button class="buy-button" v-on:click="buy">立即购买</el-button>
+            <el-container class="good-others">
+              <el-container class="contents">
+                <div class="good-name">{{goodsInfo.name}}</div>
+                <div class="good-description">{{goodsInfo.description}}</div>
+                <div class="good-description">分类：{{goodsInfo.kind}}</div>
+                <div class="good-price">售价: ¥<span style="margin-left: 5px;font-size: 30px">{{goodsInfo.price}}</span></div>
+                <div class="good-price">邮费: ¥<span style="margin-left: 5px;font-size: 20px">{{goodsInfo.deliverPrice}}</span></div>
+                <div class="seller-name" v-on:click="toUserPage">卖家：{{goodsInfo.poster}}</div>
+                <el-button class="cart-button" v-on:click="addCart">加入购物车</el-button>
+                <el-button class="buy-button" v-on:click="buy">立即购买</el-button>
+              </el-container>
             </el-container>
           </el-container>
         </el-container>
-      </el-container>
-    </el-main>
+      </el-main>
+    </el-container>
   </el-container>
   <!--  <div>-->
   <!--    商品名称<h1>{{goodsInfo.name}}</h1>-->
@@ -92,6 +148,7 @@ export default {
         posterId: '',
         kind: ''
       },
+      searchContent: undefined,
       posterInfo: {
         name: '',
         id: ''
@@ -249,6 +306,43 @@ export default {
     logOut () {
       this.$axios.post('login0/logout/ ')
       this.$router.push('/login')
+    },
+    goReleasedTask () {
+      this.$router.push('/releasedtask')
+    },
+    goReceivedTask () {
+      this.$router.push('/receivedtask')
+    },
+    goTaskHall () {
+      this.$router.push('/taskhall')
+    },
+    goFavoriteUser () {
+      this.$router.push('/favoriteusers')
+    },
+    goFavoriteGoods () {
+      this.$router.push('/favoritegoods')
+    },
+    goSellOrder () {
+      this.$router.push('/sellorder')
+    },
+    goBuyOrder () {
+      this.$router.push('/buyorder')
+    },
+    goPostGoods () {
+      this.$router.push('/sellinggoods')
+    },
+    goNewGoods () {
+      this.$router.push('/addgoods')
+    },
+    searchTop () {
+      this.$router.push({name: 'Result',
+        params: {
+          searchContent: this.searchContent,
+          labels: undefined,
+          status: undefined,
+          orderMethod: undefined
+        }
+      })
     }
   }
 }
@@ -258,9 +352,8 @@ export default {
 .home-container {
   height: 100%;
   width: 100%;
-  background: center no-repeat url("../../assets/back7.jpg");
+  background: center repeat url("../../assets/back7.jpg");
   background-size: cover;
-  display: block;
 }
 
 .el-header {
@@ -271,7 +364,28 @@ export default {
   align-items: center;
   color: #ffffff;
   font-size: 40px;
-  opacity: 0.5;
+  opacity: 0.7;
+}
+
+.mid-head {
+  display: flex;
+  align-items: center;
+}
+
+.menu-buttons {
+  display: block;
+  margin: auto;
+  text-align: center;
+  align-items: center;
+}
+
+.inside-button {
+  margin-top: 5px;
+  border: 0;
+  text-align: center;
+  align-items: center;
+  background-color: #545c64;
+  color: #ffffff;
 }
 
 .right-head {
@@ -297,7 +411,6 @@ export default {
 
 .pane-content {
   display: flex;
-  height: 100%;
   width: 1000px;
   border-radius: 10px;
   border: 2px solid #eaeaea;
@@ -368,15 +481,6 @@ export default {
   align-items: center;
   margin-top: 30px;
   font-size: 20px;
-  text-align: left;
-  display: flex;
-  color: red;
-}
-
-.good-deliverPrice {
-  align-items: center;
-  margin-top: 30px;
-  font-size: 15px;
   text-align: left;
   display: flex;
   color: red;

@@ -3,7 +3,15 @@
     <el-header class="el-header">
       <div class="right-head">
         <img src="../../assets/testlogo.png" class="logo" alt="">
-        <span>SUSTech Store</span>
+        <span class="title">SUSTech Store</span>
+      </div>
+      <div class="mid-head">
+        <el-input
+          placeholder="请输入搜索信息"
+          prefix-icon="el-icon-search"
+          v-model="searchContent" style="width: 870px"
+          @keyup.enter.native="searchTop">
+        </el-input>
       </div>
       <div class="left-head">
         <el-menu
@@ -14,7 +22,7 @@
           active-text-color="#ffd04b">
           <el-menu-item index="1" v-on:click="homePage">主页</el-menu-item>
           <el-submenu index="2">
-            <template slot="title">{{ $store.state.userName }}</template>
+            <template slot="title">{{$store.state.userName}}</template>
             <el-menu-item index="2-1" v-on:click="myPage">个人主页</el-menu-item>
             <el-menu-item index="2-2" v-on:click="cartPage">购物车</el-menu-item>
             <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>
@@ -24,82 +32,155 @@
         </el-menu>
       </div>
     </el-header>
-    <el-main>
-      <el-container class="mid-content">
-        <el-tabs type="border-card" v-model="activePane">
-          <!--          pay-pane-->
-          <el-tab-pane label="待付款" class="whole-pane" name="first">
-            <el-container class="whole-order" v-for="(item, index) in payList" :key="index">
-              <el-container class="order-photo">
-                <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
-              </el-container>
-              <el-container class="order-name">{{item.goodsName}}</el-container>
-              <el-container class="order-detail">{{item.description}}</el-container>
-              <el-container class="order-price">¥{{item.price}}</el-container>
-              <el-container class="order-pay">
-                <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
-              </el-container>
-            </el-container>
-          </el-tab-pane>
-          <!--          send-pane-->
-          <el-tab-pane label="待发货" class="whole-pane" name="second">
-            <el-container class="whole-order" v-for="(item, index) in shipList" :key="index">
-              <el-container class="order-photo">
-                <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
-              </el-container>
-              <el-container class="order-name">{{item.goodsName}}</el-container>
-              <el-container class="order-detail">{{item.description}}</el-container>
-              <el-container class="order-price">¥{{item.price}}</el-container>
-              <el-container class="order-pay">
-                <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
-              </el-container>
-            </el-container>
-          </el-tab-pane>
-          <!--          receive-pane-->
-          <el-tab-pane label="待收货" class="whole-pane" name="third">
-            <el-container class="whole-order" v-for="(item, index) in receiveList" :key="index">
-              <el-container class="order-photo">
-                <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
-              </el-container>
-              <el-container class="order-name">{{item.goodsName}}</el-container>
-              <el-container class="order-detail">{{item.description}}</el-container>
-              <el-container class="order-price">¥{{item.price}}</el-container>
-              <el-container class="order-pay">
-                <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
-              </el-container>
-            </el-container>
-          </el-tab-pane>
-          <!--          evaluate-pane-->
-          <el-tab-pane label="待评价" class="whole-pane" name="fourth">
-            <el-container class="whole-order" v-for="(item, index) in evaluateList" :key="index">
-              <el-container class="order-photo">
-                <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
-              </el-container>
-              <el-container class="order-name">{{item.goodsName}}</el-container>
-              <el-container class="order-detail">{{item.description}}</el-container>
-              <el-container class="order-price">¥{{item.price}}</el-container>
-              <el-container class="order-pay">
-                <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
-              </el-container>
-            </el-container>
-          </el-tab-pane>
-          <!--          finished-pane-->
-          <el-tab-pane label="已完成" class="whole-pane" name="fifth">
-            <el-container class="whole-order" v-for="(item, index) in completeList" :key="index">
-              <el-container class="order-photo">
-                <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
-              </el-container>
-              <el-container class="order-name">{{item.goodsName}}</el-container>
-              <el-container class="order-detail">{{item.description}}</el-container>
-              <el-container class="order-price">¥{{item.price}}</el-container>
-              <el-container class="order-pay">
-                <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
-              </el-container>
-            </el-container>
-          </el-tab-pane>
-        </el-tabs>
-      </el-container>
-    </el-main>
+    <el-container style="display: flex;height: 100%;">
+      <el-aside width="200px" style="background-color: #545c64;opacity: 0.5;">
+        <el-menu
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#409EFF"
+          :unique-opened="true"
+          :collapse-transition="false"
+          :router="true"
+        >
+          <el-submenu class="menu-buttons" index="1">
+            <template slot="title">
+              <i class="el-icon-user"></i>
+              <span>用户信息</span>
+            </template>
+            <el-button class="inside-button" v-on:click="myPage">个人主页</el-button><br>
+            <el-button class="inside-button" v-on:click="cartPage">购物车</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="2">
+            <template slot="title">
+              <i class="el-icon-goods"></i>
+              <span>商品</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goSellOrder">卖出的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goBuyOrder">买到的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goPostGoods">发布的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goNewGoods">上架新商品</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="3">
+            <template slot="title">
+              <i class="el-icon-star-off"></i>
+              <span>收藏</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goFavoriteGoods">收藏的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goFavoriteUser">收藏的卖家</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="4">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>跑腿</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goTaskHall">任务大厅</el-button><br>
+            <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
+            <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
+      <el-main style="height: 100%;padding: 0;">
+        <el-container class="mid-content">
+          <el-tabs type="border-card" v-model="activePane">
+            <!--          pay-pane-->
+            <el-tab-pane label="待付款" class="whole-pane" name="first">
+              <div v-if="payList.length">
+                <el-container class="whole-order" v-for="(item, index) in payList" :key="index">
+                  <el-container class="order-photo">
+                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                  </el-container>
+                  <el-container class="order-name">{{item.goodsName}}</el-container>
+                  <el-container class="order-detail">{{item.description}}</el-container>
+                  <el-container class="order-price">¥{{item.price}}</el-container>
+                  <el-container class="order-pay">
+                    <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
+                  </el-container>
+                </el-container>
+              </div>
+              <div v-else>
+                <h2>这里什么也没有哦</h2>
+              </div>
+            </el-tab-pane>
+            <!--          send-pane-->
+            <el-tab-pane label="待发货" class="whole-pane" name="second">
+              <div v-if="shipList.length">
+                <el-container class="whole-order" v-for="(item, index) in shipList" :key="index">
+                  <el-container class="order-photo">
+                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                  </el-container>
+                  <el-container class="order-name">{{item.goodsName}}</el-container>
+                  <el-container class="order-detail">{{item.description}}</el-container>
+                  <el-container class="order-price">¥{{item.price}}</el-container>
+                  <el-container class="order-pay">
+                    <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
+                  </el-container>
+                </el-container>
+              </div>
+              <div v-else>
+                <h2>这里什么也没有哦</h2>
+              </div>
+            </el-tab-pane>
+            <!--          receive-pane-->
+            <el-tab-pane label="待收货" class="whole-pane" name="third">
+              <div v-if="receiveList.length">
+                <el-container class="whole-order" v-for="(item, index) in receiveList" :key="index">
+                  <el-container class="order-photo">
+                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                  </el-container>
+                  <el-container class="order-name">{{item.goodsName}}</el-container>
+                  <el-container class="order-detail">{{item.description}}</el-container>
+                  <el-container class="order-price">¥{{item.price}}</el-container>
+                  <el-container class="order-pay">
+                    <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
+                  </el-container>
+                </el-container>
+              </div>
+              <div v-else>
+                <h2>这里什么也没有哦</h2>
+              </div>
+            </el-tab-pane>
+            <!--          evaluate-pane-->
+            <el-tab-pane label="待评价" class="whole-pane" name="fourth">
+              <div v-if="evaluateList.length">
+                <el-container class="whole-order" v-for="(item, index) in evaluateList" :key="index">
+                  <el-container class="order-photo">
+                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                  </el-container>
+                  <el-container class="order-name">{{item.goodsName}}</el-container>
+                  <el-container class="order-detail">{{item.description}}</el-container>
+                  <el-container class="order-price">¥{{item.price}}</el-container>
+                  <el-container class="order-pay">
+                    <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
+                  </el-container>
+                </el-container>
+              </div>
+              <div v-else>
+                <h2>这里什么也没有哦</h2>
+              </div>
+            </el-tab-pane>
+            <!--          finished-pane-->
+            <el-tab-pane label="已完成" class="whole-pane" name="fifth">
+              <div v-if="completeList.length">
+                <el-container class="whole-order" v-for="(item, index) in completeList" :key="index">
+                  <el-container class="order-photo">
+                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                  </el-container>
+                  <el-container class="order-name">{{item.goodsName}}</el-container>
+                  <el-container class="order-detail">{{item.description}}</el-container>
+                  <el-container class="order-price">¥{{item.price}}</el-container>
+                  <el-container class="order-pay">
+                    <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
+                  </el-container>
+                </el-container>
+              </div>
+              <div v-else>
+                <h2>这里什么也没有哦</h2>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </el-container>
+      </el-main>
+    </el-container>
   </el-container>
   <!--  <el-tabs>-->
   <!--    <el-tab-pane label="待付款"><order-box v-for="(item, index) of payList" :key="index+Math.random()" :goodsName="item.goodsName" :price="item.price" :photo="item.photo" :detail="item.orderDetail"></order-box></el-tab-pane>-->
@@ -243,7 +324,8 @@ export default {
       receiveList: [],
       evaluateList: [],
       completeList: [],
-      activePane: 'first'
+      activePane: 'first',
+      searchContent: undefined
     }
   },
   methods: {
@@ -270,6 +352,43 @@ export default {
     logOut () {
       this.$axios.post('login0/logout/ ')
       this.$router.push('/login')
+    },
+    goReleasedTask () {
+      this.$router.push('/releasedtask')
+    },
+    goReceivedTask () {
+      this.$router.push('/receivedtask')
+    },
+    goTaskHall () {
+      this.$router.push('/taskhall')
+    },
+    goFavoriteUser () {
+      this.$router.push('/favoriteusers')
+    },
+    goFavoriteGoods () {
+      this.$router.push('/favoritegoods')
+    },
+    goSellOrder () {
+      this.$router.push('/sellorder')
+    },
+    goBuyOrder () {
+      this.$router.push('/buyorder')
+    },
+    goPostGoods () {
+      this.$router.push('/sellinggoods')
+    },
+    goNewGoods () {
+      this.$router.push('/addgoods')
+    },
+    searchTop () {
+      this.$router.push({name: 'Result',
+        params: {
+          searchContent: this.searchContent,
+          labels: undefined,
+          status: undefined,
+          orderMethod: undefined
+        }
+      })
     }
   }
 }
@@ -279,9 +398,8 @@ export default {
 .home-container {
   height: 100%;
   width: 100%;
-  background: center no-repeat url("../../assets/back7.jpg");
+  background: center repeat url("../../assets/back7.jpg");
   background-size: cover;
-  display: block;
 }
 
 .el-header {
@@ -292,7 +410,28 @@ export default {
   align-items: center;
   color: #ffffff;
   font-size: 40px;
-  opacity: 0.5;
+  opacity: 0.7;
+}
+
+.mid-head {
+  display: flex;
+  align-items: center;
+}
+
+.menu-buttons {
+  display: block;
+  margin: auto;
+  text-align: center;
+  align-items: center;
+}
+
+.inside-button {
+  margin-top: 5px;
+  border: 0;
+  text-align: center;
+  align-items: center;
+  background-color: #545c64;
+  color: #ffffff;
 }
 
 .right-head {

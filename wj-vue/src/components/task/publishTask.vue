@@ -3,7 +3,15 @@
     <el-header class="el-header">
       <div class="right-head">
         <img src="../../assets/testlogo.png" class="logo" alt="">
-        <span>SUSTech Store</span>
+        <span class="title">SUSTech Store</span>
+      </div>
+      <div class="mid-head">
+        <el-input
+          placeholder="请输入搜索信息"
+          prefix-icon="el-icon-search"
+          v-model="searchContent" style="width: 870px"
+          @keyup.enter.native="searchTop">
+        </el-input>
       </div>
       <div class="left-head">
         <el-menu
@@ -24,85 +32,138 @@
         </el-menu>
       </div>
     </el-header>
-    <el-main>
-      <el-container class="mid-content">
-        <el-button style="margin-bottom: 20px;" type="primary" v-on:click="otherTaskVisible=true">发布</el-button>
-        <el-tabs type="border-card" v-model="activePane">
-          <!--          pay-pane-->
-          <el-tab-pane label="待送货的订单" class="whole-pane" name="first">
-            <el-container class="whole-order" v-for="(item, index) in shipList" :key="index">
-              <el-container class="order-photo">
-                <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
-              </el-container>
-              <el-container class="order-name">{{item.goodsName}}</el-container>
-              <el-container class="order-detail">发货地址：{{item.sendAddress}}</el-container>
-              <el-container class="order-detail">收货地址：{{item.receiveAddress}}</el-container>
-<!--              <el-container class="order-detail">{{item.orderDetail}}</el-container>-->
-              <el-container class="order-pay">
-                <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
-                <el-button type="text" class="button" @click="clickPostTaskOrder(item)">发布任务</el-button>
-              </el-container>
-            </el-container>
-          </el-tab-pane>
-        </el-tabs>
-      </el-container>
-      <el-dialog style="margin: auto;" :visible.sync="otherTaskVisible" :modal-append-to-body="false">
-        <el-form :model="otherTaskForm" label-width="200px" label-position="left">
-          <el-form-item label="任务名称" prop="taskName">
-            <el-input v-model="otherTaskForm.name"></el-input>
-          </el-form-item>
-          <el-form-item label="价格" prop="taskPrice">
-            <el-input v-model="otherTaskForm.price"></el-input>
-          </el-form-item>
-          <el-form-item label="最晚取货时间" prop="taskDDL">
-            <el-date-picker v-model="otherTaskForm.ddlTime" type="datetime" placeholder="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionLater" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-          </el-form-item>
-          <el-form-item label="任务描述" prop="taskDes">
-            <el-input v-model="otherTaskForm.description"></el-input>
-          </el-form-item>
-          <el-form-item label="发货地址" prop="taskSendAddress">
-            <el-select v-model="otherTaskForm.senderAddressId" placeholder="请选择收货区域">
-              <el-option
-                v-for="item in sendAddressList"
-                :label="item.name + item.region+item.address+item.phone"
-                :key="item.id"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="收货地址" prop="taskReceAddress">
-            <el-select v-model="otherTaskForm.receiveAddressId" placeholder="请选择收货区域">
-              <el-option
-                v-for="item in receiveAddressList"
-                :label="item.name + item.region+item.address+item.phone"
-                :key="item.id"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <el-button @click="otherTaskVisible=false">取消</el-button>
-        <el-button type="primary" @click="postOtherTask">发布跑腿任务</el-button>
-      </el-dialog>
-      <el-dialog :visible.sync="orderTaskVisible">
-        <el-form :model="orderTaskForm">
-          <el-form-item label="任务名称" prop="taskName2">
-            <el-input v-model="orderTaskForm.name"></el-input>
-          </el-form-item>
-          <el-form-item label="价格" prop="taskPrice2">
-            <el-input v-model="orderTaskForm.price"></el-input>
-          </el-form-item>
-          <el-form-item label="最晚取货时间" prop="taskDDL2">
-            <el-date-picker v-model="orderTaskForm.ddlTime" type="datetime" placeholder="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionLater" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-          </el-form-item>
-          <el-form-item label="任务描述" prop="taskDes2">
-            <el-input v-model="orderTaskForm.description"></el-input>
-          </el-form-item>
-        </el-form>
-        <el-button @click="orderTaskForm=false">取消</el-button>
-        <el-button @click="postTaskOrder">发布跑腿任务</el-button>
-      </el-dialog>
-    </el-main>
+    <el-container style="display: flex;height: 100%;">
+      <el-aside width="200px" style="background-color: #545c64;opacity: 0.5;">
+        <el-menu
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#409EFF"
+          :unique-opened="true"
+          :collapse-transition="false"
+          :router="true"
+        >
+          <el-submenu class="menu-buttons" index="1">
+            <template slot="title">
+              <i class="el-icon-user"></i>
+              <span>用户信息</span>
+            </template>
+            <el-button class="inside-button" v-on:click="myPage">个人主页</el-button><br>
+            <el-button class="inside-button" v-on:click="cartPage">购物车</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="2">
+            <template slot="title">
+              <i class="el-icon-goods"></i>
+              <span>商品</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goSellOrder">卖出的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goBuyOrder">买到的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goPostGoods">发布的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goNewGoods">上架新商品</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="3">
+            <template slot="title">
+              <i class="el-icon-star-off"></i>
+              <span>收藏</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goFavoriteGoods">收藏的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goFavoriteUser">收藏的卖家</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="4">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>跑腿</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goTaskHall">任务大厅</el-button><br>
+            <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
+            <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
+      <el-main style="height: 100%;padding: 0;">
+        <el-container class="mid-content">
+          <el-button style="margin-bottom: 20px;" type="primary" v-on:click="otherTaskVisible=true">发布</el-button>
+          <el-tabs type="border-card" v-model="activePane">
+            <!--          pay-pane-->
+            <el-tab-pane label="跑腿任务" class="whole-pane" name="first">
+              <div v-if="shipList.length">
+                <el-container class="whole-order" v-for="(item, index) in shipList" :key="index">
+                  <el-container class="order-photo">
+                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                  </el-container>
+                  <el-container class="order-name">{{item.goodsName}}</el-container>
+                  <el-container class="order-detail">发货地址：{{item.sendAddress}}</el-container>
+                  <el-container class="order-detail">收货地址：{{item.receiveAddress}}</el-container>
+    <!--              <el-container class="order-detail">{{item.orderDetail}}</el-container>-->
+                  <el-container class="order-pay">
+                    <el-button class="last-button" v-on:click="toOrderPage(item)">查看详情</el-button>
+                    <el-button type="text" class="button" @click="clickPostTaskOrder(item)">发布任务</el-button>
+                  </el-container>
+                </el-container>
+              </div>
+              <div v-else>
+                <h2>这里目前什么也没有哦</h2>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+        </el-container>
+        <el-dialog style="margin: auto;" :visible.sync="otherTaskVisible" :modal-append-to-body="false">
+          <el-form :model="otherTaskForm" label-width="200px" label-position="left">
+            <el-form-item label="任务名称" prop="taskName">
+              <el-input v-model="otherTaskForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="价格" prop="taskPrice">
+              <el-input v-model="otherTaskForm.price"></el-input>
+            </el-form-item>
+            <el-form-item label="最晚取货时间" prop="taskDDL">
+              <el-date-picker v-model="otherTaskForm.ddlTime" type="datetime" placeholder="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionLater" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="任务描述" prop="taskDes">
+              <el-input v-model="otherTaskForm.description"></el-input>
+            </el-form-item>
+            <el-form-item label="发货地址" prop="taskSendAddress">
+              <el-select v-model="otherTaskForm.senderAddressId" placeholder="请选择收货区域">
+                <el-option
+                  v-for="item in sendAddressList"
+                  :label="item.name + item.region+item.address+item.phone"
+                  :key="item.id"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="收货地址" prop="taskReceAddress">
+              <el-select v-model="otherTaskForm.receiveAddressId" placeholder="请选择收货区域">
+                <el-option
+                  v-for="item in receiveAddressList"
+                  :label="item.name + item.region+item.address+item.phone"
+                  :key="item.id"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <el-button @click="otherTaskVisible=false">取消</el-button>
+          <el-button type="primary" @click="postOtherTask">发布跑腿任务</el-button>
+        </el-dialog>
+        <el-dialog :visible.sync="orderTaskVisible">
+          <el-form :model="orderTaskForm">
+            <el-form-item label="任务名称" prop="taskName2">
+              <el-input v-model="orderTaskForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="价格" prop="taskPrice2">
+              <el-input v-model="orderTaskForm.price"></el-input>
+            </el-form-item>
+            <el-form-item label="最晚取货时间" prop="taskDDL2">
+              <el-date-picker v-model="orderTaskForm.ddlTime" type="datetime" placeholder="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionLater" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="任务描述" prop="taskDes2">
+              <el-input v-model="orderTaskForm.description"></el-input>
+            </el-form-item>
+          </el-form>
+          <el-button @click="orderTaskForm=false">取消</el-button>
+          <el-button @click="postTaskOrder">发布跑腿任务</el-button>
+        </el-dialog>
+      </el-main>
+    </el-container>
   </el-container>
   <!--  <el-container>-->
   <!--    <el-button @click="otherTaskVisible=true">-->
@@ -216,6 +277,7 @@ export default {
         ddlTime: '',
         description: ''
       },
+      searchContent: undefined,
       sendAddressList: [],
       receiveAddressList: [],
       shipList: [],
@@ -350,6 +412,43 @@ export default {
     logOut () {
       this.$axios.post('login0/logout/ ')
       this.$router.push('/login')
+    },
+    goReleasedTask () {
+      this.$router.push('/releasedtask')
+    },
+    goReceivedTask () {
+      this.$router.push('/receivedtask')
+    },
+    goTaskHall () {
+      this.$router.push('/taskhall')
+    },
+    goFavoriteUser () {
+      this.$router.push('/favoriteusers')
+    },
+    goFavoriteGoods () {
+      this.$router.push('/favoritegoods')
+    },
+    goSellOrder () {
+      this.$router.push('/sellorder')
+    },
+    goBuyOrder () {
+      this.$router.push('/buyorder')
+    },
+    goPostGoods () {
+      this.$router.push('/sellinggoods')
+    },
+    goNewGoods () {
+      this.$router.push('/addgoods')
+    },
+    searchTop () {
+      this.$router.push({name: 'Result',
+        params: {
+          searchContent: this.searchContent,
+          labels: undefined,
+          status: undefined,
+          orderMethod: undefined
+        }
+      })
     }
   }
 }
@@ -359,9 +458,8 @@ export default {
 .home-container {
   height: 100%;
   width: 100%;
-  background: center no-repeat url("../../assets/back7.jpg");
+  background: center repeat url("../../assets/back7.jpg");
   background-size: cover;
-  display: block;
 }
 
 .el-header {
@@ -372,7 +470,28 @@ export default {
   align-items: center;
   color: #ffffff;
   font-size: 40px;
-  opacity: 0.5;
+  opacity: 0.7;
+}
+
+.mid-head {
+  display: flex;
+  align-items: center;
+}
+
+.menu-buttons {
+  display: block;
+  margin: auto;
+  text-align: center;
+  align-items: center;
+}
+
+.inside-button {
+  margin-top: 5px;
+  border: 0;
+  text-align: center;
+  align-items: center;
+  background-color: #545c64;
+  color: #ffffff;
 }
 
 .right-head {

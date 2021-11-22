@@ -3,7 +3,15 @@
     <el-header class="el-header">
       <div class="right-head">
         <img src="../../assets/testlogo.png" class="logo" alt="">
-        <span>SUSTech Store</span>
+        <span class="title">SUSTech Store</span>
+      </div>
+      <div class="mid-head">
+        <el-input
+          placeholder="请输入搜索信息"
+          prefix-icon="el-icon-search"
+          v-model="searchContent" style="width: 870px"
+          @keyup.enter.native="searchTop">
+        </el-input>
       </div>
       <div class="left-head">
         <el-menu
@@ -24,92 +32,140 @@
         </el-menu>
       </div>
     </el-header>
-    <el-main>
-      <el-container class="mid-content">
-        <el-container class="pane-content">
-          <el-container class="page-title">
-            <span style="margin-left: 10px">上架的商品</span>
-            <el-button class="add-button" v-on:click="addGood" v-if="isSeller">添加商品</el-button>
-          </el-container>
-          <div v-if="goodsList.length">
-            <el-container class="whole-order" v-for="(item, index) in goodsList" :key="index">
-              <el-container class="good-photo">
-                <el-image :src="item.photo" fit="contain" :alt="item.name"></el-image>
-              </el-container>
-              <el-container class="good-name">{{item.name}}</el-container>
-              <el-container class="good-detail">被{{item.favouriteNumber}}人喜欢</el-container>
-              <el-container class="good-price">¥{{item.price}}</el-container>
-              <el-container class="good-button">
-                <el-button class="last-button-one" v-on:click="toGoodsPage(index)">查看详情</el-button>
-                <el-button class="last-button-two" v-on:click="deleteGoods(index)">下架</el-button>
-              </el-container>
+    <el-container style="display: flex;height: 100%;">
+      <el-aside width="200px" style="background-color: #545c64;opacity: 0.5;">
+        <el-menu
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#409EFF"
+          :unique-opened="true"
+          :collapse-transition="false"
+          :router="true"
+        >
+          <el-submenu class="menu-buttons" index="1">
+            <template slot="title">
+              <i class="el-icon-user"></i>
+              <span>用户信息</span>
+            </template>
+            <el-button class="inside-button" v-on:click="myPage">个人主页</el-button><br>
+            <el-button class="inside-button" v-on:click="cartPage">购物车</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="2">
+            <template slot="title">
+              <i class="el-icon-goods"></i>
+              <span>商品</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goSellOrder">卖出的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goBuyOrder">买到的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goPostGoods">发布的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goNewGoods">上架新商品</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="3">
+            <template slot="title">
+              <i class="el-icon-star-off"></i>
+              <span>收藏</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goFavoriteGoods">收藏的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goFavoriteUser">收藏的卖家</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="4">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>跑腿</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goTaskHall">任务大厅</el-button><br>
+            <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
+            <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
+      <el-main style="height: 100%;padding: 0;">
+        <el-container class="mid-content">
+          <el-container class="pane-content">
+            <el-container class="page-title">
+              <span style="margin-left: 10px">上架的商品</span>
+              <el-button class="add-button" v-on:click="addGood" v-if="isSeller">添加商品</el-button>
             </el-container>
-          </div>
-          <div v-else>
-            <h2>这里什么也没有，快去卖点什么吧</h2>
-          </div>
+            <div v-if="goodsList.length">
+              <el-container class="whole-order" v-for="(item, index) in goodsList" :key="index">
+                <el-container class="good-photo">
+                  <el-image :src="item.photo" fit="contain" :alt="item.name"></el-image>
+                </el-container>
+                <el-container class="good-name">{{item.name}}</el-container>
+                <el-container class="good-detail">被{{item.favouriteNumber}}人喜欢</el-container>
+                <el-container class="good-price">¥{{item.price}}</el-container>
+                <el-container class="good-button">
+                  <el-button class="last-button-one" v-on:click="toGoodsPage(index)">查看详情</el-button>
+                  <el-button class="last-button-two" v-on:click="deleteGoods(index)">下架</el-button>
+                </el-container>
+              </el-container>
+            </div>
+            <div v-else>
+              <h2>这里什么也没有，快去卖点什么吧</h2>
+            </div>
+          </el-container>
         </el-container>
-      </el-container>
-      <el-dialog :visible.sync="dialogFormVisible">
-        <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="商品名称" prop="goodName">
-            <el-input v-model="form.goods_title" placeholder="请输入商品名称"></el-input>
-          </el-form-item>
-          <el-form-item label="商品价格" prop="goodPrice">
-            <el-input v-model="form.goods_price" placeholder="请输入商品价格"></el-input>
-          </el-form-item>
-          <el-form-item label="商品分类" prop="goodType">
-            <el-cascader  :options="options"
-                          :props="{ checkStrictly: true }"
-                          v-model="form.goods_kind"
-                          clearable></el-cascader>
-          </el-form-item>
-          <el-form-item label="使用程度" prop="goodStatus">
-            <el-select v-model="form.goods_status" placeholder="请选择">
-              <el-option
-                v-for="item in newOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="商品描述" prop="goodDescription">
-            <el-input v-model="form.goods_description" placeholder="请输入商品分类"></el-input>
-          </el-form-item>
-          <el-form-item label="商品图片" prop="goodImage">
-            <el-upload
-              action="auto"
-              :http-request="uploadSectionFile"
-              list-type="picture-card"
-              :file-list="form.fileList"
-              class = "contentImgStyle"
-              :limit="3"
-              :on-exceed="handleExceed">
-              <i class="el-icon-plus"></i>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="发货地址" prop="sendAddress">
-            <el-select v-model="form.goods_address_id" placeholder="请选择">
-              <el-option
-                v-for="item in addressList"
-                :label="item.name + item.region+item.address+item.phone"
-                :key="item.id"
-                :value="item.id"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="邮费" prop="postage">
-            <el-input v-model="form.goods_postage"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submit2">确认添加</el-button>
-            <el-button type="success">重置</el-button>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-    </el-main>
+        <el-dialog :visible.sync="dialogFormVisible">
+          <el-form ref="form" :model="form" label-width="80px">
+            <el-form-item label="商品名称" prop="goodName">
+              <el-input v-model="form.goods_title" placeholder="请输入商品名称"></el-input>
+            </el-form-item>
+            <el-form-item label="商品价格" prop="goodPrice">
+              <el-input v-model="form.goods_price" placeholder="请输入商品价格"></el-input>
+            </el-form-item>
+            <el-form-item label="商品分类" prop="goodType">
+              <el-cascader  :options="options"
+                            :props="{ checkStrictly: true }"
+                            v-model="form.goods_kind"
+                            clearable></el-cascader>
+            </el-form-item>
+            <el-form-item label="使用程度" prop="goodStatus">
+              <el-select v-model="form.goods_status" placeholder="请选择">
+                <el-option
+                  v-for="item in newOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="商品描述" prop="goodDescription">
+              <el-input v-model="form.goods_description" placeholder="请输入商品分类"></el-input>
+            </el-form-item>
+            <el-form-item label="商品图片" prop="goodImage">
+              <el-upload
+                action="auto"
+                :http-request="uploadSectionFile"
+                list-type="picture-card"
+                :file-list="form.fileList"
+                class = "contentImgStyle"
+                :limit="3"
+                :on-exceed="handleExceed">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="发货地址" prop="sendAddress">
+              <el-select v-model="form.goods_address_id" placeholder="请选择">
+                <el-option
+                  v-for="item in addressList"
+                  :label="item.name + item.region+item.address+item.phone"
+                  :key="item.id"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="邮费" prop="postage">
+              <el-input v-model="form.goods_postage"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submit2">确认添加</el-button>
+              <el-button type="success">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+      </el-main>
+    </el-container>
   </el-container>
   <!--  <table>-->
   <!--    <tr>-->
@@ -156,6 +212,7 @@ export default {
   data () {
     return {
       goodsList: [],
+      searchContent: undefined,
       form: {
         goods_title: '',
         goods_price: '',
@@ -452,6 +509,43 @@ export default {
     },
     addGood () {
       this.dialogFormVisible = true
+    },
+    goReleasedTask () {
+      this.$router.push('/releasedtask')
+    },
+    goReceivedTask () {
+      this.$router.push('/receivedtask')
+    },
+    goTaskHall () {
+      this.$router.push('/taskhall')
+    },
+    goFavoriteUser () {
+      this.$router.push('/favoriteusers')
+    },
+    goFavoriteGoods () {
+      this.$router.push('/favoritegoods')
+    },
+    goSellOrder () {
+      this.$router.push('/sellorder')
+    },
+    goBuyOrder () {
+      this.$router.push('/buyorder')
+    },
+    goPostGoods () {
+      this.$router.push('/sellinggoods')
+    },
+    goNewGoods () {
+      this.$router.push('/addgoods')
+    },
+    searchTop () {
+      this.$router.push({name: 'Result',
+        params: {
+          searchContent: this.searchContent,
+          labels: undefined,
+          status: undefined,
+          orderMethod: undefined
+        }
+      })
     }
   }
 }
@@ -461,9 +555,8 @@ export default {
 .home-container {
   height: 100%;
   width: 100%;
-  background: center no-repeat url("../../assets/back7.jpg");
+  background: center repeat url("../../assets/back7.jpg");
   background-size: cover;
-  display: block;
 }
 
 .el-header {
@@ -474,7 +567,28 @@ export default {
   align-items: center;
   color: #ffffff;
   font-size: 40px;
-  opacity: 0.5;
+  opacity: 0.7;
+}
+
+.mid-head {
+  display: flex;
+  align-items: center;
+}
+
+.menu-buttons {
+  display: block;
+  margin: auto;
+  text-align: center;
+  align-items: center;
+}
+
+.inside-button {
+  margin-top: 5px;
+  border: 0;
+  text-align: center;
+  align-items: center;
+  background-color: #545c64;
+  color: #ffffff;
 }
 
 .right-head {

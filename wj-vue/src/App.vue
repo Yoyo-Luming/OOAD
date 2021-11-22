@@ -26,4 +26,10 @@ export default {
   color: #2c3e50;
   /*margin-top: 60px;*/
 }
+
+html, body, #app{
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 </style>

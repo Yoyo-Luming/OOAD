@@ -5,6 +5,14 @@
         <img src="../assets/testlogo.png" class="logo" alt="">
         <span class="title">SUSTech Store</span>
       </div>
+      <div class="mid-head">
+        <el-input
+          placeholder="请输入搜索信息"
+          prefix-icon="el-icon-search"
+          v-model="searchContent" style="width: 870px"
+          @keyup.enter.native="searchTop">
+        </el-input>
+      </div>
       <div class="left-head">
         <el-menu
           class="el-menu-demo"
@@ -24,8 +32,8 @@
         </el-menu>
       </div>
     </el-header>
-    <el-container style="display: flex;">
-      <el-aside width="200px" style="background-color: #545c64;">
+    <el-container style="display: flex;height: 100%;">
+      <el-aside width="200px" style="background-color: #545c64;opacity: 0.5;">
         <el-menu
           background-color="#545c64"
           text-color="#fff"
@@ -33,7 +41,6 @@
           :unique-opened="true"
           :collapse-transition="false"
           :router="true"
-          :default-active="activePath"
         >
           <el-submenu class="menu-buttons" index="1">
             <template slot="title">
@@ -74,9 +81,18 @@
             <el-button class="inside-button" v-on:click="addressFormVisible=true">新收货地址</el-button><br>
             <el-button class="inside-button" v-on:click="sendAddressFormVisible=true">新发货地址</el-button><br>
           </el-submenu>
+          <el-submenu class="menu-buttons" index="5">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>跑腿</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goTaskHall">任务大厅</el-button><br>
+            <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
+            <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
+          </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main>
+      <el-main style="height: 100%;padding: 0;">
         <el-container class="mid-content">
           <el-tabs type="border-card" v-model="activePane">
             <!--          pay-pane-->
@@ -95,25 +111,35 @@
             </el-tab-pane>
             <!--          receive-pane-->
             <el-tab-pane label="收货地址" class="whole-pane" name="second">
-              <el-container class="whole-order" v-for="(item, index) in address" :key="index">
-                <el-container class="order-name">{{item.name}}</el-container>
-                <el-container class="order-road">{{item.region}}</el-container>
-                <el-container class="order-detail">{{item.phone}}</el-container>
-                <el-container class="order-pay">
-                  <el-button class="last-button" v-on:click="deleteAddress">删除</el-button>
+              <div v-if="address.length">
+                <el-container class="whole-order" v-for="(item, index) in address" :key="index">
+                  <el-container class="order-name">{{item.name}}</el-container>
+                  <el-container class="order-road">{{item.region}}</el-container>
+                  <el-container class="order-detail">{{item.phone}}</el-container>
+                  <el-container class="order-pay">
+                    <el-button class="last-button" v-on:click="deleteAddress">删除</el-button>
+                  </el-container>
                 </el-container>
-              </el-container>
+              </div>
+              <div v-else>
+                <h2>这里什么也没有，快去添加收货地址吧~</h2>
+              </div>
             </el-tab-pane>
             <!--          evaluate-pane-->
             <el-tab-pane label="发货地址" class="whole-pane" name="third">
-              <el-container class="whole-order" v-for="(item, index) in sendAddress" :key="index">
-                <el-container class="order-name">{{item.name}}</el-container>
-                <el-container class="order-road">{{item.region}}</el-container>
-                <el-container class="order-detail">{{item.phone}}</el-container>
-                <el-container class="order-pay">
-                  <el-button class="last-button" v-on:click="deleteSendAddress">删除</el-button>
+              <div v-if="sendAddress.length">
+                <el-container class="whole-order" v-for="(item, index) in sendAddress" :key="index">
+                  <el-container class="order-name">{{item.name}}</el-container>
+                  <el-container class="order-road">{{item.region}}</el-container>
+                  <el-container class="order-detail">{{item.phone}}</el-container>
+                  <el-container class="order-pay">
+                    <el-button class="last-button" v-on:click="deleteSendAddress">删除</el-button>
+                  </el-container>
                 </el-container>
-              </el-container>
+              </div>
+              <div v-else>
+                <h2>这里什么也没有，快去添加发货地址吧~</h2>
+              </div>
             </el-tab-pane>
           </el-tabs>
         </el-container>
@@ -357,6 +383,7 @@ export default {
         photo: '',
         balance: 123
       },
+      searchContent: undefined,
       // 激活卖家功能表单数据
       activeSellFromData: {
         name: '',
@@ -559,7 +586,6 @@ export default {
       LoginPassWordVisible: false,
       changeCode: '',
       activePane: 'first',
-      activePath: '',
       rules: {
         userType: [
           { required: true, message: '请输入用户类型', trigger: 'blur' }
@@ -717,9 +743,6 @@ export default {
       this.$axios.post('login0/logout/ ')
       this.$router.push('/login')
     },
-    search () {
-      // Todo
-    },
     deleteAddress (index) {
       if (this.address.length > 1) {
         this.$axios.post('login0/delete_address/', this.$qs.stringify({
@@ -862,6 +885,16 @@ export default {
     goBuyOrder () {
       this.$router.push('/buyorder')
     },
+    searchTop () {
+      this.$router.push({name: 'Result',
+        params: {
+          searchContent: this.searchContent,
+          labels: undefined,
+          status: undefined,
+          orderMethod: undefined
+        }
+      })
+    },
     recharge () {
       console.log(this.money)
       this.$axios.post('login0/recharge/', this.$qs.stringify({
@@ -903,6 +936,15 @@ export default {
     },
     goFavoriteUser () {
       this.$router.push('/favoriteusers')
+    },
+    goReleasedTask () {
+      this.$router.push('/releasedtask')
+    },
+    goReceivedTask () {
+      this.$router.push('/receivedtask')
+    },
+    goTaskHall () {
+      this.$router.push('/taskhall')
     },
     goFavoriteGoods () {
       this.$router.push('/favoritegoods')
@@ -961,9 +1003,8 @@ export default {
 .home-container {
   height: 100%;
   width: 100%;
-  background: center no-repeat url("../assets/back7.jpg");
+  background: center repeat url("../assets/back7.jpg");
   background-size: cover;
-  display: block;
 }
 
 .el-header {
@@ -974,10 +1015,15 @@ export default {
   align-items: center;
   color: #ffffff;
   font-size: 40px;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 .right-head {
+  display: flex;
+  align-items: center;
+}
+
+.mid-head {
   display: flex;
   align-items: center;
 }

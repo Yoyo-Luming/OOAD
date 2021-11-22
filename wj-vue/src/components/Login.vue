@@ -141,7 +141,7 @@ export default {
             }
             this.$message.success(successResponse.data.message)
             this.$global.initWebSocket()
-            this.$router.push('/result')
+            this.$router.push('/home')
           } else {
             this.$message.error(successResponse.data.message)
           }

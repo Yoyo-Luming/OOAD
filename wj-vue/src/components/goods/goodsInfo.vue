@@ -46,7 +46,7 @@
             <el-container class="contents">
               <div class="good-name">{{goodsInfo.name}}</div>
               <div class="good-description">{{goodsInfo.description}}</div>
-              <div>分类：{{goodsInfo.kind}}</div>
+              <div class="good-description">分类：{{goodsInfo.kind}}</div>
               <div class="good-price">售价: ¥<span style="margin-left: 5px;font-size: 30px">{{goodsInfo.price}}</span></div>
               <div class="good-deliverPrice">邮费: ¥<span style="margin-left: 5px;font-size: 20px">{{goodsInfo.deliverPrice}}</span></div>
               <div class="seller-name" v-on:click="toUserPage">卖家：{{goodsInfo.poster}}</div>

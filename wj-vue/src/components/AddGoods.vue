@@ -438,8 +438,14 @@ export default {
         method: 'post',
         url: '/login0/upload_commodity/',
         data: param
-      }).then(function (response) {
-        console.log(response)
+      }).then(response => {
+        if (response.data.status === '200') {
+          this.$message.success('商品上传成功')
+          this.$router.push('/sellinggoods')
+        } else {
+          this.$message.info(response.data.message)
+        }
+        // console.log(response)
         // alert(response.data.message)
       })
     },

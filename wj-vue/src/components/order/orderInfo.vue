@@ -512,7 +512,7 @@ export default {
     if (this.info.transaction_status === 3 && !this.currentUserIsSeller) {
       this.receiveButton = true
     }
-    if (this.info.transaction_status === 4) {
+    if (this.info.transaction_status === 4 && !this.currentUserIsSeller) {
       this.commentButton = true
     }
     this.isAdmin = (this.$store.state.userStatus === 3)

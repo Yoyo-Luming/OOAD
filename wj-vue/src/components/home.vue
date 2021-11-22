@@ -346,7 +346,6 @@ export default {
       if (type !== -1) {
         this.$router.push({name: 'Result',
           params: {
-            type: type,
             searchContent: this.searchContent,
             labels: this.labels,
             status: this.status,

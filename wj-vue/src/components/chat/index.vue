@@ -17,15 +17,11 @@
       <h3>群聊</h3>
       <div class="message-panel">
         <msg-box v-for="(item, index) of msgList" :key="index+Math.random()" :uname="item.name" :is-photo="item.isPhoto" :url="item.url" :content="item.msg" :isSelf="item.isSelf"></msg-box>
-
       </div>
       <el-button @click="uploadPhotoVisible=true">上传图片</el-button>
       <div class="input-area">
         <textarea class="input" v-model="msg" @keyup.enter="sendMsg"></textarea>
-        <!-- <button class="send" @click="sendMsg">发送</button> -->
-
         <el-button class="send-btn" @click="sendMsg">发送</el-button>
-
       </div>
     </div>
     <el-dialog :visible.sync="uploadPhotoVisible">

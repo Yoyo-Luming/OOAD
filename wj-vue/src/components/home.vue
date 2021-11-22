@@ -155,10 +155,10 @@ export default {
   components: {GoodsBox},
   data () {
     return {
-      searchContent: '',
-      labels: [0, 0],
-      status: '未选择',
-      orderMethod: '未选择',
+      searchContent: undefined,
+      labels: undefined,
+      status: undefined,
+      orderMethod: undefined,
       goodsList: [],
       options: [{
         value: 1,
@@ -336,9 +336,9 @@ export default {
     },
     search () {
       let type = -1
-      if (this.labels[0] === 0 && this.status === '未选择' && this.orderMethod === '未选择') {
+      if (this.labels === undefined && this.status === undefined && this.orderMethod === undefined && this.searchContent !== undefined) {
         type = 1
-      } else if (this.searchContent === '' && this.labels[0] === 0) {
+      } else if (this.searchContent === undefined && this.labels === undefined) {
         this.$message.error('请输入搜索内容或者选择商品分类')
       } else {
         type = 2

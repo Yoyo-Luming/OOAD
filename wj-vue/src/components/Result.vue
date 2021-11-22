@@ -91,10 +91,10 @@ export default {
   components: {GoodsBox},
   data () {
     return {
-      searchContent: '',
-      labels: [0, 0],
-      status: '未选择',
-      orderMethod: '未选择',
+      searchContent: undefined,
+      labels: undefined,
+      status: undefined,
+      orderMethod: undefined,
       goodsList: [],
       options: [{
         value: 1,
@@ -272,9 +272,13 @@ export default {
       //   price: 22,
       //   photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'
       // })
-      console.log(this.labels[0])
+      console.log('-----')
+      console.log(this.searchContent)
+      console.log(this.labels)
+      console.log(this.status)
+      console.log(this.orderMethod)
       this.goodsList = []
-      if (this.labels[0] === 0 && this.status === '未选择' && this.orderMethod === '未选择') {
+      if (this.labels === undefined && this.status === undefined && this.orderMethod === undefined && this.searchContent !== undefined) {
         let url = 'search/?q=' + this.searchContent
         console.log(url)
         this.$axios.post(url).then(response => {
@@ -292,14 +296,14 @@ export default {
             })
           }
         })
-      } else if (this.searchContent === '' && this.labels[0] === 0) {
+      } else if (this.searchContent === undefined && this.labels === undefined) {
         this.$message.error('请输入搜索内容或者选择商品分类')
       } else {
         let class1Id = ''
         let class2Id = ''
         let newStatus = ''
         let sortMethod = 'default'
-        if (this.labels !== '未选择') {
+        if (this.labels !== undefined) {
           if (this.labels.length === 2) {
             class1Id = this.labels[0]
             class2Id = this.labels[1]
@@ -307,10 +311,10 @@ export default {
             class1Id = this.labels[0]
           }
         }
-        if (this.status !== '未选择') {
+        if (this.status !== undefined) {
           newStatus = this.status
         }
-        if (this.orderMethod !== '未选择') {
+        if (this.orderMethod !== undefined) {
           sortMethod = this.orderMethod
         }
         this.$axios.post('commodity/search_by_class_label_all/', this.$qs.stringify({

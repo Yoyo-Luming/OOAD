@@ -338,6 +338,10 @@ export default {
       })
     },
     submitComment () {
+      if (this.commentText === '') {
+        this.$message.error('请输入评价！')
+        return
+      }
       this.$axios.post('task/task_comment/', this.$qs.stringify({
         task_id: this.taskId,
         comment_content: this.commentText,

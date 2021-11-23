@@ -88,10 +88,10 @@
       </el-aside>
       <el-main style="height: 100%;padding: 0;">
         <el-container class="mid-content">
-          <el-button style="margin-bottom: 20px;" type="primary" v-on:click="otherTaskVisible=true">发布</el-button>
+          <el-button style="margin-bottom: 20px;" type="primary" v-on:click="otherTaskVisible=true">发布任务</el-button>
           <el-tabs type="border-card" v-model="activePane">
             <!--          pay-pane-->
-            <el-tab-pane label="跑腿任务" class="whole-pane" name="first">
+            <el-tab-pane label="订单任务" class="whole-pane" name="first">
               <div v-if="shipList.length">
                 <el-container class="whole-order" v-for="(item, index) in shipList" :key="index">
                   <el-container class="order-photo">
@@ -127,8 +127,8 @@
             <el-form-item label="任务描述" prop="taskDes">
               <el-input v-model="otherTaskForm.description"></el-input>
             </el-form-item>
-            <el-form-item label="发货地址" prop="taskSendAddress">
-              <el-select v-model="otherTaskForm.senderAddressId" placeholder="请选择收货区域">
+            <el-form-item label="领货地址" prop="taskSendAddress">
+              <el-select v-model="otherTaskForm.senderAddressId" placeholder="请选择领货地址">
                 <el-option
                   v-for="item in sendAddressList"
                   :label="item.name + item.region+item.address+item.phone"
@@ -138,7 +138,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="收货地址" prop="taskReceAddress">
-              <el-select v-model="otherTaskForm.receiveAddressId" placeholder="请选择收货区域">
+              <el-select v-model="otherTaskForm.receiveAddressId" placeholder="请选择收货地址">
                 <el-option
                   v-for="item in receiveAddressList"
                   :label="item.name + item.region+item.address+item.phone"
@@ -177,6 +177,7 @@
 <script>
 // import orderBox from '../order/orderBox'
 export default {
+  inject: ['reload'],
   name: 'publishTask',
   mounted () {
     this.$axios.post('/login0/get_address_list/', this.$qs.stringify({
@@ -322,6 +323,35 @@ export default {
   },
   methods: {
     postOtherTask () {
+      if (this.otherTaskForm.name === '') {
+        this.$message.error('请输入任务名称！')
+        return
+      }
+      if (this.otherTaskForm.price === '') {
+        this.$message.error('请输入价格！')
+        return
+      }
+      if (this.otherTaskForm.ddlTime === '') {
+        this.$message.error('请输入最迟领货时间！')
+        return
+      }
+      if (this.otherTaskForm.description === '') {
+        this.$message.error('请输入任务描述！')
+        return
+      }
+      if (this.otherTaskForm.senderAddressId === '') {
+        this.$message.error('请选择领货地址！')
+        return
+      }
+      if (this.otherTaskForm.receiveAddressId === '') {
+        this.$message.error('请选择收货地址！')
+        return
+      }
+      const numberChecker = /^[0-9]+$/
+      if (!numberChecker.test(this.otherTaskForm.price)) {
+        this.$message.error('价格必须为正整数！')
+        return
+      }
       this.$axios.post('task/release_task_others/', this.$qs.stringify({
         ddl_time: this.otherTaskForm.ddlTime,
         price: this.otherTaskForm.price,
@@ -330,9 +360,10 @@ export default {
         sender_addr_id: this.otherTaskForm.senderAddressId,
         receive_addr_id: this.otherTaskForm.receiveAddressId
       })).then(response => {
-        this.$message.info(response.data.message)
         if (response.data.status === '200') {
           this.otherTaskVisible = false
+        } else {
+          this.$message.error(response.data.message)
         }
       })
     },
@@ -348,16 +379,25 @@ export default {
       this.orderTaskVisible = true
     },
     postTaskOrder () {
+      if (this.orderTaskForm.name === '') {
+        this.$message.error('请输入任务名称！')
+        return
+      }
       if (this.orderTaskForm.price === '') {
-        this.$message.warning('请输入价格！')
+        this.$message.error('请输入价格！')
         return
       }
       if (this.orderTaskForm.ddlTime === '') {
-        this.$message.warning('请输入最迟领货时间！')
+        this.$message.error('请输入最迟领货时间！')
         return
       }
       if (this.orderTaskForm.description === '') {
-        this.$message.warning('请输入最迟领货时间！')
+        this.$message.error('请输入任务描述！')
+        return
+      }
+      const numberChecker = /^[0-9]+$/
+      if (!numberChecker.test(this.orderTaskForm.price)) {
+        this.$message.error('价格必须为正整数！')
         return
       }
       this.$axios.post('/task/release_task_transaction/', this.$qs.stringify({
@@ -367,13 +407,10 @@ export default {
         description: this.orderTaskForm.description,
         name: this.orderTaskForm.name
       })).then(response => {
-        this.$message.info(response.data.message)
         if (response.data.status === '200') {
-          this.orderTaskForm.ddlTime = ''
-          this.orderTaskForm.name = ''
-          this.orderTaskForm.description = ''
-          this.orderTaskForm.price = ''
-          this.orderTaskVisible = false
+          this.reload()
+        } else {
+          this.$message.error(response.data.message)
         }
       })
     },

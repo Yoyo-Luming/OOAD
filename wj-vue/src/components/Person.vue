@@ -394,6 +394,7 @@
 
 <script>
 export default {
+  inject: ['reload'],
   name: 'Person',
   data () {
     const verifyEmpty = (rule, value, callback) => {
@@ -754,7 +755,6 @@ export default {
       this.$axios.post('/login0/get_user_details/', this.$qs.stringify({}))
         .then(response => {
           if (response.data.message === '用户无权访问') {
-            // 用户未激活，先激活
             this.activeFromVisible = true
           } else {
             console.log(response.data)
@@ -848,11 +848,22 @@ export default {
       }
     },
     changUserInfo () {
+      if (this.fromData.userType === '') {
+        this.$message.error('请输入用户类别！')
+        return
+      }
+      if (this.fromData.trueName === '') {
+        this.$message.error('请输入用户真实姓名！')
+        return
+      }
+      if (this.fromData.description === '') {
+        this.$message.error('请输入用户自我介绍！')
+        return
+      }
       let infoForm = new FormData()
       infoForm.append('user_identify ', this.fromData.userType)
       infoForm.append('self_description', this.fromData.description)
       infoForm.append('real_name', this.fromData.trueName)
-      infoForm.append('header_photo', this.fromData.photo)
       this.$axios({
         method: 'post',
         url: '/login0/modify_self_info/',
@@ -862,10 +873,17 @@ export default {
         if (response.data.status === '200') {
           this.$message.success(response.data.message)
           this.UserInfoFormVisible = false
+          this.reload()
+        } else {
+          this.$message.error(response.data.message)
         }
       })
     },
     uploadHeaderPhoto () {
+      if (this.uploadHeaderPhotoFile.length === 0) {
+        this.$message.error('请上传用户头像！')
+        return
+      }
       let headerForm = new FormData()
       headerForm.append('header_photo', this.uploadHeaderPhotoFile[0].photo)
       this.$axios({method: 'post', url: '/login0/upload_head_photo/', data: headerForm}).then(response => {
@@ -873,6 +891,7 @@ export default {
           // this.userInfo.photo =
           this.$message.success(response.data.message)
           this.uploadHeaderPhotoFile = []
+          this.reload()
         } else {
           this.$message.info(response.data.message)
         }
@@ -904,10 +923,12 @@ export default {
         user_phone: this.addressFromData.phone,
         address_type: 1
       })).then(response => {
-        console.log(response.data)
-        this.$message.info(response.data.message)
         if (response.data.status === '200') {
+          this.$message.success(response.data.message)
           this.addressFormVisible = false
+          this.reload()
+        } else {
+          this.$message.error(response.data.message)
         }
       })
     },
@@ -919,9 +940,12 @@ export default {
         user_phone: this.sendAddressFromData.phone,
         address_type: 2
       })).then(response => {
-        this.$message.info(response.data.message)
         if (response.data.status === '200') {
+          this.$message.success(response.data.message)
           this.sendAddressFormVisible = false
+          this.reload()
+        } else {
+          this.$message.error(response.data.message)
         }
       })
     },
@@ -929,6 +953,9 @@ export default {
       console.log(this.$global.userId)
       // 先激活，上传真实姓名，用户类别，支付密码，收货地址
       // TODO 支付密码需要输入两次确认
+      // if (this.activeFromData) {
+      //
+      // }
       this.$axios.post('/login0/activate/', this.$qs.stringify({
         real_name: this.activeFromData.realName,
         user_identify: this.activeFromData.userType,
@@ -951,6 +978,9 @@ export default {
             // this.$store.commit('setUserStatus', 1)
             // this.$message.success()
             this.activeFromVisible = false
+            this.reload()
+          } else {
+            this.$message.error(response.data.message)
           }
         })
       })
@@ -1015,7 +1045,6 @@ export default {
           this.$message.error(response.data.message)
         }
       })
-      console.log('activateSell!')
     },
     goFavoriteUser () {
       this.$router.push('/favoriteusers')

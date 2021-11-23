@@ -100,6 +100,22 @@ export default {
   },
   methods: {
     register () {
+      if (this.registerForm.username === '') {
+        this.$message.error('请输入用户名！')
+        return
+      }
+      if (this.registerForm.password === '') {
+        this.$message.error('请输入登密码！')
+        return
+      }
+      if (this.registerForm.code === '') {
+        this.$message.error('请输入邮箱验证码！')
+        return
+      }
+      if (this.registerForm.password !== this.registerForm.verifyPassword) {
+        this.$message.error('两次输入的密码不相同！')
+        return
+      }
       this.$axios.post('login0/register/', this.$qs.stringify({
         status: 1,
         code: this.registerForm.code,
@@ -117,6 +133,15 @@ export default {
       // 待完成
     },
     getCode () {
+      if (this.registerForm.email === '') {
+        this.$message.error('请输入验证邮箱！')
+        return
+      }
+      const regEmail = /^([a-zA-Z0-9_-])+@((mail.sustech.edu.cn)|(sustech.edu.cn))+$/
+      if (!regEmail.test(this.registerForm.email)) {
+        this.$message.error('请输入南方科技大学官方邮箱！')
+        return
+      }
       this.$axios.post('login0/new_register_email/', this.$qs.stringify({
         user_email: this.registerForm.email,
         status: 0

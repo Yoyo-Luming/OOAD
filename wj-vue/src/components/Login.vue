@@ -105,6 +105,14 @@ export default {
     login () {
       // console.log(this.$store.state.userName)
       // console.log(this.$global.userName)
+      if (this.loginForm.username === '') {
+        this.$message.error('请输入用户名！')
+        return
+      }
+      if (this.loginForm.password === '') {
+        this.$message.error('请输入登录密码！')
+        return
+      }
       this.isShow = true
     },
     mounted () {
@@ -161,6 +169,10 @@ export default {
       this.dialogFormVisible = true
     },
     sendCode () {
+      if (this.changeForm.mailBox === '') {
+        this.$message.error('请输入验证邮箱！')
+        return
+      }
       this.$axios.post('login0/forget_password_email/', this.$qs.stringify({
         user_email: this.changeForm.mailBox
       })).then(response => {
@@ -168,6 +180,14 @@ export default {
       })
     },
     confirmChange () {
+      if (this.changeForm.newPassword === '') {
+        this.$message.error('请输入新密码！')
+        return
+      }
+      if (this.changeForm.changeCode === '') {
+        this.$message.error('请输入验证码！')
+        return
+      }
       this.$axios.post('login0/forget_password/', this.$qs.stringify({
         new_password: this.changeForm.newPassword,
         post_code: this.changeForm.changeCode

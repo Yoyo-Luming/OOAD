@@ -115,7 +115,7 @@
                 <br>
                 <el-container style="display: flex;justify-content: right; margin-right: 50px;margin-top: 50px">
                   <el-button @click="cancel">取消</el-button>
-                  <el-button type="danger" @click="confirmOrder">确认订单</el-button>
+                  <el-button type="danger" @click="confirmOrder"><div v-if="isConfirm">付款</div><div v-else>确认订单</div></el-button>
                 </el-container>
               </el-container>
             </el-container>
@@ -175,46 +175,6 @@
       </el-main>
     </el-container>
   </el-container>
-  <!--  <el-container>-->
-  <!--    商品名称：{{goodsName}}-->
-  <!--    商品价格：{{goodsPrice}}-->
-  <!--    邮费：{{deliverPrice}}-->
-  <!--    实付款：{{totalPrice}}-->
-  <!--    商品图片：<img :src="goodsPhoto">-->
-  <!--    选择收货地址：<el-select v-model="addressId" placeholder="请选择">-->
-  <!--      <el-option-->
-  <!--        v-for="item in addressList"-->
-  <!--        :label="item.name + item.region+item.address+item.phone"-->
-  <!--        :key="item.id"-->
-  <!--        :value="item.id"-->
-  <!--        >-->
-  <!--      </el-option>-->
-  <!--    </el-select>-->
-  <!--    <el-button @click="cancel">取消</el-button>-->
-  <!--    <el-button @click="confirmOrder">确认订单</el-button>-->
-  <!--    <el-dialog :visible="dialogFormVisible">-->
-  <!--      <el-dialog :visible.sync="innerVisible">-->
-  <!--        <div v-if="payMethod===1">-->
-  <!--          支付密码:<el-input v-model="payPassword"></el-input>-->
-  <!--          <el-button @click="dialogFormVisible=false">取消</el-button>-->
-  <!--          <el-button @click="pay">确认</el-button>-->
-  <!--        </div>-->
-  <!--        <div v-else-if="payMethod===2">2</div>-->
-  <!--        <div v-else>3</div>-->
-  <!--      </el-dialog>-->
-  <!--      请选择支付方式-->
-  <!--      <el-select v-model="payMethod">-->
-  <!--      <el-option-->
-  <!--        v-for="item in payOptions"-->
-  <!--        :label="item.label"-->
-  <!--        :key="item.value"-->
-  <!--        :value="item.value">-->
-  <!--      </el-option>-->
-  <!--      </el-select>-->
-  <!--      <el-button @click="dialogFormVisible=false">取消</el-button>-->
-  <!--      <el-button @click="innerVisible=true">确定</el-button>-->
-  <!--    </el-dialog>-->
-  <!--  </el-container>-->
 </template>
 
 <script>
@@ -305,6 +265,7 @@ export default {
       totalPrice: 0,
       payPassword: '',
       payMethod: '',
+      isConfirm: false,
       regionList: [ '荔园',
         '创园',
         '慧园',
@@ -369,7 +330,14 @@ export default {
   },
   methods: {
     confirmOrder () {
-      console.log(this.goodsId)
+      if (this.addressId === '') {
+        this.$message.error('请选择发货地址！')
+        return
+      }
+      if (this.isConfirm) {
+        this.payFormVisible = true
+        return
+      }
       this.$axios.post('transaction/post_transaction/', this.$qs.stringify({
         mer_id: this.goodsId,
         rec_address_id: this.addressId
@@ -377,29 +345,43 @@ export default {
         console.log(response.data)
         this.transactionId = response.data.transaction_id
         if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.isConfirm = true
           // this.$router.push('/order')
           this.payFormVisible = true
+        } else {
+          this.$message.error(response.data.message)
         }
       })
     },
     pay () {
       // console.log(this.payPassword)
+      if (this.payPassword === '') {
+        this.$message.error('请输入支付密码！')
+        return
+      }
       this.$axios.post('transaction/commit_transaction_virtual/', this.$qs.stringify({
         tra_id: this.transactionId,
         pay_password: this.payPassword
       })).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         if (response.data.status === '200') {
+          this.$message.success(response.data.message)
           this.$router.push('/buyorder')
+        } else {
+          this.$message.error(response.data.message)
         }
       })
     },
     cancel () {
       console.log('cancel')
-      this.$router.push({name: 'goodsInfo', params: {mer_id: this.goodsId}})
+      this.$store.commit('setToGoodsPage', this.goodsId)
+      this.$router.push('/goods/goodsInfo')
+      // this.$router.push({name: 'goodsInfo', params: {mer_id: this.goodsId}})
     },
     uploadPaySectionFile (param) {
       const uploadPayFileLength = this.uploadPayFile.length
+
       let fileObj = param.file
       let file = new File([fileObj], new Date().getTime() + '.jpg', {
         type: 'image/jpg'
@@ -407,6 +389,10 @@ export default {
       this.uploadPayFile[uploadPayFileLength] = {'photo': file}
     },
     submitQRPay () {
+      if (this.uploadPayFile.length === 0) {
+        this.$message.error('请上传支付凭证！')
+        return
+      }
       let file = this.uploadPayFile[0].photo
       let photoForm = new FormData()
       photoForm.append('current_pay_prove ', file)
@@ -427,6 +413,10 @@ export default {
       this.$message.warning('最多只能上传一张相片！')
     },
     choosePayMethod () {
+      if (this.payMethod === '') {
+        this.$message.error('请选择支付方式！')
+        return
+      }
       if (this.payMethod < 3) {
         this.innerVisible = true
       } else {

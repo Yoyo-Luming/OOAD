@@ -317,6 +317,10 @@ export default {
       this.goods[index].select = !this.goods[index].select
     },
     submit () {
+      if (this.goods.length === 0) {
+        this.$message.error('请选择商品！')
+        return
+      }
       this.$axios.post('transaction/get_identify_code/').then(response => {
         console.log(response.data)
         if (response.data.status === '200') {
@@ -341,14 +345,24 @@ export default {
       })
     },
     pay () {
+      if (this.payPassword === '') {
+        this.$message.error('请输入支付密码！')
+        return
+      }
+      if (this.addressId === '') {
+        this.$message.error('选择收货地址！')
+        return
+      }
       this.$axios.post('transaction/commit_transaction_total/', this.$qs.stringify({
         current_identify_code: this.identifyCode,
         pay_password: this.payPassword,
         rec_address_id: this.addressId
       })).then(response => {
-        console.log(response.data)
         if (response.data.status === '200') {
+          this.$message.success(response.data.message)
           this.$router.push('buyorder')
+        } else {
+          this.$message.error(response.data.message)
         }
       })
     },

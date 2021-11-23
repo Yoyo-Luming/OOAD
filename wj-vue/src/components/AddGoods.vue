@@ -144,7 +144,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="submit2">确认添加</el-button>
-                <el-button type="success">重置</el-button>
+                <el-button type="success" @click="resetForm">重置</el-button>
               </el-form-item>
             </el-form>
           </el-container>
@@ -157,7 +157,7 @@
 <script>
 
 export default {
-  // TODO need check
+  inject: ['reload'],
   name: 'AddGoods',
   mounted () {
     this.$axios.post('/login0/get_address_list/', this.$qs.stringify({
@@ -414,7 +414,48 @@ export default {
       // console.log(this.form.goods_kind[0])
       // console.log(this.form.goods_kind[1])
       // console.log(this.form.goods_status)
-      console.log(this.form.goods_address_id)
+      // console.log(this.form.goods_address_id)
+      // if () {
+      //
+      // }
+      if (this.form.goods_title === '') {
+        this.$message.error('请输入商品名称！')
+        return
+      }
+      if (this.form.goods_price === '') {
+        this.$message.error('请输入商品价格！')
+        return
+      }
+      console.log('kind')
+      console.log(this.form.goods_kind)
+      if (this.form.goods_kind.length === 0) {
+        this.$message.error('请选择商品类别！')
+        return
+      }
+      if (this.form.goods_kind.length === 1) {
+        this.$message.error('请选择商品二级类别！')
+        return
+      }
+      if (this.form.goods_status === '') {
+        this.$message.error('请选择商品使用程度')
+        return
+      }
+      if (this.form.goods_description === '') {
+        this.$message.error('请输入商品描述！')
+        return
+      }
+      if (this.uploadFile.length === 0) {
+        this.$message.error('请上传至少一张商品图片！')
+        return
+      }
+      if (this.form.goods_address_id === '') {
+        this.$message.error('请选择发货地址！')
+        return
+      }
+      if (this.form.goods_postage === '') {
+        this.$message.error('请输入邮费！')
+        return
+      }
       let param = new FormData() // FormData 对象
       let list = this.uploadFile[0]
       let file = list.imgFile
@@ -450,6 +491,11 @@ export default {
         // this.uploadFile = []
         // this.form.fileList = []
         console.log(response)
+        if (response.data.status !== '200') {
+          this.$message.error(response.data.message)
+        } else {
+          this.$router.push('/sellinggoods')
+        }
         // alert(response.data.message)
       })
     },
@@ -511,6 +557,9 @@ export default {
         orderMethod: undefined
       })
       this.$router.push('/result')
+    },
+    resetForm () {
+      this.reload()
     }
   }
 }

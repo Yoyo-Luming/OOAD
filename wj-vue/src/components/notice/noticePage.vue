@@ -86,8 +86,7 @@
             <el-tab-pane label="消息列表" class="whole-pane" name="first">
               <el-container class="whole-notice" v-for="(item, index) in chatList" :key="index">
                 <el-container class="message-container">
-                  <div class="notice-column-user" v-if="checkUser">用户：{{item.user1Name}}</div>
-                  <div class="notice-column-user" v-else>用户：{{item.user2Name}}</div>
+                  <div class="notice-column-user" >用户：{{item.otherName}}</div>
                   <div class="notice-column-message">最后一条讯息：{{item.lastInfo}}</div>
                 </el-container>
                 <el-container class="notice-pay">
@@ -135,7 +134,7 @@ export default {
       noticeList: [],
       start_position: 0,
       end_position: 10,
-      activePane: 'second',
+      activePane: 'first',
       searchContent: undefined
     }
   },
@@ -169,6 +168,7 @@ export default {
       console.log(this.noticeList)
     })
     this.$axios.post('dialogue/dialogue_list/').then(response => {
+      console.log('-------------')
       console.log(response.data)
       let len = response.data.return_list.length
       let list = response.data.return_list
@@ -181,11 +181,18 @@ export default {
         } else {
           lastInfo = '[图片]'
         }
+        let otherId = ''
+        let otherName = ''
+        if (list[i].user1_name !== this.$store.state.userName) {
+          otherName = list[i].user1_name
+          otherId = list[i].user1_id
+        } else {
+          otherName = list[i].user2_name
+          otherId = list[i].user2_id
+        }
         this.chatList.push({
-          user1Id: list[i].user1_id,
-          user2Id: list[i].user2_id,
-          user1Name: list[i].user1_name,
-          user2Name: list[i].user2_name,
+          otherName: otherName,
+          otherId: otherId,
           lastInfo: lastInfo,
           waitNumber: list[i].wait_number,
           hasNext: list[i].has_next,
@@ -197,16 +204,18 @@ export default {
   methods: {
     toChatPage (item) {
       // console.log('toChatPage!')
-      let otherName = ''
-      let otherId = ''
-      if (this.user1Name === this.$store.state.userName) {
-        otherName = item.user2Name
-        otherId = item.user2Id
-      } else {
-        otherName = item.user1Name
-        otherId = item.user1Id
-      }
-      this.$router.push({name: 'chatPage', params: {name: otherName, id: otherId, dialogueId: item.dialogueId}})
+      // let otherName = ''
+      // let otherId = ''
+      // if (this.user1Name === this.$store.state.userName) {
+      //   otherName = item.user2Name
+      //   otherId = item.user2Id
+      // } else {
+      //   otherName = item.user1Name
+      //   otherId = item.user1Id
+      // }
+      this.$store.commit('setToChatPage', {name: item.otherName, id: item.otherId, dialogueId: item.dialogueId})
+      this.$router.push('/chatPage')
+      // this.$router.push({name: 'chatPage', params: {name: otherName, id: otherId, dialogueId: item.dialogueId}})
     },
     checkUser () {
       return this.user1Name === this.$store.state.userName

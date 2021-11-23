@@ -174,7 +174,7 @@ export default {
   },
   methods: {
     handleSelect (key, keyPath) {},
-    sendMsg: function () {
+    sendMsg () {
       if (this.msg === '') {
         this.$message.error('请输入内容！')
         return
@@ -205,6 +205,9 @@ export default {
         console.log('11111111111111')
         this.$message.info('您有来自' + data.info.my_name + '的消息！')
         // this.$message.info('您收到其他人的消息！')
+        return
+      }
+      if (this.otherName === this.$store.state.userName) {
         return
       }
       if (data.info.data_type === 2) {

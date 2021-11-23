@@ -77,6 +77,13 @@
             <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
             <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
           </el-submenu>
+          <el-submenu class="menu-buttons" index="5">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>通知</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goNoticePage">通知详情</el-button><br>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main style="height: 100%;padding: 0;">
@@ -245,6 +252,9 @@ export default {
     },
     goReceivedTask () {
       this.$router.push('/receivedtask')
+    },
+    goNoticePage () {
+      this.$router.push('/notice')
     },
     goTaskHall () {
       this.$router.push('/taskhall')

@@ -77,6 +77,13 @@
             <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
             <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
           </el-submenu>
+          <el-submenu class="menu-buttons" index="5">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>通知</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goNoticePage">通知详情</el-button><br>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main style="height: 100%;padding: 0;">
@@ -258,6 +265,15 @@ export default {
     })
   },
   data () {
+    const verifyEmpty = (rule, value, callback) => {
+      if (value === '') {
+        console.log(value)
+        callback(new Error('此项不能为空'))
+      } else {
+        console.log(value)
+        callback()
+      }
+    }
     return {
       otherTaskVisible: false,
       orderTaskVisible: false,
@@ -318,34 +334,34 @@ export default {
       },
       rules: {
         taskName: [
-          { required: true, message: '请输入任务名字', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         taskPrice: [
-          { required: true, message: '请输入任务价格', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         taskDDL: [
-          { required: true, message: '请输入任务DDL', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         taskDes: [
-          { required: true, message: '请输入任务描述', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         taskSendAddress: [
-          { required: true, message: '请输入任务起始地点', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         taskReceAddress: [
-          { required: true, message: '请输入任务目标地点', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         taskName2: [
-          { required: true, message: '请输入任务名字', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         taskPrice2: [
-          { required: true, message: '请输入任务价格', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         taskDDL2: [
-          { required: true, message: '请输入任务DDL', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         taskDes2: [
-          { required: true, message: '请输入任务描述', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ]
       }
     }
@@ -400,6 +416,9 @@ export default {
     },
     homePage () {
       this.$router.push('/')
+    },
+    goNoticePage () {
+      this.$router.push('/notice')
     },
     cartPage () {
       this.$router.push('/cart')

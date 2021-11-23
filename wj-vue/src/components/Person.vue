@@ -90,6 +90,20 @@
             <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
             <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
           </el-submenu>
+          <el-submenu class="menu-buttons" index="6">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>通知</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goNoticePage">通知详情</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" v-if="$store.state.userStatus === 3" index="7">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>管理员</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goAdminPage">管理员页面</el-button><br>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main style="height: 100%;padding: 0;">
@@ -201,6 +215,9 @@
           <el-form-item label="支付密码" prop="payPassword">
             <el-input v-model="activeFromData.payPassword" placeholder="请输入支付密码"></el-input>
           </el-form-item>
+          <el-form-item label="确认支付密码" prop="activeFromDataPayPassword">
+            <el-input v-model="activeFromData.activeFromDataPayPassword" placeholder="请再次输入支付密码"></el-input>
+          </el-form-item>
           <el-form-item label="默认收货地址">
             <el-form-item label="收货人姓名" prop="consigneeName" style="margin-top: 15px;">
               <el-input v-model="activeFromData.consigneeName" placeholder="请输入收货人姓名"></el-input>
@@ -290,6 +307,9 @@
           <el-form-item label="新登录密码" prop="newLoginPassword">
             <el-input v-model="newLoginPassword" placeholder="请输入新登录密码"></el-input>
           </el-form-item>
+          <el-form-item label="新登录密码" prop="verifyNewLoginPassword">
+            <el-input v-model="verifyNewLoginPassword" placeholder="请再次输入新登录密码"></el-input>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="LoginPassWordVisible=false">取消</el-button>
@@ -304,6 +324,9 @@
           <el-form-item label="新支付密码" prop="newPayPassword">
             <el-input v-model="newPayPassword" placeholder="请输入新支付密码"></el-input>
           </el-form-item>
+          <el-form-item label="新支付密码" prop="verifyNewPayPassword">
+            <el-input v-model="verifyNewPayPassword" placeholder="请再次输入新支付密码"></el-input>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="PayPassWordVisible=false">取消</el-button>
@@ -312,11 +335,14 @@
       </el-dialog>
       <el-dialog title="忘记支付密码" :visible.sync="forgetVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" label-width="200px" label-position="left" :rules="rules">
-          <el-form-item label="新支付密码" prop="newPayPassword2">
-            <el-input v-model="newPayPassword" placeholder="请输入旧支付密码"></el-input>
+          <el-form-item label="新支付密码" prop="">
+            <el-input v-model="newPayPassword" placeholder="请输入新支付密码"></el-input>
+          </el-form-item>
+          <el-form-item label="新支付密码" prop="verifyNewPayPassword">
+            <el-input v-model="verifyNewPayPassword" placeholder="请再次输入新支付密码"></el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="checkCode">
-            <el-input v-model="changeCode" placeholder="请输入新支付密码"></el-input>
+            <el-input v-model="changeCode" placeholder="请输入验证码"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -377,6 +403,33 @@ export default {
         callback(new Error('此项不能为空'))
       } else {
         console.log(value)
+        callback()
+      }
+    }
+    const verifyActiveFromDataPayPassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.activeFromData.payPassword) {
+        callback(new Error('两次输入的密码必须相同'))
+      } else {
+        callback()
+      }
+    }
+    const verifyNewPayPassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.newPayPassword) {
+        callback(new Error('两次输入的密码必须相同'))
+      } else {
+        callback()
+      }
+    }
+    const verifyNewLoginPassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.newLoginPassword) {
+        callback(new Error('两次输入的密码必须相同'))
+      } else {
         callback()
       }
     }
@@ -445,7 +498,8 @@ export default {
         region: '',
         address: '',
         phone: '',
-        payPassword: ''
+        payPassword: '',
+        activeFromDataPayPassword: ''
       },
       areaOptions: [{
         value: '1',
@@ -587,7 +641,9 @@ export default {
       money: 10000,
       activeSellFromVisible: false,
       newPayPassword: '',
+      verifyNewPayPassword: '',
       newLoginPassword: '',
+      verifyNewLoginPassword: '',
       oldPayPassword: '',
       oldLoginPassword: '',
       forgetVisible: false,
@@ -662,9 +718,6 @@ export default {
         newPayPassword: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        newPayPassword2: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
         checkCode: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
@@ -682,6 +735,15 @@ export default {
         ],
         sellerQR: [
           { validator: verifyEmpty, trigger: 'blur' }
+        ],
+        activeFromDataPayPassword: [
+          { validator: verifyActiveFromDataPayPassword, trigger: 'blur' }
+        ],
+        verifyNewPayPassword: [
+          { validator: verifyNewPayPassword, trigger: 'blur' }
+        ],
+        verifyNewLoginPassword: [
+          { validator: verifyNewLoginPassword, trigger: 'blur' }
         ]
       }
     }
@@ -747,6 +809,9 @@ export default {
     },
     markPage () {
       this.$router.push('/favoritegoods')
+    },
+    goNoticePage () {
+      this.$router.push('/notice')
     },
     logOut () {
       this.$axios.post('login0/logout/')
@@ -971,6 +1036,9 @@ export default {
     },
     goNewGoods () {
       this.$router.push('/addgoods')
+    },
+    goAdminPage () {
+      this.$router.push('/handleproblem')
     },
     changePayPassword () {
       // 修改支付密码

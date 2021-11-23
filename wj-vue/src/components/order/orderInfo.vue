@@ -77,6 +77,13 @@
             <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
             <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
           </el-submenu>
+          <el-submenu class="menu-buttons" index="5">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>通知</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goNoticePage">通知详情</el-button><br>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main style="height: 100%;padding: 0;">
@@ -347,6 +354,15 @@ export default {
   // TODO need check
   name: 'orderInfo',
   data () {
+    const verifyEmpty = (rule, value, callback) => {
+      if (value === '') {
+        console.log(value)
+        callback(new Error('此项不能为空'))
+      } else {
+        console.log(value)
+        callback()
+      }
+    }
     return {
       active: 0,
       sender: 'z3',
@@ -474,43 +490,43 @@ export default {
         '其它'],
       rules: {
         rating: [
-          { required: true, message: '请打分', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         comment1: [
-          { required: true, message: '请选择评价', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         comment2: [
-          { required: true, message: '请选择评价', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         comment3: [
-          { required: true, message: '请选择评价', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         reply: [
-          { required: true, message: '请输入回复', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         question: [
-          { required: true, message: '请输入问题', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         payPassword: [
-          { required: true, message: '请输入支付密码', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         payCheck: [
-          { required: true, message: '请输入支付凭证', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         payMethod: [
-          { required: true, message: '请选择支付方式', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         questionType: [
-          { required: true, message: '请输入问题类型', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         description: [
-          { required: true, message: '请输入描述', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         transport: [
-          { required: true, message: '请选择评价', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         comment4: [
-          { required: true, message: '请输入评价', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ]
       }
     }
@@ -758,6 +774,9 @@ export default {
     },
     myPage () {
       this.$router.push('/person')
+    },
+    goNoticePage () {
+      this.$router.push('/notice')
     },
     homePage () {
       this.$router.push('/home')

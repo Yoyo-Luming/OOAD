@@ -6,7 +6,7 @@ import register from '../components/register'
 import AddGoods from '../components/AddGoods'
 import Person from '../components/Person'
 import Result from '../components/Result'
-import ChatPage from '../components/chat/index'
+import chatPage from '../components/chat/chatPage'
 import userInfo from '../components/user/userInfo'
 import goodsInfo from '../components/goods/goodsInfo'
 import buyPage from '../components/buyPage'
@@ -78,9 +78,9 @@ export default new Router({
       component: Result
     },
     {
-      path: '/chatpage',
+      path: '/chat',
       name: 'chatPage',
-      component: ChatPage
+      component: chatPage
     },
     {
       path: '/user/userInfo',

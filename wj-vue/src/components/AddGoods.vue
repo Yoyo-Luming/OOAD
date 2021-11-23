@@ -77,6 +77,13 @@
             <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
             <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
           </el-submenu>
+          <el-submenu class="menu-buttons" index="5">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>通知</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goNoticePage">通知详情</el-button><br>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main style="height: 100%;padding: 0;">
@@ -173,6 +180,15 @@ export default {
     })
   },
   data () {
+    const verifyEmpty = (rule, value, callback) => {
+      if (value === '') {
+        console.log(value)
+        callback(new Error('此项不能为空'))
+      } else {
+        console.log(value)
+        callback()
+      }
+    }
     return {
       searchContent: undefined,
       form: {
@@ -333,28 +349,28 @@ export default {
       ],
       rules: {
         goodName: [
-          { required: true, message: '请输入商品名字', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         goodPrice: [
-          { required: true, message: '请输入商品售价', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         goodType: [
-          { required: true, message: '请输入商品类型', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         goodStatus: [
-          { required: true, message: '请输入商品状态', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         goodDescription: [
-          { required: true, message: '请输入商品描述', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         goodImage: [
-          { required: true, message: '请输入商品图片', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         sendAddress: [
-          { required: true, message: '请选择发货地址', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         postage: [
-          { required: true, message: '请输入邮费', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ]
       }
     }
@@ -440,6 +456,9 @@ export default {
     },
     myPage () {
       this.$router.push('/person')
+    },
+    goNoticePage () {
+      this.$router.push('/notice')
     },
     homePage () {
       this.$router.push('/')

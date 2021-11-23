@@ -3,7 +3,15 @@
     <el-header class="el-header">
       <div class="right-head">
         <img src="../../assets/testlogo.png" class="logo" alt="">
-        <span>SUSTech Store</span>
+        <span class="title">SUSTech Store</span>
+      </div>
+      <div class="mid-head">
+        <el-input
+          placeholder="请输入搜索信息"
+          prefix-icon="el-icon-search"
+          v-model="searchContent" style="width: 870px"
+          @keyup.enter.native="searchTop">
+        </el-input>
       </div>
       <div class="left-head">
         <el-menu
@@ -13,53 +21,108 @@
           text-color="#fff"
           active-text-color="#ffd04b">
           <el-menu-item index="1" v-on:click="homePage">主页</el-menu-item>
-          <el-submenu index="3">
+          <el-submenu index="2">
             <template slot="title">{{$store.state.userName}}</template>
             <el-menu-item index="2-1" v-on:click="myPage">个人主页</el-menu-item>
             <el-menu-item index="2-2" v-on:click="cartPage">购物车</el-menu-item>
             <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>
             <el-menu-item index="2-4" v-on:click="markPage">收藏的商品</el-menu-item>
           </el-submenu>
-          <el-menu-item index="4" v-on:click="logOut">Log Out</el-menu-item>
+          <el-menu-item index="3" v-on:click="logOut">注销</el-menu-item>
         </el-menu>
       </div>
     </el-header>
-    <el-main>
-      <el-container class="mid-content">
-        <el-container class="wrapper">
-          <h3>{{otherName}}</h3>
-          <div class="message-panel">
-            <msg-box v-for="(item, index) of msgList" :key="index+Math.random()" :uname="item.name" :is-photo="item.isPhoto" :url="item.url" :content="item.msg" :isSelf="item.isSelf"></msg-box>
-          </div>
-          <el-button style="margin-top: 20px;margin-bottom: 20px;align-items: center;" @click="uploadPhotoVisible=true">上传图片</el-button>
-          <div class="input-area">
-            <textarea class="input" v-model="msg" @keyup.enter="sendMsg"></textarea>
-            <el-button class="send-btn" @click="sendMsg">发送</el-button>
-          </div>
+    <el-container style="display: flex;height: 100%;">
+      <el-aside width="200px" style="background-color: #545c64;opacity: 0.5;">
+        <el-menu
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#409EFF"
+          :unique-opened="true"
+          :collapse-transition="false"
+          :router="true"
+        >
+          <el-submenu class="menu-buttons" index="1">
+            <template slot="title">
+              <i class="el-icon-user"></i>
+              <span>用户信息</span>
+            </template>
+            <el-button class="inside-button" v-on:click="myPage">个人主页</el-button><br>
+            <el-button class="inside-button" v-on:click="cartPage">购物车</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="2">
+            <template slot="title">
+              <i class="el-icon-goods"></i>
+              <span>商品</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goSellOrder">卖出的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goBuyOrder">买到的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goPostGoods">发布的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goNewGoods">上架新商品</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="3">
+            <template slot="title">
+              <i class="el-icon-star-off"></i>
+              <span>收藏</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goFavoriteGoods">收藏的商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goFavoriteUser">收藏的卖家</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="4">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>跑腿</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goTaskHall">任务大厅</el-button><br>
+            <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
+            <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
+          </el-submenu>
+          <el-submenu class="menu-buttons" index="5">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>通知</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goNoticePage">通知详情</el-button><br>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
+      <el-main style="height: 100%;padding: 0;">
+        <el-container class="mid-content">
+          <el-container class="wrapper">
+            <h3>{{otherName}}</h3>
+            <div class="message-panel">
+              <msg-box v-for="(item, index) of msgList" :key="index+Math.random()" :uname="item.name" :is-photo="item.isPhoto" :url="item.url" :content="item.msg" :isSelf="item.isSelf"></msg-box>
+            </div>
+            <el-button style="margin-top: 20px;margin-bottom: 20px;align-items: center;" @click="uploadPhotoVisible=true">上传图片</el-button>
+            <div class="input-area">
+              <textarea class="input" v-model="msg" @keyup.enter="sendMsg"></textarea>
+              <el-button class="send-btn" @click="sendMsg">发送</el-button>
+            </div>
+          </el-container>
         </el-container>
-      </el-container>
-      <el-dialog style="margin: auto;" :visible.sync="uploadPhotoVisible" :modal-append-to-body="false">
-        <el-form ref="form">
-          <el-form-item>
-            <span>上传图片</span>
-            <el-upload
-              action="auto"
-              :http-request="uploadSectionFile"
-              list-type="picture-card"
-              :file-list="fileList"
-              class = "contentImgStyle"
-              :limit="1"
-              :on-exceed="handleExceed">
-              <i class="el-icon-plus"></i>
-            </el-upload>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="uploadPhotoVisible=false">取消</el-button>
-          <el-button type="primary" @click="uploadPhoto">确认</el-button>
-        </div>
-      </el-dialog>
-    </el-main>
+        <el-dialog style="margin: auto;" :visible.sync="uploadPhotoVisible" :modal-append-to-body="false">
+          <el-form ref="form">
+            <el-form-item>
+              <span>上传图片</span>
+              <el-upload
+                action="auto"
+                :http-request="uploadSectionFile"
+                list-type="picture-card"
+                :file-list="fileList"
+                class = "contentImgStyle"
+                :limit="1"
+                :on-exceed="handleExceed">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="uploadPhotoVisible=false">取消</el-button>
+            <el-button type="primary" @click="uploadPhoto">确认</el-button>
+          </div>
+        </el-dialog>
+      </el-main>
+    </el-container>
   </el-container>
   <!--  <div class="outer-wrapper">-->
   <!--    <el-menu-->
@@ -107,6 +170,7 @@ export default {
       webSocket: null,
       dialogue_id: '',
       token: '',
+      searchContent: undefined,
       otherName: '',
       dialogueId: '',
       uploadPhotoVisible: false,
@@ -278,6 +342,9 @@ export default {
     myPage () {
       this.$router.push('/person')
     },
+    goNoticePage () {
+      this.$router.push('/notice')
+    },
     homePage () {
       this.$router.push('/home')
     },
@@ -316,6 +383,15 @@ export default {
     },
     goNewGoods () {
       this.$router.push('/addgoods')
+    },
+    searchTop () {
+      this.$store.commit('setToSearchPage', {
+        searchContent: this.searchContent,
+        labels: undefined,
+        status: undefined,
+        orderMethod: undefined
+      })
+      this.$router.push('/result')
     }
   }
 }
@@ -326,9 +402,8 @@ export default {
 .home-container {
   height: 100%;
   width: 100%;
-  background: center no-repeat url("../../assets/back7.jpg");
+  background: center repeat url("../../assets/back7.jpg");
   background-size: cover;
-  display: block;
 }
 
 .el-header {
@@ -339,7 +414,19 @@ export default {
   align-items: center;
   color: #ffffff;
   font-size: 40px;
-  opacity: 0.5;
+  opacity: 0.7;
+}
+
+.mid-head {
+  display: flex;
+  align-items: center;
+}
+
+.menu-buttons {
+  display: block;
+  margin: auto;
+  text-align: center;
+  align-items: center;
 }
 
 .right-head {

@@ -77,6 +77,13 @@
             <el-button class="inside-button" v-on:click="goReleasedTask">发布的跑腿任务</el-button><br>
             <el-button class="inside-button" v-on:click="goReceivedTask">接受的跑腿任务</el-button><br>
           </el-submenu>
+          <el-submenu class="menu-buttons" index="5">
+            <template slot="title">
+              <i class="el-icon-location-outline"></i>
+              <span>通知</span>
+            </template>
+            <el-button class="inside-button" v-on:click="goNoticePage">通知详情</el-button><br>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main style="height: 100%;padding: 0;">
@@ -274,6 +281,15 @@ export default {
     })
   },
   data () {
+    const verifyEmpty = (rule, value, callback) => {
+      if (value === '') {
+        console.log(value)
+        callback(new Error('此项不能为空'))
+      } else {
+        console.log(value)
+        callback()
+      }
+    }
     return {
       // dialogFormVisible: false,
       payFormVisible: false,
@@ -338,16 +354,16 @@ export default {
       orderId: '',
       rules: {
         address: [
-          { required: true, message: '请选择收货地址', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         payPassword: [
-          { required: true, message: '请输入支付密码', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         payCheck: [
-          { required: true, message: '请上传支付凭证', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ],
         payMethod: [
-          { required: true, message: '请选择支付方式', trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' }
         ]
       }
     }
@@ -482,6 +498,9 @@ export default {
     },
     goNewGoods () {
       this.$router.push('/addgoods')
+    },
+    goNoticePage () {
+      this.$router.push('/notice')
     }
   }
 }

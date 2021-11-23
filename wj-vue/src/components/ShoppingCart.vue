@@ -360,9 +360,7 @@ export default {
     },
     logOut () {
       this.$axios.post('login0/logout/')
-      this.$store.commit('setUserName', '')
-      this.$store.commit('setUserStatus', 0)
-      this.$store.commit('setUserId', '')
+      this.$store.commit('setLogout')
       this.$router.push('/login')
     },
     goReleasedTask () {

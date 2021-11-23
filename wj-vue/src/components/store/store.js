@@ -72,6 +72,19 @@ export default new Vuex.Store({
     },
     setToChatPage (state, params) {
       state.toChatPage = params
+    },
+    setLogout (state) {
+      state.userName = ''
+      state.userId = ''
+      state.userStatus = 0
+      state.isChatting = false
+      state.toGoodsPage.merId = ''
+      state.toUserPage.userId = ''
+      state.toOrderPage = {orderDetail: {}, from: ''}
+      state.toTaskPage.detail = {}
+      state.toBuyPage.goodsId = ''
+      state.toSearchPage = {searchContent: undefined, labels: undefined, status: undefined, orderMethod: undefined}
+      state.toChatPage = {name: '', id: '', dialogueId: ''}
     }
   },
   actions: {

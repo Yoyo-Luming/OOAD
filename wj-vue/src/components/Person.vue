@@ -916,6 +916,22 @@ export default {
       this.uploadQRCodeFile[uploadQRCodeFileLength] = {'photo': file}
     },
     addAddress () {
+      if (this.addressFromData.name === '') {
+        this.$message.error('请输入收货人姓名！')
+        return
+      }
+      if (this.addressFromData.region === '') {
+        this.$message.error('请输入选择收货区域！')
+        return
+      }
+      if (this.addressFromData.address === '') {
+        this.$message.error('请输入具体地址！')
+        return
+      }
+      if (this.addressFromData.phone === '') {
+        this.$message.error('请输入收货人联系方式！')
+        return
+      }
       this.$axios.post('/login0/add_address/', this.$qs.stringify({
         user_name: this.addressFromData.name,
         user_addr: this.addressFromData.address,
@@ -933,6 +949,22 @@ export default {
       })
     },
     addSendAddress () {
+      if (this.sendAddressFromData.name === '') {
+        this.$message.error('请输入发货人姓名！')
+        return
+      }
+      if (this.sendAddressFromData.region === '') {
+        this.$message.error('请输入选择发货区域！')
+        return
+      }
+      if (this.sendAddressFromData.address === '') {
+        this.$message.error('请输入具体地址！')
+        return
+      }
+      if (this.sendAddressFromData.phone === '') {
+        this.$message.error('请输入发货人联系方式！')
+        return
+      }
       this.$axios.post('/login0/add_address/', this.$qs.stringify({
         user_name: this.sendAddressFromData.name,
         user_addr: this.sendAddressFromData.address,
@@ -950,12 +982,47 @@ export default {
       })
     },
     activate () {
-      console.log(this.$global.userId)
       // 先激活，上传真实姓名，用户类别，支付密码，收货地址
       // TODO 支付密码需要输入两次确认
       // if (this.activeFromData) {
       //
       // }
+      if (this.activeFromData.realName === '') {
+        this.$message.error('请输入真实姓名！')
+        return
+      }
+      if (this.activeFromData.userType === '') {
+        this.$message.error('请选择用户类型！')
+        return
+      }
+      if (this.activeFromData.payPassword === '') {
+        this.$message.error('请输入支付密码！')
+        return
+      }
+      // if (this.activeFromData.realName !== this.v ) {
+      //   this.$message.error('请输入真实姓名！')
+      //   return
+      // }
+      if (this.activeFromData.consigneeName === '') {
+        this.$message.error('请输入收货人姓名！')
+        return
+      }
+      if (this.activeFromData.region === '') {
+        this.$message.error('请输入选择收货区域！')
+        return
+      }
+      if (this.activeFromData.address === '') {
+        this.$message.error('请输入具体地址！')
+        return
+      }
+      if (this.activeFromData.phone === '') {
+        this.$message.error('请输入收货人联系方式！')
+        return
+      }
+      if (this.activeFromData.payPassword !== this.activeFromData.activeFromDataPayPassword) {
+        this.$message.error('两次支付密码输入不一样！')
+        return
+      }
       this.$axios.post('/login0/activate/', this.$qs.stringify({
         real_name: this.activeFromData.realName,
         user_identify: this.activeFromData.userType,
@@ -999,14 +1066,6 @@ export default {
         orderMethod: undefined
       })
       this.$router.push('/result')
-      // this.$router.push({name: 'Result',
-      //   params: {
-      //     searchContent: this.searchContent,
-      //     labels: undefined,
-      //     status: undefined,
-      //     orderMethod: undefined
-      //   }
-      // })
     },
     recharge () {
       console.log(this.money)
@@ -1017,6 +1076,25 @@ export default {
       })
     },
     activateSell () {
+      if (this.uploadQRCodeFile.length === 0) {
+        this.$message.error('请上传收款二维码')
+      }
+      if (this.activeSellFromData.name === '') {
+        this.$message.error('请输入发货人姓名！')
+        return
+      }
+      if (this.activeSellFromData.region === '') {
+        this.$message.error('请输入选择发货区域！')
+        return
+      }
+      if (this.activeSellFromData.address === '') {
+        this.$message.error('请输入具体地址！')
+        return
+      }
+      if (this.activeSellFromData.phone === '') {
+        this.$message.error('请输入发货人联系方式！')
+        return
+      }
       let list = this.uploadQRCodeFile[0]
       let file = list.photo
       let photoForm = new FormData()
@@ -1071,8 +1149,18 @@ export default {
       this.$router.push('/handleproblem')
     },
     changePayPassword () {
-      // 修改支付密码
-      // TODO 两次确认输入
+      if (this.oldPayPassword === '') {
+        this.$message.error('请输入原始支付密码')
+        return
+      }
+      if (this.newPayPassword === '') {
+        this.$message.error('请输入新支付密码')
+        return
+      }
+      if (this.verifyNewPayPassword !== this.newPayPassword) {
+        this.$message.error('两遍支付任务密码输入不一样')
+        return
+      }
       this.$axios.post('login0/change_pay_password/', this.$qs.stringify({
         old_pay_password: this.oldPayPassword,
         new_pay_password: this.newPayPassword
@@ -1082,8 +1170,18 @@ export default {
       })
     },
     changeLoginPassword () {
-      // 修改登录密码
-      // TODO 两次确认输入
+      if (this.oldLoginPassword === '') {
+        this.$message.error('请输入原始登录密码')
+        return
+      }
+      if (this.newLoginPassword === '') {
+        this.$message.error('请输入新登录密码')
+        return
+      }
+      if (this.verifyNewLoginPassword !== this.newPayPassword) {
+        this.$message.error('两遍登录密码输入不一样')
+        return
+      }
       this.$axios.post('login0/change_password/', this.$qs.stringify({
         old_password: this.oldLoginPassword,
         new_password: this.newLoginPassword
@@ -1098,6 +1196,18 @@ export default {
       })
     },
     confirmChange () {
+      if (this.newPayPassword === '') {
+        this.$message.error('请输入新支付密码')
+        return
+      }
+      if (this.changeCode === '') {
+        this.$message.error('请输入邮箱验证码')
+        return
+      }
+      if (this.newPayPassword !== this.verifyNewPayPassword) {
+        this.$message.error('两遍支付密码输入不一样')
+        return
+      }
       this.$axios.post('login0/forget_pay_password/', this.$qs.stringify({
         new_password: this.newPayPassword,
         post_code: this.changeCode

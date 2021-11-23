@@ -595,7 +595,6 @@ export default {
       // this.$router.push({name: 'userInfo', params: {userId: this.senderId}})
     },
     callSender () {
-      alert('callSender!')
       this.$axios.post('dialogue/start_dialogue/', this.$qs.stringify({
         business_id: this.senderId
       })).then(response => {
@@ -610,7 +609,9 @@ export default {
             chatName = this.sender
             chatId = this.senderId
           }
-          this.$router.push({name: 'chatPage', params: {name: chatName, id: chatId, dialogueId: response.data.dialogue_id}})
+          this.$store.commit('setToChatPage', {name: chatName, id: chatId, dialogueId: response.data.dialogue_id})
+          this.$router.push('/chatPage')
+          // this.$router.push({name: 'chatPage', params: {name: chatName, id: chatId, dialogueId: response.data.dialogue_id}})
         }
       })
     },

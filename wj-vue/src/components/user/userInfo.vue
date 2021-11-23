@@ -269,7 +269,9 @@ export default {
       })).then(response => {
         console.log(response.data)
         if (response.data.status === '200' || response.data.status === '201') {
-          this.$router.push({name: 'chatPage', params: {name: this.userName, id: this.userId, dialogueId: response.data.dialogue_id}})
+          this.$store.commit('setToChatPage', {name: this.userName, id: this.userId, dialogueId: response.data.dialogue_id})
+          this.$router.push('/chatPage')
+          // this.$router.push({name: 'chatPage', params: {name: this.userName, id: this.userId, dialogueId: response.data.dialogue_id}})
         }
       })
     },

@@ -120,9 +120,12 @@ export default {
   mounted () {
     this.userName = this.$store.state.userName
     this.userId = this.$store.state.userId
-    this.otherName = this.$route.params.name
-    this.otherId = this.$route.params.id
-    this.dialogueId = this.$route.params.dialogueId
+    // this.otherName = this.$route.params.name
+    // this.otherId = this.$route.params.id
+    // this.dialogueId = this.$route.params.dialogueId
+    this.otherName = this.$store.state.toChatPage.name
+    this.otherId = this.$store.state.toChatPage.id
+    this.dialogueId = this.$store.state.toChatPage.dialogueId
     this.$store.commit('setIsChatting', true)
     console.log(this.dialogueId)
     // dialogue_info: []
@@ -172,6 +175,10 @@ export default {
   methods: {
     handleSelect (key, keyPath) {},
     sendMsg: function () {
+      if (this.msg === '') {
+        this.$message.error('请输入内容！')
+        return
+      }
       const data = {
         dialogue_id: this.dialogueId,
         data_type: 1,

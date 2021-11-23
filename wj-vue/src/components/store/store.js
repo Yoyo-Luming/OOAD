@@ -31,6 +31,11 @@ export default new Vuex.Store({
       labels: undefined,
       status: undefined,
       orderMethod: undefined
+    },
+    toChatPage: {
+      name: '',
+      id: '',
+      dialogueId: ''
     }
   },
   mutations: {
@@ -64,6 +69,9 @@ export default new Vuex.Store({
     },
     setToSearchPage (state, params) {
       state.toSearchPage = params
+    },
+    setToChatPage (state, params) {
+      state.toChatPage = params
     }
   },
   actions: {

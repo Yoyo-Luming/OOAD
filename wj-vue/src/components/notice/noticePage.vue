@@ -212,7 +212,10 @@ export default {
       return this.user1Name === this.$store.state.userName
     },
     logOut () {
-      this.$axios.post('login0/logout/ ')
+      this.$axios.post('login0/logout/')
+      this.$store.commit('setUserName', '')
+      this.$store.commit('setUserStatus', 0)
+      this.$store.commit('setUserId', '')
       this.$router.push('/login')
     },
     myPage () {

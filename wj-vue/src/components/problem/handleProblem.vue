@@ -111,11 +111,9 @@
 </template>
 
 <script>
-import problemBox from './problemBox'
 export default {
   // TODO need check
   name: 'handleProblem',
-  components: {problemBox},
   data () {
     return {
       problemList: [],
@@ -166,7 +164,10 @@ export default {
       this.$router.push('/favoritegoods')
     },
     logOut () {
-      this.$axios.post('login0/logout/ ')
+      this.$axios.post('login0/logout/')
+      this.$store.commit('setUserName', '')
+      this.$store.commit('setUserStatus', 0)
+      this.$store.commit('setUserId', '')
       this.$router.push('/login')
     },
     goReleasedTask () {

@@ -133,10 +133,8 @@
 </template>
 
 <script>
-import GoodsBox from './goodsBox'
 export default {
   name: 'Result',
-  components: {GoodsBox},
   data () {
     return {
       searchContent: undefined,
@@ -338,7 +336,6 @@ export default {
       this.$store.commit('setUserName', '')
       this.$store.commit('setUserStatus', 0)
       this.$store.commit('setUserId', '')
-      console.log('-----' + this.$store.state.userName)
       this.$router.push('/login')
     },
     search () {
@@ -347,9 +344,15 @@ export default {
       //   price: 22,
       //   photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'
       // })
-      console.log(this.labels[0])
+      // console.log(this.labels[0])
       this.goodsList = []
-      if (this.labels === undefined && this.status === undefined && this.orderMethod === undefined && this.searchContent !== undefined) {
+      const chineseChecker = /[\u4e00-\u9fa5]/
+      console.log(this.searchContent)
+      console.log('check')
+      console.log(chineseChecker.test('2222'))
+      console.log(chineseChecker.test('abcd'))
+      console.log(chineseChecker.test(this.searchContent))
+      if (this.labels === undefined && this.status === undefined && this.orderMethod === undefined && this.searchContent !== undefined && chineseChecker.test(this.searchContent)) {
         let url = 'search/?q=' + this.searchContent
         console.log(url)
         this.$axios.post(url).then(response => {
@@ -367,7 +370,7 @@ export default {
             })
           }
         })
-      } else if (this.searchContent === undefined && this.labels === undefined) {
+      } else if ((this.searchContent === undefined || this.searchContent === '') && this.labels === undefined) {
         this.$message.error('请输入搜索内容或者选择商品分类')
       } else {
         let class1Id = ''

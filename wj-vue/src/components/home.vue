@@ -196,11 +196,9 @@
 </template>
 
 <script>
-import GoodsBox from './goodsBox'
 
 export default {
   name: 'home',
-  components: {GoodsBox},
   data () {
     return {
       searchContent: undefined,

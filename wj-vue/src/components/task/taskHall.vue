@@ -187,7 +187,9 @@ export default {
   },
   methods: {
     goTaskInfo (item) {
-      this.$router.push({name: 'taskInfo', params: {detail: item.detail}})
+      this.$store.commit('setToTaskPage', item.detail)
+      this.$router.push('/taskInfo')
+      // this.$router.push({name: 'taskInfo', params: {detail: item.detail}})
     },
     goPublishTask () {
       this.$router.push('publishTask')

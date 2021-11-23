@@ -677,7 +677,9 @@ export default {
       })).then(response => {
         console.log(response.data)
         taskDetail = response.data.rela_task
-        this.$router.push({name: 'taskInfo', params: {detail: taskDetail}})
+        this.$store.commit('setToTaskPage', taskDetail)
+        this.$router.push('/taskInfo')
+        // this.$router.push({name: 'taskInfo', params: {detail: taskDetail}})
       })
     },
     submitProblem () {

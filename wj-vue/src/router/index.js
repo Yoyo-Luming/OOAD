@@ -128,7 +128,7 @@ export default new Router({
       component: publishTask
     },
     {
-      path: '/taskinfo',
+      path: '/taskInfo',
       name: 'taskInfo',
       component: taskInfo
     },

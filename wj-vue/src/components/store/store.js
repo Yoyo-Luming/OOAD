@@ -19,6 +19,9 @@ export default new Vuex.Store({
     toOrderPage: {
       orderDetail: {},
       from: ''
+    },
+    toTaskPage: {
+      detail: {}
     }
   },
   mutations: {
@@ -45,6 +48,9 @@ export default new Vuex.Store({
       console.log(params)
       state.toOrderPage.orderDetail = params.orderDetail
       state.toOrderPage.from = params.from
+    },
+    setToTaskPage (state, detail) {
+      state.toTaskPage.detail = detail
     }
   },
   actions: {

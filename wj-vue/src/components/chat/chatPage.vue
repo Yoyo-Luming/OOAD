@@ -258,6 +258,7 @@ export default {
         })
         this.uploadPhotoVisible = false
       })
+      this.uploadFile = []
     },
     logOut () {
       this.$axios.post('login0/logout/')

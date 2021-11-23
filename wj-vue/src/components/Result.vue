@@ -79,7 +79,7 @@
               prefix-icon="el-icon-search"
               v-model="searchContent" style="width: 870px">
             </el-input>
-            <el-button type="primary" style="width: 100px;background: #a0c4ff;border: none;" v-on:click="search">搜索</el-button>
+            <el-button type="primary" style="width: 100px;border: none;" v-on:click="search">搜索</el-button>
           </el-container>
           <el-container class="choose-opt">
             <el-cascader  :options="options"

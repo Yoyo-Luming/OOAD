@@ -131,7 +131,7 @@
           </el-container>
         </el-container>
         <el-dialog style="margin: auto;" :visible.sync="commentVisible" :modal-append-to-body="false">
-          <el-form ref="form" label-width="200px">
+          <el-form ref="form" label-width="200px" :rules="rules">
             <el-form-item class="form-item-class" label="服务评分：" prop="rating">
               <el-rate v-model="commentRate"></el-rate>
             </el-form-item>

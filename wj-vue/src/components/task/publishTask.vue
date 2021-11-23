@@ -107,7 +107,7 @@
           </el-tabs>
         </el-container>
         <el-dialog style="margin: auto;" :visible.sync="otherTaskVisible" :modal-append-to-body="false">
-          <el-form :model="otherTaskForm" label-width="200px" label-position="left">
+          <el-form :model="otherTaskForm" label-width="200px" label-position="left" :rules="rules">
             <el-form-item label="任务名称" prop="taskName">
               <el-input v-model="otherTaskForm.name"></el-input>
             </el-form-item>
@@ -145,7 +145,7 @@
           <el-button type="primary" @click="postOtherTask">发布跑腿任务</el-button>
         </el-dialog>
         <el-dialog :visible.sync="orderTaskVisible">
-          <el-form :model="orderTaskForm">
+          <el-form :model="orderTaskForm" :rules="rules">
             <el-form-item label="任务名称" prop="taskName2">
               <el-input v-model="orderTaskForm.name"></el-input>
             </el-form-item>
@@ -213,11 +213,9 @@
 
 <script>
 // import orderBox from '../order/orderBox'
-import taskForOrderBox from './taskForOrderBox'
 export default {
   // TODO need check
   name: 'publishTask',
-  components: {taskForOrderBox},
   mounted () {
     this.$axios.post('/login0/get_address_list/', this.$qs.stringify({
     })).then(response => {
@@ -277,7 +275,7 @@ export default {
         ddlTime: '',
         description: ''
       },
-      searchContent: undefined,
+      searchContent: '',
       sendAddressList: [],
       receiveAddressList: [],
       shipList: [],

@@ -161,7 +161,7 @@
           </el-container>
         </el-container>
         <el-dialog title="评价" :visible.sync="commentVisible" center>
-          <el-form ref="form" label-width="200px">
+          <el-form ref="form" label-width="200px" :rules="rules">
             <el-form-item class="form-item-class" label="商品评价：" prop="rating">
               <el-rate style="align-items: center" v-model="comment1"></el-rate>
             </el-form-item>
@@ -181,7 +181,7 @@
           </div>
         </el-dialog>
         <el-dialog style="margin: auto;" :visible.sync="handleProblemVisible" :modal-append-to-body="false">
-          <el-form ref="form" label-width="200px">
+          <el-form ref="form" label-width="200px" :rules="rules">
             <el-form-item label="回复:" prop="reply">
               <el-input v-model="handleProblemForm.superuserLog"></el-input>
             </el-form-item>
@@ -198,7 +198,7 @@
         <el-dialog style="margin: auto;" :visible.sync="payFormVisible" :modal-append-to-body="false">
           <el-dialog style="margin: auto;" :visible.sync="innerVisible" :modal-append-to-body="false">
             <div v-if="payMethod===1">
-              <el-form ref="form" label-width="200px">
+              <el-form ref="form" label-width="200px" :rules="rules">
                 <el-form-item label="支付密码:" prop="payPassword">
                   <el-input v-model="payPassword"></el-input>
                 </el-form-item>
@@ -209,7 +209,7 @@
               </div>
             </div>
             <div v-else-if="payMethod===2">
-              <el-form ref="form" label-width="200px">
+              <el-form ref="form" label-width="200px" :rules="rules">
                 <img :src="QRCodeUrl">
                 <el-form-item label="上传支付凭证:" prop="payCheck">
                   <el-upload
@@ -229,7 +229,7 @@
               </div>
             </div>
           </el-dialog>
-          <el-form ref="form" label-width="200px">
+          <el-form ref="form" label-width="200px" :rules="rules">
             <el-form-item label="请选择支付方式:" prop="payMethod">
               <el-select v-model="payMethod">
                 <el-option
@@ -247,7 +247,7 @@
           </div>
         </el-dialog>
         <el-dialog style="margin: auto;" :visible.sync="problemFromVisible" :modal-append-to-body="false">
-          <el-form ref="form" label-width="200px">
+          <el-form ref="form" label-width="200px" :rules="rules">
             <el-form-item class="form-item-class" label="问题类型：" prop="questionType">
               <el-select v-model="problemForm.problemType">
                 <el-option

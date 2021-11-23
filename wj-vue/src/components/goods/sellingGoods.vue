@@ -106,7 +106,7 @@
           </el-container>
         </el-container>
         <el-dialog :visible.sync="dialogFormVisible">
-          <el-form ref="form" :model="form" label-width="80px">
+          <el-form ref="form" :model="form" label-width="200px" :rules="rules">
             <el-form-item label="商品名称" prop="goodName">
               <el-input v-model="form.goods_title" placeholder="请输入商品名称"></el-input>
             </el-form-item>

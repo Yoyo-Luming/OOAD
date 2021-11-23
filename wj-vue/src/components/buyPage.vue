@@ -118,7 +118,7 @@
         <el-dialog style="margin: auto;" :visible.sync="payFormVisible" :modal-append-to-body="false">
           <el-dialog style="margin: auto;" :visible.sync="innerVisible" :modal-append-to-body="false">
             <div v-if="payMethod===1">
-              <el-form ref="form" label-width="200px">
+              <el-form ref="form" label-width="200px" :rules="rules">
                 <el-form-item label="支付密码:" prop="payPassword">
                   <el-input v-model="payPassword"></el-input>
                 </el-form-item>
@@ -129,7 +129,7 @@
               </div>
             </div>
             <div v-else>
-              <el-form ref="form" label-width="200px">
+              <el-form ref="form" label-width="200px" :rules="rules">
                 <img :src="QRCodeUrl">
                 <el-form-item label="上传支付凭证:" prop="payCheck">
                   <el-upload
@@ -149,7 +149,7 @@
               </div>
             </div>
           </el-dialog>
-          <el-form ref="form" label-width="200px">
+          <el-form ref="form" label-width="200px" :rules="rules">
             <el-form-item label="请选择支付方式:" >
               <el-select v-model="payMethod" prop="payMethod">
                 <el-option

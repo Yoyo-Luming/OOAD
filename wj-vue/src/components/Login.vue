@@ -69,7 +69,7 @@ export default {
     }
     const verifyPassword = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('Please input your password'))
+        callback(new Error('请输入密码'))
       } else {
         callback()
       }

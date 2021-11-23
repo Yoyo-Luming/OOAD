@@ -117,7 +117,7 @@
           </el-tabs>
         </el-container>
         <el-dialog style="margin: auto;" :visible.sync="chooseAddressVisible" :modal-append-to-body="false">
-          <el-form ref="form" label-width="200px">
+          <el-form ref="form" label-width="200px" :rules="rules">
             <el-form-item class="form-item-class" label="收货地址：" prop="recAddress">
               <el-select v-model="addressId">
                 <el-option
@@ -136,7 +136,7 @@
           </div>
         </el-dialog>
         <el-dialog style="margin: auto;" :visible.sync="chooseAddressVisible" :modal-append-to-body="false">
-          <el-form ref="form" label-width="200px">
+          <el-form ref="form" label-width="200px" :rules="rules">
             <el-form-item class="form-item-class" label="支付密码：" prop="password">
               <el-input v-model="payPassword"></el-input>
             </el-form-item>

@@ -82,7 +82,7 @@
       <el-main style="height: 100%;padding: 0;">
         <el-container class="mid-content">
           <el-container class="pane-content">
-            <el-form ref="form" :model="form" label-width="200px" label-position="right" style="width: 80%;margin-top: 50px;">
+            <el-form ref="form" :model="form" label-width="200px" label-position="right" style="width: 80%;margin-top: 50px;" :rules="rules">
               <el-form-item label="商品名称" prop="goodName">
                 <el-input v-model="form.goods_title" placeholder="请输入商品名称"></el-input>
               </el-form-item>

@@ -117,11 +117,9 @@
 </template>
 
 <script>
-import taskBox from './taskBox'
 export default {
   // TODO need check
   name: 'taskHall',
-  components: {taskBox},
   data () {
     return {
       activePane: 'first',

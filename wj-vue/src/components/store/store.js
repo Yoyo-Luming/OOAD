@@ -15,6 +15,10 @@ export default new Vuex.Store({
     },
     toUserPage: {
       userId: ''
+    },
+    toOrderPage: {
+      orderDetail: {},
+      from: ''
     }
   },
   mutations: {
@@ -35,6 +39,12 @@ export default new Vuex.Store({
     },
     setToUserPage (state, userId) {
       state.toUserPage.userId = userId
+    },
+    setToOrderPage (state, params) {
+      console.log('instore')
+      console.log(params)
+      state.toOrderPage.orderDetail = params.orderDetail
+      state.toOrderPage.from = params.from
     }
   },
   actions: {

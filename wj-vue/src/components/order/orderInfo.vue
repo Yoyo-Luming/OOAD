@@ -516,17 +516,12 @@ export default {
     }
   },
   mounted () {
-    // this.buyButton = true
-    // this.commentButton = true
-    // console.log(this.buyButton)
-    console.log('---------------------')
-    console.log(this.$route.params.orderDetail)
-    if (this.$route.params.from === 'handleProblem') {
+    console.log('store')
+    console.log(this.$store.state.toOrderPage)
+    if (this.$store.state.toOrderPage.from === 'handleProblem') {
       this.isHandleProblem = true
-      // console.log('handlePromblem')
     }
-    this.info = this.$route.params.orderDetail
-    // console.log(info)
+    this.info = this.$store.state.toOrderPage.orderDetail
     this.$axios.post('commodity/commodity_detail/', this.$qs.stringify({
       mer_id: this.info.merchandise_id
     })).then(response => {

@@ -332,7 +332,10 @@ export default {
     toOrderPage (item) {
       console.log('------')
       console.log(item.orderDetail)
-      this.$router.push({name: 'orderInfo', params: {orderDetail: item.orderDetail}})
+      let params = {orderDetail: item.orderDetail, from: 'handleProblem'}
+      this.$store.commit('setToOrderPage', params)
+      this.$router.push('/orderInfo')
+      // this.$router.push({name: 'orderInfo', params: {orderDetail: item.orderDetail}})
     },
     myPage () {
       this.$router.push('/person')

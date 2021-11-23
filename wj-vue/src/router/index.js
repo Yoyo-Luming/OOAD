@@ -108,7 +108,7 @@ export default new Router({
       component: sellOrder
     },
     {
-      path: '/orderinfo',
+      path: '/orderInfo',
       name: 'orderInfo',
       component: orderInfo
     },

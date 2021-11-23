@@ -367,8 +367,11 @@ export default {
       })
     },
     toOrderPage (item) {
-      console.log(item.detail)
-      this.$router.push({name: 'orderInfo', params: {orderDetail: item.orderDetail}})
+      // console.log(item.detail)
+      let params = {orderDetail: item.orderDetail, from: 'handleProblem'}
+      this.$store.commit('setToOrderPage', params)
+      this.$router.push('/orderInfo')
+      // this.$router.push({name: 'orderInfo', params: {orderDetail: item.orderDetail}})
     },
     clickPostTaskOrder (item) {
       this.current_transaction_id = item.orderDetail.transaction_id

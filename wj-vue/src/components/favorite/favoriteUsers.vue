@@ -170,7 +170,9 @@ export default {
   },
   methods: {
     toUserPage (index) {
-      this.$router.push({name: 'userInfo', params: {userId: this.usersList[index].userId}})
+      this.$store.commit('setToUserPage', this.usersList[index].userId)
+      this.$router.push('/user/userInfo')
+      // this.$router.push({name: 'userInfo', params: {userId: this.usersList[index].userId}})
     },
     deleteFavoriteUser (index) {
       this.$message.info(index)

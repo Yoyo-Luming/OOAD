@@ -104,7 +104,7 @@
               <el-container class="line-one">
                 <div class="task-place">商家：{{sender}}</div>
                 <div class="task-place">发货地址：{{sendAddress}}</div>
-                <div class="task-place">卖家：{{receiver}}</div>
+                <div class="task-place">买家：{{receiver}}</div>
                 <div class="task-place">收货地址：{{receiveAddress}}</div>
               </el-container>
             </el-container>
@@ -595,7 +595,9 @@ export default {
     },
     toSellerPage () {
       // alert('tosellerPage!')
-      this.$router.push({name: 'userInfo', params: {userId: this.senderId}})
+      this.$store.commit('setToUserPage', this.senderId)
+      this.$router.push('/user/userInfo')
+      // this.$router.push({name: 'userInfo', params: {userId: this.senderId}})
     },
     callSender () {
       alert('callSender!')

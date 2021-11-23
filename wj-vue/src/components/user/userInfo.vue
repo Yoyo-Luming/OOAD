@@ -205,7 +205,8 @@ export default {
     }
   },
   mounted () {
-    this.userId = this.$route.params.userId
+    // this.userId = this.$route.params.userId
+    this.userId = this.$store.state.toUserPage.userId
     console.log(this.userId)
     this.$axios.post('login0/user_page/', this.$qs.stringify({
       user_id: this.userId

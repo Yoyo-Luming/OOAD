@@ -11,7 +11,10 @@ export default new Vuex.Store({
     userStatus: 0,
     isChatting: false,
     toGoodsPage: {
-      mer_id: ''
+      merId: ''
+    },
+    toUserPage: {
+      userId: ''
     }
   },
   mutations: {
@@ -28,7 +31,10 @@ export default new Vuex.Store({
       state.isChatting = currentStatus
     },
     setToGoodsPage (state, goodsId) {
-      state.toGoodsPage.mer_id = goodsId
+      state.toGoodsPage.merId = goodsId
+    },
+    setToUserPage (state, userId) {
+      state.toUserPage.userId = userId
     }
   },
   actions: {

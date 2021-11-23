@@ -195,7 +195,7 @@ export default {
     // this.price = 122
     // this.url.push('https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png')
     // this.goodsInfo.id = this.$route.params.mer_id
-    this.goodsInfo.id = this.$store.state.toGoodsPage.mer_id
+    this.goodsInfo.id = this.$store.state.toGoodsPage.merId
     console.log(this.goodsInfo.id)
     this.$axios.post('commodity/commodity_detail/', this.$qs.stringify({
       mer_id: this.goodsInfo.id

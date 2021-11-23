@@ -274,7 +274,9 @@ export default {
       })
     },
     toGoodsPage (index) {
-      this.$router.push({name: 'goodsInfo', params: {mer_id: this.sellingList[index].goodsId}})
+      this.$store.commit('setToGoodsPage', this.goodsList[index].goodsId)
+      this.$router.push('/goods/goodsInfo')
+      // this.$router.push({name: 'goodsInfo', params: {mer_id: this.sellingList[index].goodsId}})
     },
     myPage () {
       this.$router.push('/person')

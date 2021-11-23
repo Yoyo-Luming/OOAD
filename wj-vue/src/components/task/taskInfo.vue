@@ -151,7 +151,6 @@
 
 <script>
 export default {
-  // TODO need check
   name: 'taskInfo',
   mounted () {
     this.detail = this.$store.state.toTaskPage.detail
@@ -396,14 +395,13 @@ export default {
       this.$router.push('/addgoods')
     },
     searchTop () {
-      this.$router.push({name: 'Result',
-        params: {
-          searchContent: this.searchContent,
-          labels: undefined,
-          status: undefined,
-          orderMethod: undefined
-        }
+      this.$store.commit('setToSearchPage', {
+        searchContent: this.searchContent,
+        labels: undefined,
+        status: undefined,
+        orderMethod: undefined
       })
+      this.$router.push('/result')
     }
   }
 }

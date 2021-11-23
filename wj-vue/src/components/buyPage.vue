@@ -213,19 +213,12 @@
 
 <script>
 export default {
-  // TODO need check, 添加二维码支付、线下支付
   name: 'buyPage',
   mounted () {
-    this.goodsName = this.$route.params.goodsName
-    // this.goodsPrice = this.$route.params.goodsPrice
-    // this.goodsPhoto = this.$route.params.goodsPhoto
-    this.goodsId = this.$route.params.goodsId
-    console.log('---------')
-    console.log(this.goodsPhoto)
+    this.goodsId = this.$store.state.toBuyPage.goodsId
     this.$axios.post('/commodity/commodity_detail/', this.$qs.stringify({
       mer_id: this.goodsId
     })).then(response => {
-      console.log(response.data)
       // addr_info:
       //   addr_id: "NTA:1mnGkw:_OFQoBXWiZpl-g9gQYxTlOWMQ3x2gLZh4ddGJJQv8Io"
       //   is_default: false
@@ -251,6 +244,7 @@ export default {
       // mer_upload_user_name: "oy3"
       // message: "成功返回商品oppo的信息"
       // status: "200"
+      this.goodsName = response.data.mer_name
       this.deliverPrice = response.data.mer_deliver_price
       this.goodsPrice = response.data.mer_price
       this.totalPrice = this.deliverPrice + this.goodsPrice
@@ -446,14 +440,13 @@ export default {
       this.$router.push('/sellinggoods')
     },
     searchTop () {
-      this.$router.push({name: 'Result',
-        params: {
-          searchContent: this.searchContent,
-          labels: undefined,
-          status: undefined,
-          orderMethod: undefined
-        }
+      this.$store.commit('setToSearchPage', {
+        searchContent: this.searchContent,
+        labels: undefined,
+        status: undefined,
+        orderMethod: undefined
       })
+      this.$router.push('/result')
     },
     markPage () {
       this.$router.push('/favoritegoods')

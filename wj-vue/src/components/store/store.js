@@ -22,6 +22,15 @@ export default new Vuex.Store({
     },
     toTaskPage: {
       detail: {}
+    },
+    toBuyPage: {
+      goodsId: ''
+    },
+    toSearchPage: {
+      searchContent: undefined,
+      labels: undefined,
+      status: undefined,
+      orderMethod: undefined
     }
   },
   mutations: {
@@ -44,13 +53,17 @@ export default new Vuex.Store({
       state.toUserPage.userId = userId
     },
     setToOrderPage (state, params) {
-      console.log('instore')
-      console.log(params)
       state.toOrderPage.orderDetail = params.orderDetail
       state.toOrderPage.from = params.from
     },
     setToTaskPage (state, detail) {
       state.toTaskPage.detail = detail
+    },
+    setToBuyPage (state, goodsId) {
+      state.toBuyPage.goodsId = goodsId
+    },
+    setToSearchPage (state, params) {
+      state.toSearchPage = params
     }
   },
   actions: {

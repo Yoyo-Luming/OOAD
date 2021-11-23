@@ -898,14 +898,21 @@ export default {
       this.$router.push('/buyorder')
     },
     searchTop () {
-      this.$router.push({name: 'Result',
-        params: {
-          searchContent: this.searchContent,
-          labels: undefined,
-          status: undefined,
-          orderMethod: undefined
-        }
+      this.$store.commit('setToSearchPage', {
+        searchContent: this.searchContent,
+        labels: undefined,
+        status: undefined,
+        orderMethod: undefined
       })
+      this.$router.push('/result')
+      // this.$router.push({name: 'Result',
+      //   params: {
+      //     searchContent: this.searchContent,
+      //     labels: undefined,
+      //     status: undefined,
+      //     orderMethod: undefined
+      //   }
+      // })
     },
     recharge () {
       console.log(this.money)

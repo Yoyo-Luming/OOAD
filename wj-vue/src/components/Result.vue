@@ -276,14 +276,11 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$route.params)
-    if (this.$route.params != null) {
-      this.searchContent = this.$route.params.searchContent
-      this.labels = this.$route.params.labels
-      this.status = this.$route.params.status
-      this.orderMethod = this.$route.params.orderMethod
-      this.search()
-    }
+    this.searchContent = this.$store.state.toSearchPage.searchContent
+    this.labels = this.$store.state.toSearchPage.labels
+    this.status = this.$store.state.toSearchPage.status
+    this.orderMethod = this.$store.state.toSearchPage.orderMethod
+    this.search()
   },
   methods: {
     toGoodsPage (item) {

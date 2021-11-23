@@ -93,7 +93,7 @@ export default new Router({
       component: goodsInfo
     },
     {
-      path: '/buypage',
+      path: '/buyPage',
       name: 'buyPage',
       component: buyPage
     },

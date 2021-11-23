@@ -422,14 +422,21 @@ export default {
         type = 2
       }
       if (type !== -1) {
-        this.$router.push({name: 'Result',
-          params: {
-            searchContent: this.searchContent,
-            labels: this.labels,
-            status: this.status,
-            orderMethod: this.orderMethod
-          }
+        this.$store.commit('setToSearchPage', {
+          searchContent: this.searchContent,
+          labels: this.labels,
+          status: this.status,
+          orderMethod: this.orderMethod
         })
+        this.$router.push('/result')
+        // this.$router.push({name: 'Result',
+        //   params: {
+        //     searchContent: this.searchContent,
+        //     labels: this.labels,
+        //     status: this.status,
+        //     orderMethod: this.orderMethod
+        //   }
+        // })
       }
     }
   }

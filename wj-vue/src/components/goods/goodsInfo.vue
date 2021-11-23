@@ -282,13 +282,13 @@ export default {
       })
     },
     toUserPage () {
-      this.$router.push({name: 'userInfo', params: {userId: this.goodsInfo.posterId}})
+      this.$store.commit('setToUserPage', this.goodsInfo.posterId)
+      this.$router.push('/user/userInfo')
+      // this.$router.push({name: 'userInfo', params: {userId: this.goodsInfo.posterId}})
     },
     buy () {
-      console.log(this.goodsInfo.name)
-      console.log(this.goodsInfo.price)
-      console.log(this.goodsInfo.url[0])
-      this.$router.push({name: 'buyPage', params: {goodsName: this.goodsInfo.name, goodsPrice: this.goodsInfo.price, goodsPhoto: this.goodsInfo.url[0], goodsId: this.goodsInfo.id}})
+      this.$store.commit('setToBuyPage', this.goodsInfo.id)
+      this.$router.push('/buyPage')
     },
     myPage () {
       this.$router.push('/person')

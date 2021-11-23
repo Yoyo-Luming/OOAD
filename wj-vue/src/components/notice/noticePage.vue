@@ -97,7 +97,7 @@
                   <div class="notice-column-message">最后一条讯息：{{item.lastInfo}}</div>
                 </el-container>
                 <el-container class="notice-pay">
-                  <el-badge :value="item.waitNumber" class="item">
+                  <el-badge :value="item.waitNumber" class="item" :hidden="item.waitNumber === 0">
                     <el-button class="last-button" type="primary" v-on:click="toChatPage(item)">查看详情</el-button>
                   </el-badge>
                 </el-container>
@@ -107,14 +107,8 @@
               <el-container class="whole-notice" v-for="(item, index) in noticeList" :key="index">
                 <el-badge is-dot :hidden="item.type === 1">
                   <el-container class="message-container">
-                    <div class="notice-column-user" v-if="checkUser">{{item.date}}</div>
-                  </el-container>
-                  <el-container class="notice-pay">
-                    <div class="notice-column-message">{{item.information}}</div>
-
-                    <!--                <el-badge :value="item.waitNumber" class="item">-->
-                    <!--                  <el-button class="last-button" type="primary" v-on:click="toChatPage(item)">查看详情</el-button>-->
-                    <!--                </el-badge>-->
+                    <div class="notice-column-user">{{item.date}}</div>
+                    <div class="notice-column-message" style="margin-left: 20px;align-items: center;">{{item.information}}</div>
                   </el-container>
                 </el-badge>
               </el-container>
@@ -223,9 +217,6 @@ export default {
       this.$store.commit('setToChatPage', {name: item.otherName, id: item.otherId, dialogueId: item.dialogueId})
       this.$router.push('/chatPage')
       // this.$router.push({name: 'chatPage', params: {name: otherName, id: otherId, dialogueId: item.dialogueId}})
-    },
-    checkUser () {
-      return this.user1Name === this.$store.state.userName
     },
     logOut () {
       this.$axios.post('login0/logout/')

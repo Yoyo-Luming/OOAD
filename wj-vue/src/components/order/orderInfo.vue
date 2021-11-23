@@ -532,8 +532,8 @@ export default {
     }
   },
   mounted () {
-    console.log('store')
-    console.log(this.$store.state.toOrderPage)
+    // TEST
+    // this.$store.commit('setUserStatus', 2)
     if (this.$store.state.toOrderPage.from === 'handleProblem') {
       this.isHandleProblem = true
     }
@@ -580,9 +580,10 @@ export default {
     if (this.info.transaction_status === 3 && !this.currentUserIsSeller) {
       this.receiveButton = true
     }
-    if (this.info.transaction_status === 4) {
+    if (this.info.transaction_status === 4 && !this.currentUserIsSeller) {
       this.commentButton = true
     }
+    // this.commentButton = true
     this.isAdmin = (this.$store.state.userStatus === 3)
     this.$axios.post('login0/get_QR_Code/', this.$qs.stringify({
       user_id: this.senderId
@@ -593,6 +594,7 @@ export default {
     })
     this.payInfo.payMethod = this.payTypes[this.info.pay_method - 1]
     this.payInfo.payProveUrl = this.info.pay_prove
+    this.srcList.push(this.info.pay_prove)
     console.log(this.payInfo.payProveUrl)
     this.sendAddress = this.regionList[this.info.sender_location.user_region] + ' ' + this.info.sender_location.user_addr
     this.receiveAddress = this.regionList[this.info.receiver_location.user_region] + ' ' + this.info.receiver_location.user_addr
@@ -632,13 +634,19 @@ export default {
       })
     },
     buy () {
+      if (this.payPassword === '') {
+        this.$message.error('请输入支付密码！')
+        return
+      }
       this.$axios.post('transaction/commit_transaction_virtual/', this.$qs.stringify({
         tra_id: this.orderId,
         pay_password: this.payPassword
       })).then(response => {
-        this.$message.info(response.data.message)
         if (response.data.status === '200') {
+          this.$message.success(response.data.message)
           this.$router.push('/buyorder')
+        } else {
+          this.$message.error(response.data.message)
         }
       })
     },
@@ -646,9 +654,12 @@ export default {
       this.$axios.post('transaction/already_send_transaction/', this.$qs.stringify({
         current_tra_id: this.orderId
       })).then(response => {
-        this.$message.info(response.data.message)
+        // this.$message.info(response.data.message)
         if (response.data.status === '200') {
+          this.$message.success(response.data.message)
           this.$router.push('/sellorder')
+        } else {
+          this.$message.error(response.data.message)
         }
       })
     },
@@ -656,9 +667,12 @@ export default {
       this.$axios.post('transaction/already_receive_transaction/', this.$qs.stringify({
         current_tra_id: this.orderId
       })).then(response => {
-        this.$message.info(response.data.message)
+        // this.$message.info(response.data.message)
         if (response.data.status === '200') {
+          this.$message.success(response.data.message)
           this.$router.push('/buyorder')
+        } else {
+          this.$message.error(response.data.message)
         }
       })
     },
@@ -666,12 +680,20 @@ export default {
       this.$axios.post('transaction/cancel_transaction/', this.$qs.stringify({
         tra_id: this.orderId
       })).then(response => {
-        this.$message.info(response.data.message)
-        this.$router.push('/buyorder')
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.$router.push('/buyorder')
+        } else {
+          this.$message.error(response.data.message)
+        }
       })
       // console.log('cancel')
     },
     submitComment () {
+      if (this.commentText === '') {
+        this.$message.error('请输入评价！')
+        return
+      }
       this.$axios.post('transaction/comment_transaction/', this.$qs.stringify({
         current_tra_id: this.orderId,
         comment_content: this.commentText,
@@ -680,7 +702,6 @@ export default {
         comment_level_tra: this.comment3
       })).then(response => {
         this.$message.info(response.data.message)
-
         if (response.data.status === '200') {
           this.$router.push('/buyorder')
         }
@@ -700,6 +721,16 @@ export default {
       })
     },
     submitProblem () {
+      if (this.problemForm.problemDescription === '') {
+        this.$message.error('请输入问题描述！')
+        return
+      }
+      console.log('problem')
+      if (this.problemForm.problemType === '') {
+        this.$message.error('请输入问题类型！')
+        return
+      }
+      console.log(this.problemForm.problemType)
       this.$axios.post('transaction/transaction_has_problem/', this.$qs.stringify({
         current_tra_id: this.orderId,
         problem_description: this.problemForm.problemDescription,
@@ -715,6 +746,15 @@ export default {
       })
     },
     handleProblem () {
+      if (this.handleProblemForm.superuserLog === '') {
+        this.$message.error('请输入问题处理回复！')
+        return
+      }
+      if (this.handleProblemForm.problemRole === '') {
+        this.$message.error('请选择问题方！')
+        return
+      }
+      // console.log()
       this.$axios.post('supermanager/handle_problem/', this.$qs.stringify({
         superuser_log: this.handleProblemForm.superuserLog,
         problem_id: this.problemId,
@@ -725,7 +765,7 @@ export default {
           this.handleProblemVisible = false
           this.$message.success(response.data.message)
         } else {
-          this.$message.info(response.data.message)
+          this.$message.error(response.data.message)
         }
       })
     },
@@ -741,6 +781,10 @@ export default {
       this.uploadPayFile[uploadPayFileLength] = {'photo': file}
     },
     submitQRPay () {
+      if (this.uploadPayFile.length === 0) {
+        this.$message.warning('请上传支付凭证！')
+        return
+      }
       let file = this.uploadPayFile[0].photo
       let photoForm = new FormData()
       photoForm.append('current_pay_prove ', file)
@@ -751,6 +795,7 @@ export default {
         if (response.data.status === '200') {
           this.payFormVisible = false
           this.$message.success(response.data.message)
+          this.uploadPayFile = []
         } else {
           this.$message.info(response.data.message)
         }

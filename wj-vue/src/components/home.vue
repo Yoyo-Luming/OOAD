@@ -350,8 +350,8 @@ export default {
   mounted () {
     this.$axios.post('login0/get_recommend_list/').then(response => {
       console.log(response.data)
-      let len = response.data.return_List.length
-      let list = response.data.return_List
+      let len = response.data.return_list.length
+      let list = response.data.return_list
       console.log(len)
       for (let i = 0; i < len; ++i) {
         this.recommendList.push({

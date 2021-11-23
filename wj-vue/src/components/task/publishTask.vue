@@ -172,56 +172,11 @@
       </el-main>
     </el-container>
   </el-container>
-  <!--  <el-container>-->
-  <!--    <el-button @click="otherTaskVisible=true">-->
-  <!--      发布跑腿任务-->
-  <!--    </el-button>-->
-  <!--    <task-for-order-box v-for="(item, index) of shipList" :key="index+Math.random()" :goodsName="item.goodsName" :photo="item.photo" :sendAddress="item.sendAddress" :receiveAddress="item.receiveAddress" :detail="item.orderDetail"></task-for-order-box>-->
-  <!--    <el-dialog :visible.sync="otherTaskVisible">-->
-  <!--      <el-form :model="otherTaskForm">-->
-  <!--        <el-form-item label="任务名称">-->
-  <!--          <el-input v-model="otherTaskForm.name"></el-input>-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="价格">-->
-  <!--          <el-input v-model="otherTaskForm.price"></el-input>-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="最晚取货时间">-->
-  <!--          <el-date-picker v-model="otherTaskForm.ddlTime" type="datetime" placeholder="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionLater" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="任务描述">-->
-  <!--          <el-input v-model="otherTaskForm.description"></el-input>-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="发货地址">-->
-  <!--          <el-select v-model="otherTaskForm.senderAddressId" placeholder="请选择收货区域">-->
-  <!--            <el-option-->
-  <!--              v-for="item in sendAddressList"-->
-  <!--              :label="item.name + item.region+item.address+item.phone"-->
-  <!--              :key="item.id"-->
-  <!--              :value="item.id">-->
-  <!--            </el-option>-->
-  <!--          </el-select>-->
-  <!--        </el-form-item>-->
-  <!--        <el-form-item label="收货地址">-->
-  <!--          <el-select v-model="otherTaskForm.receiveAddressId" placeholder="请选择收货区域">-->
-  <!--            <el-option-->
-  <!--              v-for="item in receiveAddressList"-->
-  <!--              :label="item.name + item.region+item.address+item.phone"-->
-  <!--              :key="item.id"-->
-  <!--              :value="item.id">-->
-  <!--            </el-option>-->
-  <!--          </el-select>-->
-  <!--        </el-form-item>-->
-  <!--      </el-form>-->
-  <!--      <el-button @click="otherTaskVisible=false">取消</el-button>-->
-  <!--      <el-button @click="postOtherTask">发布跑腿任务</el-button>-->
-  <!--    </el-dialog>-->
-  <!--  </el-container>-->
 </template>
 
 <script>
 // import orderBox from '../order/orderBox'
 export default {
-  // TODO need check
   name: 'publishTask',
   mounted () {
     this.$axios.post('/login0/get_address_list/', this.$qs.stringify({
@@ -244,7 +199,6 @@ export default {
             phone: response.data.return_list[i].user_phone})
         }
       }
-      // console.log(this.addressList)
     })
     this.$axios.post('login0/wait_deliver_fuc_seller/').then(response => {
       console.log('-----------')
@@ -394,6 +348,18 @@ export default {
       this.orderTaskVisible = true
     },
     postTaskOrder () {
+      if (this.orderTaskForm.price === '') {
+        this.$message.warning('请输入价格！')
+        return
+      }
+      if (this.orderTaskForm.ddlTime === '') {
+        this.$message.warning('请输入最迟领货时间！')
+        return
+      }
+      if (this.orderTaskForm.description === '') {
+        this.$message.warning('请输入最迟领货时间！')
+        return
+      }
       this.$axios.post('/task/release_task_transaction/', this.$qs.stringify({
         tra_id: this.current_transaction_id,
         ddl_time: this.orderTaskForm.ddlTime,

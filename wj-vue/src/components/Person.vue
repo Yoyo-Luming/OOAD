@@ -469,8 +469,6 @@ export default {
       uploadQRCodeFile: [],
       hasPhoto: false,
       address: [
-        { id: 1, name: 'Name1', region: '荔园', address: 20, phone: 1123 },
-        { id: 2, name: 'Name2', region: '创园', address: 80, phone: 132435 }
       ],
       sendAddress: [
         // { id: 1, name: 'Name1', region: 'a', address: 20, phone: 1123 }
@@ -938,6 +936,9 @@ export default {
         pay_password: this.activeFromData.payPassword
       })).then(response => {
         console.log(response.data)
+        if (response.data.status === '200') {
+          this.$store.commit('setUserStatus', 1)
+        }
         this.$axios.post('/login0/add_address/', this.$qs.stringify({
           current_user: this.$store.state.userId,
           user_name: this.activeFromData.consigneeName,
@@ -948,7 +949,8 @@ export default {
         })).then(response => {
           // this.$store.state.userStatus = 1
           if (response.data.status === '200') {
-            this.$store.commit('setUserStatus', 1)
+            // this.$store.commit('setUserStatus', 1)
+            // this.$message.success()
             this.activeFromVisible = false
           }
         })

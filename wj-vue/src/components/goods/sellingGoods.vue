@@ -112,65 +112,6 @@
             </div>
           </el-container>
         </el-container>
-        <el-dialog :visible.sync="dialogFormVisible">
-          <el-form ref="form" :model="form" label-width="200px" :rules="rules">
-            <el-form-item label="商品名称" prop="goodName">
-              <el-input v-model="form.goods_title" placeholder="请输入商品名称"></el-input>
-            </el-form-item>
-            <el-form-item label="商品价格" prop="goodPrice">
-              <el-input v-model="form.goods_price" placeholder="请输入商品价格"></el-input>
-            </el-form-item>
-            <el-form-item label="商品分类" prop="goodType">
-              <el-cascader  :options="options"
-                            :props="{ checkStrictly: true }"
-                            v-model="form.goods_kind"
-                            clearable></el-cascader>
-            </el-form-item>
-            <el-form-item label="使用程度" prop="goodStatus">
-              <el-select v-model="form.goods_status" placeholder="请选择">
-                <el-option
-                  v-for="item in newOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="商品描述" prop="goodDescription">
-              <el-input v-model="form.goods_description" placeholder="请输入商品分类"></el-input>
-            </el-form-item>
-            <el-form-item label="商品图片" prop="goodImage">
-              <el-upload
-                action="auto"
-                :http-request="uploadSectionFile"
-                list-type="picture-card"
-                :file-list="form.fileList"
-                class = "contentImgStyle"
-                :limit="3"
-                :on-exceed="handleExceed">
-                <i class="el-icon-plus"></i>
-              </el-upload>
-            </el-form-item>
-            <el-form-item label="发货地址" prop="sendAddress">
-              <el-select v-model="form.goods_address_id" placeholder="请选择">
-                <el-option
-                  v-for="item in addressList"
-                  :label="item.name + item.region+item.address+item.phone"
-                  :key="item.id"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="邮费" prop="postage">
-              <el-input v-model="form.goods_postage"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="submit2">确认添加</el-button>
-              <el-button type="success">重置</el-button>
-            </el-form-item>
-          </el-form>
-        </el-dialog>
       </el-main>
     </el-container>
   </el-container>
@@ -217,28 +158,9 @@ export default {
     })
   },
   data () {
-    const verifyEmpty = (rule, value, callback) => {
-      if (value === '') {
-        console.log(value)
-        callback(new Error('此项不能为空'))
-      } else {
-        console.log(value)
-        callback()
-      }
-    }
     return {
       goodsList: [],
       searchContent: undefined,
-      form: {
-        goods_title: '',
-        goods_price: '',
-        goods_status: '',
-        goods_kind: '',
-        goods_description: '',
-        goods_address_id: '',
-        goods_postage: '',
-        fileList: []
-      },
       addressList: [],
       isSeller: false,
       regionList: [ '荔园',
@@ -385,34 +307,7 @@ export default {
           value: 4,
           label: '明显使用痕迹'
         }
-      ],
-      dialogFormVisible: false,
-      rules: {
-        goodName: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        goodPrice: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        goodType: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        goodStatus: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        goodDescription: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        goodImage: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        sendAddress: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        postage: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ]
-      }
+      ]
     }
   },
   methods: {
@@ -455,57 +350,6 @@ export default {
     handleExceed (files, fileList) {
       this.$message.warning('最多只能上传三张相片！')
     },
-    uploadSectionFile (param) {
-      const uploadFileLength = this.uploadFile.length
-      let fileObj = param.file
-      let file = new File([fileObj], new Date().getTime() + '.jpg', {
-        type: 'image/jpg'
-      })
-      this.uploadFile[uploadFileLength] = {'imgFile': file}
-    },
-    submit2 () {
-      // console.log(this.goods_kind.length)
-      // console.log(this.form.goods_kind[0])
-      // console.log(this.form.goods_kind[1])
-      // console.log(this.form.goods_status)
-      console.log(this.form.goods_address_id)
-      let param = new FormData() // FormData 对象
-      let list = this.uploadFile[0]
-      let file = list.imgFile
-      param.append('image1', file) // 文件对象
-      param.append('mer_name', this.form.goods_title) // 1
-      param.append('mer_description', this.form.goods_description) // 2
-      param.append('mer_price', this.form.goods_price) // 3
-      param.append('class1_id', this.form.goods_kind[0]) // 4
-      param.append('class2_id', this.form.goods_kind[1]) // 5
-      param.append('fineness_id', this.form.goods_status) // 6
-      param.append('deliver_price', this.form.goods_postage)
-      param.append('send_address_id', this.form.goods_address_id)
-      // 邮费 deliver_price 发货地址 send_address_id
-      if (this.uploadFile.length >= 2) {
-        let list2 = this.uploadFile[1]
-        let file2 = list2.imgFile
-        param.append('image2', file2)
-      } else {
-        param.append('image2', '')
-      }
-      if (this.uploadFile.length >= 3) {
-        let list3 = this.uploadFile[2]
-        let file3 = list3.imgFile
-        param.append('image3', file3)
-      } else {
-        param.append('image3', '')
-      }
-      this.$axios({
-        method: 'post',
-        url: '/login0/upload_commodity/',
-        data: param
-      }).then(function (response) {
-        alert(response.data.message)
-      }).catch(error => {
-        alert(error)
-      })
-    },
     myPage () {
       this.$router.push('/person')
     },
@@ -527,7 +371,7 @@ export default {
       this.$router.push('/login')
     },
     addGood () {
-      this.dialogFormVisible = true
+      this.$router.push('/addgoods')
     },
     goReleasedTask () {
       this.$router.push('/releasedtask')

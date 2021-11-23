@@ -189,13 +189,6 @@
       </el-main>
     </el-container>
   </el-container>
-  <!--  <el-tabs>-->
-  <!--    <el-tab-pane label="待付款"><order-box v-for="(item, index) of payList" :key="index+Math.random()" :goodsName="item.goodsName" :price="item.price" :photo="item.photo" :detail="item.orderDetail"></order-box></el-tab-pane>-->
-  <!--    <el-tab-pane label="待发货"><order-box v-for="(item, index) of shipList" :key="index+Math.random()" :goodsName="item.goodsName" :price="item.price" :photo="item.photo" :detail="item.orderDetail"></order-box></el-tab-pane>-->
-  <!--    <el-tab-pane label="待收货"><order-box v-for="(item, index) of receiveList" :key="index+Math.random()" :goodsName="item.goodsName" :price="item.price" :photo="item.photo" :detail="item.orderDetail"></order-box></el-tab-pane>-->
-  <!--    <el-tab-pane label="待评价"><order-box v-for="(item, index) of evaluateList" :key="index+Math.random()" :goodsName="item.goodsName" :price="item.price" :photo="item.photo" :detail="item.orderDetail"></order-box></el-tab-pane>-->
-  <!--    <el-tab-pane label="已完成"><order-box v-for="(item, index) of completeList" :key="index+Math.random()" :goodsName="item.goodsName" :price="item.price" :photo="item.photo" :detail="item.orderDetail"></order-box></el-tab-pane>-->
-  <!--  </el-tabs>-->
 </template>
 
 <script>
@@ -318,15 +311,7 @@ export default {
   },
   data () {
     return {
-      payList: [
-      //   {
-      //   goodsName: '汉堡1',
-      //   price: 1,
-      //   description: 'nice',
-      //   photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
-      //   orderDetail: []
-      // }
-      ],
+      payList: [],
       shipList: [],
       receiveList: [],
       evaluateList: [],
@@ -342,7 +327,6 @@ export default {
       let params = {orderDetail: item.orderDetail, from: 'handleProblem'}
       this.$store.commit('setToOrderPage', params)
       this.$router.push('/orderInfo')
-      // this.$router.push({name: 'orderInfo', params: {orderDetail: item.orderDetail}})
     },
     myPage () {
       this.$router.push('/person')

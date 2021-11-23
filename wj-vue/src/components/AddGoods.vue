@@ -1,11 +1,11 @@
 <template>
   <el-container class="home-container">
     <el-header class="el-header">
-      <div class="right-head">
+      <div class="right-head" v-on:click="homePage" title="前往主页" style="cursor:pointer;">
         <img src="../assets/testlogo.png" class="logo" alt="">
         <span class="title">SUSTech Store</span>
       </div>
-      <div class="mid-head">
+      <div class="mid-head" style="width: 50%;">
         <el-input
           placeholder="请输入搜索信息"
           prefix-icon="el-icon-search"
@@ -20,15 +20,14 @@
           background-color="#545c64"
           text-color="#fff"
           active-text-color="#ffd04b">
-          <el-menu-item index="1" v-on:click="homePage">主页</el-menu-item>
-          <el-submenu index="2">
+          <el-submenu index="1">
             <template slot="title">{{$store.state.userName}}</template>
-            <el-menu-item index="2-1" v-on:click="myPage">个人主页</el-menu-item>
-            <el-menu-item index="2-2" v-on:click="cartPage">购物车</el-menu-item>
-            <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>
-            <el-menu-item index="2-4" v-on:click="markPage">收藏的商品</el-menu-item>
+            <el-menu-item index="1-1" v-on:click="myPage">个人主页</el-menu-item>
+            <el-menu-item index="1-2" v-on:click="cartPage">购物车</el-menu-item>
+            <el-menu-item index="1-3" v-on:click="sellPage">上架的商品</el-menu-item>
+            <el-menu-item index="1-4" v-on:click="markPage">收藏的商品</el-menu-item>
           </el-submenu>
-          <el-menu-item index="3" v-on:click="logOut">注销</el-menu-item>
+          <el-menu-item index="2" v-on:click="logOut">注销</el-menu-item>
         </el-menu>
       </div>
     </el-header>
@@ -90,19 +89,19 @@
         <el-container class="mid-content">
           <el-container class="pane-content">
             <el-form ref="form" :model="form" label-width="200px" label-position="right" style="width: 80%;margin-top: 50px;" :rules="rules">
-              <el-form-item label="商品名称" prop="goodName">
+              <el-form-item label="商品名称" prop="goods_title">
                 <el-input v-model="form.goods_title" placeholder="请输入商品名称"></el-input>
               </el-form-item>
-              <el-form-item label="商品价格" prop="goodPrice">
+              <el-form-item label="商品价格" prop="goods_price">
                 <el-input v-model="form.goods_price" placeholder="请输入商品价格"></el-input>
               </el-form-item>
-              <el-form-item label="商品分类" prop="goodType">
+              <el-form-item label="商品分类" prop="goods_kind">
                 <el-cascader  :options="options"
                               :props="{ checkStrictly: true }"
                               v-model="form.goods_kind"
                               clearable></el-cascader>
               </el-form-item>
-              <el-form-item label="使用程度" prop="goodStatus">
+              <el-form-item label="使用程度" prop="goods_status">
                 <el-select v-model="form.goods_status" placeholder="请选择">
                   <el-option
                     v-for="item in newOptions"
@@ -112,10 +111,10 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="商品描述" prop="goodDescription">
+              <el-form-item label="商品描述" prop="goods_description">
                 <el-input v-model="form.goods_description" placeholder="请输入商品分类"></el-input>
               </el-form-item>
-              <el-form-item label="商品图片" prop="goodImage">
+              <el-form-item label="商品图片" prop="fileList">
                 <el-upload
                   action="auto"
                   :http-request="uploadSectionFile"
@@ -129,7 +128,7 @@
                   <i class="el-icon-plus"></i>
                 </el-upload>
               </el-form-item>
-              <el-form-item label="发货地址" prop="sendAddress">
+              <el-form-item label="发货地址" prop="goods_address_id">
                 <el-select v-model="form.goods_address_id" placeholder="请选择">
                   <el-option
                     v-for="item in addressList"
@@ -140,7 +139,7 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="邮费" prop="postage">
+              <el-form-item label="邮费" prop="goods_postage">
                 <el-input v-model="form.goods_postage"></el-input>
               </el-form-item>
               <el-form-item>
@@ -348,28 +347,28 @@ export default {
         }
       ],
       rules: {
-        goodName: [
+        goods_title: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        goodPrice: [
+        goods_price: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        goodType: [
+        goods_kind: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        goodStatus: [
+        goods_status: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        goodDescription: [
+        goods_description: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        goodImage: [
+        fileList: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        sendAddress: [
+        goods_address_id: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        postage: [
+        goods_postage: [
           { validator: verifyEmpty, trigger: 'blur' }
         ]
       }
@@ -523,6 +522,7 @@ export default {
   width: 100%;
   background: center repeat url("../assets/back7.jpg");
   background-size: cover;
+  display: -webkit-box;
 }
 
 .el-header {
@@ -564,7 +564,6 @@ export default {
 
 .pane-content {
   display: block;
-  height: 100%;
   width: 1000px;
   border-radius: 10px;
   border: 2px solid #eaeaea;

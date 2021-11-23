@@ -1,11 +1,11 @@
 <template>
   <el-container class="home-container">
     <el-header class="el-header">
-      <div class="right-head">
+      <div class="right-head" v-on:click="homePage" title="前往主页" style="cursor:pointer;">
         <img src="../assets/testlogo.png" class="logo" alt="">
         <span class="title">SUSTech Store</span>
       </div>
-      <div class="mid-head">
+      <div class="mid-head" style="width: 50%;">
         <el-input
           placeholder="请输入搜索信息"
           prefix-icon="el-icon-search"
@@ -20,15 +20,14 @@
           background-color="#545c64"
           text-color="#fff"
           active-text-color="#ffd04b">
-          <el-menu-item index="1" v-on:click="homePage">主页</el-menu-item>
-          <el-submenu index="2">
+          <el-submenu index="1">
             <template slot="title">{{$store.state.userName}}</template>
-            <el-menu-item index="2-1" v-on:click="myPage">个人主页</el-menu-item>
-            <el-menu-item index="2-2" v-on:click="cartPage">购物车</el-menu-item>
-            <el-menu-item index="2-3" v-on:click="sellPage">上架的商品</el-menu-item>
-            <el-menu-item index="2-4" v-on:click="markPage">收藏的商品</el-menu-item>
+            <el-menu-item index="1-1" v-on:click="myPage">个人主页</el-menu-item>
+            <el-menu-item index="1-2" v-on:click="cartPage">购物车</el-menu-item>
+            <el-menu-item index="1-3" v-on:click="sellPage">上架的商品</el-menu-item>
+            <el-menu-item index="1-4" v-on:click="markPage">收藏的商品</el-menu-item>
           </el-submenu>
-          <el-menu-item index="3" v-on:click="logOut">注销</el-menu-item>
+          <el-menu-item index="2" v-on:click="logOut">注销</el-menu-item>
         </el-menu>
       </div>
     </el-header>
@@ -512,6 +511,7 @@ export default {
   width: 100%;
   background: center no-repeat url("../assets/back7.jpg");
   background-size: cover;
+  display: -webkit-box;
 }
 
 .el-header {

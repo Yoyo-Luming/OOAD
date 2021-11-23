@@ -2,10 +2,10 @@
   <el-container class="home-container">
     <el-header class="el-header">
       <div class="right-head">
-        <img src="../../assets/testlogo.png" class="logo" alt="">
+        <img src="../../assets/testlogo.png" class="logo" alt="" style="cursor:pointer;">
         <span class="title">SUSTech Store</span>
       </div>
-      <div class="mid-head">
+      <div class="mid-head" style="width: 50%;">
         <el-input
           placeholder="请输入搜索信息"
           prefix-icon="el-icon-search"
@@ -95,7 +95,7 @@
               </el-container>
               <el-container class="small-photo">
                 <el-container class="single-photo" v-for="(link, index) in goodsInfo.url" :key="index">
-                  <el-image :src="link" fit="contain" style="border: 2px solid #eaeaea;" :alt="goodsInfo.name" @mousemove="mouseOver(link)"></el-image>
+                  <el-image :src="link" fit="contain" style="border: 2px solid #eaeaea;" :alt="goodsInfo.name"></el-image>
                 </el-container>
               </el-container>
               <el-container class="mark_chars">
@@ -111,7 +111,7 @@
                 <div class="good-description">分类：{{goodsInfo.kind}}</div>
                 <div class="good-price">售价: ¥<span style="margin-left: 5px;font-size: 30px">{{goodsInfo.price}}</span></div>
                 <div class="good-price">邮费: ¥<span style="margin-left: 5px;font-size: 20px">{{goodsInfo.deliverPrice}}</span></div>
-                <div class="seller-name" v-on:click="toUserPage">卖家：{{goodsInfo.poster}}</div>
+                <div class="seller-name" title="前往卖家页面" style="cursor:pointer;" v-on:click="toUserPage">卖家：{{goodsInfo.poster}}</div>
                 <el-button class="cart-button" v-on:click="addCart">加入购物车</el-button>
                 <el-button class="buy-button" v-on:click="buy">立即购买</el-button>
               </el-container>
@@ -367,6 +367,7 @@ export default {
   width: 100%;
   background: center repeat url("../../assets/back7.jpg");
   background-size: cover;
+  display: -webkit-box;
 }
 
 .el-header {

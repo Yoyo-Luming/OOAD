@@ -287,7 +287,9 @@ export default {
   },
   methods: {
     toGoodsPage (item) {
-      this.$router.push({name: 'goodsInfo', params: {mer_id: item.mer_id}})
+      this.$store.commit('setToGoodsPage', item.mer_id)
+      this.$router.push('/goods/goodsInfo')
+      // this.$router.push({name: 'goodsInfo', params: {mer_id: item.mer_id}})
     },
     myPage () {
       this.$router.push('/person')

@@ -9,7 +9,10 @@ export default new Vuex.Store({
     userName: '',
     userId: '',
     userStatus: 0,
-    isChatting: false
+    isChatting: false,
+    toGoodsPage: {
+      mer_id: ''
+    }
   },
   mutations: {
     setUserName (state, name) {
@@ -22,7 +25,10 @@ export default new Vuex.Store({
       state.userStatus = status
     },
     setIsChatting (state, currentStatus) {
-      this.state.isChatting = currentStatus
+      state.isChatting = currentStatus
+    },
+    setToGoodsPage (state, goodsId) {
+      state.toGoodsPage.mer_id = goodsId
     }
   },
   actions: {

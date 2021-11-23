@@ -156,7 +156,9 @@ export default {
   },
   methods: {
     toGoodsPage (index) {
-      this.$router.push({name: 'goodsInfo', params: {mer_id: this.goodsList[index].goodsId}})
+      this.$store.commit('setToGoodsPage', this.goodsList[index].goodsId)
+      this.$router.push('/goods/goodsInfo')
+      // this.$router.push({name: 'goodsInfo', params: {mer_id: this.goodsList[index].goodsId}})
     },
     deleteFavoriteGoods (index) {
       // this.$message.info(index)

@@ -2,10 +2,10 @@
   <el-container class="home-container">
     <el-header class="el-header">
       <div class="right-head">
-        <img src="../../assets/testlogo.png" class="logo" alt="">
+        <img src="../../assets/testlogo.png" class="logo" alt="" style="cursor:pointer;">
         <span class="title">SUSTech Store</span>
       </div>
-      <div class="mid-head">
+      <div class="mid-head" style="width: 50%;">
         <el-input
           placeholder="请输入搜索信息"
           prefix-icon="el-icon-search"
@@ -118,8 +118,9 @@
             <el-divider></el-divider>
             <el-container v-if="active > 0" class="pay-detail">
               <div class="task-place">支付方式：{{payInfo.payMethod}}</div>
-              <div class="task-place">支付凭证：
-                <img alt="" :src="payInfo.payProveUrl">
+              <div class="task-place" style="display: flex;align-items: center;">
+                <div>支付凭证：</div>
+                <el-image alt="" :src="payInfo.payProveUrl" fit="fit" style="height: 200px;width: 200px;" :preview-src-list="srcList"></el-image>
               </div>
             </el-container>
             <el-divider></el-divider>
@@ -453,6 +454,7 @@ export default {
         superuserLog: '',
         problemRole: ''
       },
+      srcList: [],
       uploadPayFile: [],
       payInfo: {
         payMethod: '',
@@ -886,6 +888,7 @@ export default {
   width: 100%;
   background: center repeat url("../../assets/back7.jpg");
   background-size: cover;
+  display: -webkit-box;
 }
 
 .el-header {
@@ -943,7 +946,6 @@ export default {
 
 .pane-content {
   display: block;
-  height: 100%;
   width: 1000px;
   border-radius: 10px;
   border: 2px solid #eaeaea;

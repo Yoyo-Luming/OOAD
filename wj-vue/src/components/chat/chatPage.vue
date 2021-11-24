@@ -303,6 +303,10 @@ export default {
       this.uploadFile[uploadFileLength] = {'imgFile': file}
     },
     uploadPhoto () {
+      if (this.uploadFile.length === 0) {
+        this.$message.error('未上传图片！')
+        return
+      }
       let param = new FormData() // FormData 对象
       let list = this.uploadFile[0]
       let file = list.imgFile

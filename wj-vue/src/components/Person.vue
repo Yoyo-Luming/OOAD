@@ -51,8 +51,8 @@
             <el-button class="inside-button" v-on:click="LoginPassWordVisible=true">修改登录密码</el-button><br>
             <el-button class="inside-button" v-on:click="PayPassWordVisible=true">修改支付密码</el-button><br>
             <el-button class="inside-button" v-on:click="forgetVisible=true">忘记支付密码</el-button><br>
-            <el-button class="inside-button" v-on:click="recharge">充值</el-button><br>
-            <el-button class="inside-button" v-on:click="activeSellFromVisible=true">成为卖家</el-button><br>
+            <el-button class="inside-button" v-on:click="rechargeVisible=true">充值</el-button><br>
+            <el-button class="inside-button" v-on:click="activeSellFromVisible=true" v-if="$store.state.userStatus < 2">成为卖家</el-button><br>
           </el-submenu>
           <el-submenu class="menu-buttons" index="2">
             <template slot="title">
@@ -111,7 +111,8 @@
             <!--          pay-pane-->
             <el-tab-pane label="个人信息" class="whole-pane" name="first">
               <el-container class="user-info">
-                <el-image class="big-photo" :src="userInfo.photo" fit="contain" :alt="userInfo.name"></el-image>
+                <div v-if="hasPhoto"><el-image class="big-photo" :src="userInfo.photo" fit="contain" :alt="userInfo.name"></el-image></div>
+                <div v-else><el-image class="big-photo" :src="defaultPhoto" fit="contain" :alt="userInfo.name"></el-image></div>
                 <el-container class="contents">
                   <div class="user-name">用户名：{{userInfo.name}}</div>
                   <div class="user-describe">用户类型：{{userInfo.userType}}</div>
@@ -392,6 +393,11 @@
           <el-button type="primary" @click="activateSell">提交</el-button>
         </div>
       </el-dialog>
+      <el-dialog :visible.sync="rechargeVisible">
+          充值金额：<el-input v-model="money" placeholder="请输入充值金额"></el-input>
+          <el-button @click="rechargeVisible=false">取消</el-button>
+          <el-button type="primary" @click="recharge">提交</el-button>
+      </el-dialog>
     </el-container>
   </el-container>
 </template>
@@ -459,6 +465,7 @@ export default {
       UserInfoFormVisible: false,
       addressFormVisible: false,
       sendAddressFormVisible: false,
+      rechargeVisible: false,
       // 信息编辑表单数据
       fromData: {
         userType: '',
@@ -469,7 +476,6 @@ export default {
       uploadHeaderPhotoFile: [],
       uploadFile: [],
       uploadQRCodeFile: [],
-      hasPhoto: false,
       address: [
       ],
       sendAddress: [
@@ -638,7 +644,7 @@ export default {
         '7号门',
         '8号门',
         '其它'],
-      money: 10000,
+      money: '',
       activeSellFromVisible: false,
       newPayPassword: '',
       verifyNewPayPassword: '',
@@ -649,8 +655,10 @@ export default {
       forgetVisible: false,
       uploadHeaderPhotoVisible: false,
       LoginPassWordVisible: false,
+      hasPhoto: false,
       changeCode: '',
       activePane: 'first',
+      defaultPhoto: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       rules: {
         userType: [
           { validator: verifyEmpty, trigger: 'blur' }
@@ -1075,11 +1083,21 @@ export default {
       this.$router.push('/result')
     },
     recharge () {
+      if (this.money === '' || this.money === '0' || this.money === 0) {
+        this.$message.error('请输入充值金额！')
+        return
+      }
+      const numberChecker = /^[0-9]+$/
+      if (!numberChecker.test(this.money)) {
+        this.$message.error('充值金额必须为正整数！')
+        return
+      }
       console.log(this.money)
       this.$axios.post('login0/recharge/', this.$qs.stringify({
         money: this.money
       })).then(response => {
         if (response.data.status === '200') {
+          this.rechargeVisible = false
           this.$message.success(response.data.message)
           this.reload()
         } else {

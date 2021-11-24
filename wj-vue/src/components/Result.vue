@@ -120,7 +120,7 @@
                   <el-container class="good-describe">
                     <div class="good-name">{{item.name}}</div>
                     <div class="good-price">¥{{item.price}}</div>
-                    <div class="good-number">共有{{item.favouriteNumber}}人喜欢</div>
+                    <div class="good-number">共有{{item.favourite_number}}人喜欢</div>
                   </el-container>
                 </el-container>
               </el-container>
@@ -353,19 +353,13 @@ export default {
       // console.log(this.labels[0])
       this.goodsList = []
       const chineseChecker = /[\u4e00-\u9fa5]/
-      console.log(this.searchContent)
-      console.log('check')
-      console.log(chineseChecker.test('2222'))
-      console.log(chineseChecker.test('abcd'))
-      console.log(chineseChecker.test(this.searchContent))
       if (this.labels === undefined && this.status === undefined && this.orderMethod === undefined && this.searchContent !== undefined && chineseChecker.test(this.searchContent)) {
         let url = 'search/?q=' + this.searchContent
-        console.log(url)
         this.$axios.post(url).then(response => {
+          console.log('search_result')
           console.log(response.data)
           let len = response.data.return_list.length
           let list = response.data.return_list
-          console.log(len)
           for (let i = 0; i < len; ++i) {
             this.goodsList.push({
               name: list[i].mer_name,
@@ -404,10 +398,10 @@ export default {
           fineness_id: newStatus,
           search_str: this.searchContent
         })).then(response => {
+          console.log('search_result')
           console.log(response.data)
           let len = response.data.return_list.length
           let list = response.data.return_list
-          console.log(len)
           for (let i = 0; i < len; ++i) {
             this.goodsList.push({
               name: list[i].mer_name,

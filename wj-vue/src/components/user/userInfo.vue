@@ -479,7 +479,7 @@ export default {
   display: block;
   height: 30px;
   width: 100px;
-  font-size: 20px;
+  font-size: 15px;
   margin-top: 20px;
   word-wrap: anywhere;
   word-break: normal;

@@ -1178,7 +1178,7 @@ export default {
         this.$message.error('请输入新登录密码')
         return
       }
-      if (this.verifyNewLoginPassword !== this.newPayPassword) {
+      if (this.verifyNewLoginPassword !== this.newLoginPassword) {
         this.$message.error('两遍登录密码输入不一样')
         return
       }

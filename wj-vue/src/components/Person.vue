@@ -403,10 +403,8 @@ export default {
   data () {
     const verifyEmpty = (rule, value, callback) => {
       if (value === '') {
-        console.log(value)
         callback(new Error('此项不能为空'))
       } else {
-        console.log(value)
         callback()
       }
     }

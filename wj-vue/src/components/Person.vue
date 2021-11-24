@@ -52,7 +52,8 @@
             <el-button class="inside-button" v-on:click="PayPassWordVisible=true">修改支付密码</el-button><br>
             <el-button class="inside-button" v-on:click="forgetVisible=true">忘记支付密码</el-button><br>
             <el-button class="inside-button" v-on:click="rechargeVisible=true">充值</el-button><br>
-            <el-button class="inside-button" v-on:click="activeSellFromVisible=true" v-if="$store.state.userStatus < 2">成为卖家</el-button><br>
+            <div v-if="$store.state.userStatus < 2"><el-button class="inside-button" v-on:click="activeSellFromVisible=true" >成为卖家</el-button><br></div>
+<!--            <div v-if="$store.state.userStatus >= 2"><el-button class="inside-button" v-on:click="uploadQRCodeVisble=true">上传收款二维码</el-button><br></div>-->
           </el-submenu>
           <el-submenu class="menu-buttons" index="2">
             <template slot="title">
@@ -193,7 +194,8 @@
           list-type="picture-card"
           class = "contentImgStyle"
           :limit="1"
-          :on-exceed="handleExceed">
+          :on-exceed="handleExceed"
+          :before-remove="handleHeaderRemove">
           <i class="el-icon-plus" ></i>
         </el-upload>
         <div slot="footer" class="dialog-footer">
@@ -357,7 +359,7 @@
       </el-dialog>
       <el-dialog title="激活卖家" :visible.sync="activeSellFromVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" :model="activeSellFromData" label-width="200px" label-position="left" :rules="rules">
-          <el-form-item label="卖家" prop="sellerName">
+          <el-form-item label="发货人名称" prop="sellerName">
             <el-input v-model="activeSellFromData.name" placeholder="请输入卖家姓名"></el-input>
           </el-form-item>
           <el-form-item label="发货区域" prop="sellerRegion">
@@ -383,7 +385,8 @@
               list-type="picture-card"
               class = "contentImgStyle"
               :limit="1"
-              :on-exceed="handleExceed">
+              :on-exceed="handleExceed"
+              :before-remove="handleQRCodeRemove">
               <i class="el-icon-plus"></i>
             </el-upload>
           </el-form-item>
@@ -391,6 +394,22 @@
         <div slot="footer" class="dialog-footer">
           <el-button @click="activeSellFromVisible=false">取消</el-button>
           <el-button type="primary" @click="activateSell">提交</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog :visible.sync="uploadQRCodeVisble" title="上传支付二维码">
+        <el-upload
+          action="auto"
+          :http-request="uploadQRCodeSectionFile"
+          list-type="picture-card"
+          class = "contentImgStyle"
+          :limit="1"
+          :on-exceed="handleExceed"
+          :before-remove="handleQRCodeRemove">
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="uploadQRCodeVisble=false">取消</el-button>
+          <el-button type="primary" @click="uploadQRcode">提交</el-button>
         </div>
       </el-dialog>
       <el-dialog :visible.sync="rechargeVisible">
@@ -466,6 +485,7 @@ export default {
       addressFormVisible: false,
       sendAddressFormVisible: false,
       rechargeVisible: false,
+      uploadQRCodeVisble: false,
       // 信息编辑表单数据
       fromData: {
         userType: '',
@@ -479,7 +499,7 @@ export default {
       address: [
       ],
       sendAddress: [
-        // { id: 1, name: 'Name1', region: 'a', address: 20, phone: 1123 }
+        // { id: 1, name: '发件人名称', region: '发货区域', address: '具体地址', phone: '发货人联系方式' }
       ],
       // 添加地址表单数据
       addressFromData: {
@@ -921,6 +941,9 @@ export default {
       })
       this.uploadHeaderPhotoFile.push({'photo': file})
     },
+    handleHeaderRemove () {
+      this.uploadHeaderPhotoFile = []
+    },
     uploadQRCodeSectionFile (param) {
       const uploadQRCodeFileLength = this.uploadQRCodeFile.length
       let fileObj = param.file
@@ -928,6 +951,9 @@ export default {
         type: 'image/jpg'
       })
       this.uploadQRCodeFile[uploadQRCodeFileLength] = {'photo': file}
+    },
+    handleQRCodeRemove () {
+      this.uploadHeaderPhotoFile = []
     },
     addAddress () {
       if (this.addressFromData.name === '') {
@@ -1149,6 +1175,22 @@ export default {
               this.activeSellFromVisible = false
             }
           })
+        } else {
+          this.$message.error(response.data.message)
+        }
+      })
+    },
+    uploadQRcode () {
+      let list = this.uploadQRCodeFile[0]
+      let file = list.photo
+      let photoForm = new FormData()
+      photoForm.append('QR_Code', file)
+      this.$axios({method: 'post',
+        url: '/login0/upload_QR_code/',
+        data: photoForm}).then(response => {
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.uploadQRCodeVisble = false
         } else {
           this.$message.error(response.data.message)
         }

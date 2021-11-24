@@ -112,7 +112,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="商品描述" prop="goods_description">
-                <el-input v-model="form.goods_description" placeholder="请输入商品分类"></el-input>
+                <el-input v-model="form.goods_description" placeholder="请输入商品描述"></el-input>
               </el-form-item>
               <el-form-item label="商品图片" prop="fileList">
                 <el-upload

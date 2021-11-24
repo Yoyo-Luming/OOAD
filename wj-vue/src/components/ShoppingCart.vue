@@ -89,7 +89,7 @@
         <el-container class="mid-content">
           <el-tabs type="border-card" class="selection">
             <el-tab-pane>
-              <span slot="label" class="tabs">Shopping Cart</span>
+              <span slot="label" class="tabs">购物车</span>
               <el-container class="pane-content">
                 <div v-if="goods.length">
                   <table>

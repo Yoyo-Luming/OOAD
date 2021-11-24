@@ -81,7 +81,7 @@
         <el-container class="mid-content">
           <el-container class="search-column">
             <el-input
-              placeholder="Please input information"
+              placeholder="请输入搜索内容"
               prefix-icon="el-icon-search"
               v-model="searchContent" style="width: 870px">
             </el-input>

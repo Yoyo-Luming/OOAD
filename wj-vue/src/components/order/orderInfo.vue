@@ -118,7 +118,7 @@
             <el-divider></el-divider>
             <el-container v-if="active > 0" class="pay-detail">
               <div class="task-place">支付方式：{{payInfo.payMethod}}</div>
-              <div class="task-place" style="display: flex;align-items: center;">
+              <div class="task-place" style="display: flex;align-items: center;" v-if="payInfo.payMethod==='二维码扫码支付'">
                 <div>支付凭证：</div>
                 <el-image alt="" :src="payInfo.payProveUrl" fit="fit" style="height: 200px;width: 200px;" :preview-src-list="srcList"></el-image>
               </div>

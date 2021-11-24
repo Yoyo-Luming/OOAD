@@ -100,19 +100,31 @@
                 <el-step title="已完成" class="single-step"></el-step>
               </el-steps>
             </el-container>
-            <el-container class="user-container">
+            <el-container class="user-container" >
               <el-container class="user-photo-container">
-                <div v-if="senderHasPhoto">
-                  <el-image class="user-photo" :src="senderPhoto" fit="contain" :alt="senderName"></el-image>
+                <div v-if="currentUserIsUploder && active > 0">
+                  <div v-if="receiverHasPhoto">
+                    <el-image class="user-photo" :src="receiverPhoto" fit="contain" :alt="senderName"></el-image>
+                  </div>
+                  <div v-else>
+                    <el-image class="user-photo" :src="defult_photo" fit="contain" alt=""></el-image>
+                  </div>
+                  <div class="user-name">{{receiverName}}</div>
                 </div>
                 <div v-else>
-                  <el-image class="user-photo" :src="defult_photo" fit="contain" alt=""></el-image>
+                  <div v-if="uploaderHasPhoto">
+                    <el-image class="user-photo" :src="uploaderPhoto" fit="contain" :alt="uploaderName"></el-image>
+                  </div>
+                  <div v-else>
+                    <el-image class="user-photo" :src="defult_photo" fit="contain" alt=""></el-image>
+                  </div>
+                  <div class="user-name">{{uploaderName}}</div>
                 </div>
-                <div class="user-name">{{senderName}}</div>
               </el-container>
               <el-container class="user-buttons">
-                <el-button v-on:click="goChatPage" class="the-button">
-                  <div v-if="currentUserIsSender">联系跑腿员</div>
+                <div v-if="active === 0">等待接收</div>
+                <el-button v-on:click="goChatPage" class="the-button" v-if="active > 0">
+                  <div v-if="currentUserIsUploder">联系跑腿员</div>
                   <div v-else>联系发布者</div>
                 </el-button>
                 <el-button type="primary" class="other-button" @click="getTask" v-if="getTaskButton">领取任务</el-button>
@@ -162,37 +174,43 @@ export default {
   name: 'taskInfo',
   mounted () {
     this.detail = this.$store.state.toTaskPage.detail
+    console.log('----------')
+    console.log(this.$store.state.userName)
+    console.log(this.detail.upload_user.user_name)
     // this.detail = this.$route.params.detail
     console.log(this.detail)
     this.taskId = this.detail.task_id
     this.active = this.activeDict[this.detail.task_status] - 1
-    this.senderName = this.detail.upload_user.user_name
-    this.senderHasPhoto = this.detail.upload_user.has_header_photo
+    this.uploaderName = this.detail.upload_user.user_name
+    this.uploaderHasPhoto = this.detail.upload_user.has_header_photo
     this.taskPrice = this.detail.price
     this.taskDescription = this.detail.description
     this.taskSendRegion = this.regionList[this.detail.sender_addr.user_region]
     this.taskSendAddress = this.detail.sender_addr.user_addr
     this.taskReceiveRegion = this.regionList[this.detail.receive_addr.user_region]
     this.taskReceiveAddress = this.detail.receive_addr.user_addr
-    if (this.senderHasPhoto) {
-      this.senderPhoto = this.detail.upload_user.header_photo_url
+    if (this.uploaderHasPhoto) {
+      this.uploaderPhoto = this.detail.upload_user.header_photo_url
     }
-    console.log(this.$store.state.userName)
-    console.log(this.detail.upload_user.user_name)
-    this.currentUserIsSender = this.$store.state.userName === this.detail.upload_user.user_name
-    if (this.active === 0 && !this.currentUserIsSender) {
+    this.receiverHasPhoto = this.detail.receive_user.has_header_photo
+    if (this.receiverHasPhoto) {
+      this.receiverPhoto = this.detail.receive_user.header_photo_url
+    }
+
+    this.currentUserIsUploder = (this.$store.state.userName === this.detail.upload_user.user_name)
+    if (this.active === 0 && !this.currentUserIsUploder) {
       this.getTaskButton = true
     }
-    if (this.active === 1 && !this.currentUserIsSender) {
+    if (this.active === 1 && !this.currentUserIsUploder) {
       this.confirmGetObjectButton = true
     }
-    if (this.active === 2 && !this.currentUserIsSender) {
+    if (this.active === 2 && !this.currentUserIsUploder) {
       this.confirmSendButton = true
     }
-    if (this.active === 3 && this.currentUserIsSender) {
+    if (this.active === 3 && this.currentUserIsUploder) {
       this.confirmReceiveButton = true
     }
-    if (this.active === 4 && this.currentUserIsSender) {
+    if (this.active === 4 && this.currentUserIsUploder) {
       this.commentButton = true
     }
     this.hasOrder = (this.detail.task_type === 1)
@@ -227,16 +245,19 @@ export default {
         5: 6
       },
       active: 0,
-      senderName: '',
-      senderPhoto: '',
-      senderHasPhoto: '',
+      uploaderName: '',
+      uploaderPhoto: '',
+      uploaderHasPhoto: false,
+      receiverHasPhoto: false,
+      receiverPhoto: '',
+      receiverName: '',
       taskDescription: '',
       taskPrice: '',
       taskSendRegion: '',
       taskSendAddress: '',
       taskReceiveRegion: '',
       taskReceiveAddress: '',
-      currentUserIsSender: false,
+      currentUserIsUploder: false,
       regionList: [ '荔园',
         '创园',
         '慧园',
@@ -355,8 +376,11 @@ export default {
       })
     },
     goChatPage () {
-      if (!this.currentUserIsSender) {
-        this.$store.commit('setToChatPage', {name: this.detail.send_user.user_name, id: this.detail.send_user.user_id, dialogueId: this.detail.dialogue_id_up_sd})
+      console.log('-------------')
+      console.log(this.currentUserIsUploder)
+      console.log(this.detail.send_user.user_name)
+      if (this.currentUserIsUploder) {
+        this.$store.commit('setToChatPage', {name: this.detail.send_user.user_name, id: this.detail.send_user.user_id, dialogueId: this.detail.dialogue_id_up_se})
 
         // this.$router.push({name: 'chatPage', params: {name: this.detail.send_user.user_name, id: this.detail.send_user.user_id, dialogueId: this.detail.dialogue_id_up_sd}})
       } else {
@@ -367,7 +391,7 @@ export default {
       this.$router.push('/chatPage')
     },
     chatReceiver () {
-      this.$store.commit('setToChatPage', {name: this.detail.receive_user.user_name, id: this.detail.receive_user.user_id, dialogueId: this.detail.dialogue_id_up_se})
+      this.$store.commit('setToChatPage', {name: this.detail.receive_user.user_name, id: this.detail.receive_user.user_id, dialogueId: this.detail.dialogue_id_re_se})
       this.$router.push('/chatPage')
       // this.$router.push({name: 'chatPage', params: {name: this.detail.receive_user.user_name, id: this.detail.receive_user.user_id, dialogueId: this.detail.dialogue_id_up_se}})
     },

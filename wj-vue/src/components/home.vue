@@ -120,7 +120,7 @@
                   <el-container class="good-describe">
                     <div class="good-name">{{item.name}}</div>
                     <div class="good-price">¥{{item.price}}</div>
-                    <div class="good-number">共有{{item.favouriteNumber}}人喜欢</div>
+                    <div class="good-number">共有{{item.favourite_number}}人喜欢</div>
                   </el-container>
                 </el-container>
               </el-container>

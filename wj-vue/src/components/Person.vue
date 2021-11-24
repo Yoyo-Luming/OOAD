@@ -994,11 +994,6 @@ export default {
       })
     },
     activate () {
-      // 先激活，上传真实姓名，用户类别，支付密码，收货地址
-      // TODO 支付密码需要输入两次确认
-      // if (this.activeFromData) {
-      //
-      // }
       if (this.activeFromData.realName === '') {
         this.$message.error('请输入真实姓名！')
         return
@@ -1084,7 +1079,12 @@ export default {
       this.$axios.post('login0/recharge/', this.$qs.stringify({
         money: this.money
       })).then(response => {
-        this.$message.info(response.data.message)
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.reload()
+        } else {
+          this.$message.error(response.data.message)
+        }
       })
     },
     activateSell () {

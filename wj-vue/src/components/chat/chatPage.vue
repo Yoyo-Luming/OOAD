@@ -204,8 +204,6 @@ export default {
     })).then(response => {
       let list = response.data.dialogue_info
       let len = list.length
-      console.log('list')
-      console.log(list)
       for (let i = len - 1; i >= 0; --i) {
         if (list[i].data_type === 1) {
           this.msgList.push({

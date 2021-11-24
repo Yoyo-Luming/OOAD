@@ -408,14 +408,6 @@ export default {
       this.uploadFile[uploadFileLength] = {'imgFile': file}
     },
     submit2 () {
-      // console.log(this.goods_kind.length)
-      // console.log(this.form.goods_kind[0])
-      // console.log(this.form.goods_kind[1])
-      // console.log(this.form.goods_status)
-      // console.log(this.form.goods_address_id)
-      // if () {
-      //
-      // }
       if (this.form.goods_title === '') {
         this.$message.error('请输入商品名称！')
         return

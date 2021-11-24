@@ -6,14 +6,18 @@ export default {
   url: '',
   token: '',
   initWebSocket () {
+    // this.WebSocket.close()
     let axios = require('axios')
     axios.defaults.withCredentials = true
-    axios.defaults.baseURL = 'http://10.17.63.176/api'
+    axios.defaults.baseURL = 'http://10.17.63.176/api/'
+    // axios.defaults.baseURL = 'http://192.168.208.212/api'
+    // axios.defaults.baseURL = 'http://16.21.127.84/api'
     // axios.defaults.baseURL = 'http://store2.sustech.xyz/api'
     // axios.defaults.baseURL = 'http://10.21.115.126/api'
     axios.post('dialogue/begin_websocket/').then(response => {
       this.token = response.data.token
-      this.url = 'ws://store2.sustech.xyz:8080/api/ws/chat/' + this.token + '/'
+      // this.url = 'ws://store2.sustech.xyz:8080/api/ws/chat/' + this.token + '/'
+      this.url = 'ws://10.16.18.244:8080/api/ws/chat/' + this.token + '/'
       console.log(this.url)
       // if (window.WebSocket) {
       this.webSocket = new WebSocket(this.url)

@@ -416,7 +416,7 @@ export default {
       this.$router.push('/person')
     },
     homePage () {
-      this.$router.push('/')
+      this.$router.push('/home')
     },
     goNoticePage () {
       this.$router.push('/notice')

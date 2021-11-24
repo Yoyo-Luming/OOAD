@@ -10,7 +10,6 @@ import router from './router'
 
 // 设置反向代理，前端请求默认发送到 http://localhost:8443/api
 var axios = require('axios')
-// axios.defaults.baseURL = 'http://10.17.102.0:8080/api'
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = 'http://10.17.63.176/api'
 // axios.defaults.baseURL = 'http://10.21.127.84/api'

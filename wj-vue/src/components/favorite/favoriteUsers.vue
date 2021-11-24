@@ -198,7 +198,7 @@ export default {
       this.$router.push('/person')
     },
     homePage () {
-      this.$router.push('/')
+      this.$router.push('/home')
     },
     cartPage () {
       this.$router.push('/cart')

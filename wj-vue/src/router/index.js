@@ -39,7 +39,7 @@ export default new Router({
     // 下面都是固定的写法
     {
       path: '/',
-      redirect: '/home'
+      redirect: '/login'
     },
     {
       path: '/home',

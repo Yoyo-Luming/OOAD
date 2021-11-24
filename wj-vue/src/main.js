@@ -13,6 +13,7 @@ var axios = require('axios')
 // axios.defaults.baseURL = 'http://10.17.102.0:8080/api'
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = 'http://10.17.63.176/api'
+// axios.defaults.baseURL = 'http://store2.sustech.xyz/api'
 // axios.defaults.baseURL = 'http://10.21.115.126/api'
 // axios.defaults.baseURL = '/api'
 // 全局注册，之后可在其他组件中通过 this.$axios 发送数据

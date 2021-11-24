@@ -128,15 +128,17 @@
                 <el-container class="whole-order" v-for="(item, index) in address" :key="index">
                   <el-container class="order-name">{{item.name}}</el-container>
                   <el-container class="order-road">{{item.region}}</el-container>
+                  <el-container class="order-road">{{item.address}}</el-container>
                   <el-container class="order-detail">{{item.phone}}</el-container>
                   <el-container class="order-pay">
-                    <el-button class="last-button" v-on:click="deleteAddress">删除</el-button>
+                    <el-button class="last-button" v-on:click="deleteAddress(index)">删除</el-button>
                   </el-container>
                 </el-container>
               </div>
               <div v-else>
                 <h2>这里什么也没有，快去添加收货地址吧~</h2>
               </div>
+              <el-button @click="addressFormVisible=true" type="primary">添加</el-button>
             </el-tab-pane>
             <!--          evaluate-pane-->
             <el-tab-pane label="发货地址" class="whole-pane" name="third">
@@ -144,15 +146,17 @@
                 <el-container class="whole-order" v-for="(item, index) in sendAddress" :key="index">
                   <el-container class="order-name">{{item.name}}</el-container>
                   <el-container class="order-road">{{item.region}}</el-container>
+                  <el-container class="order-road">{{item.address}}</el-container>
                   <el-container class="order-detail">{{item.phone}}</el-container>
                   <el-container class="order-pay">
-                    <el-button class="last-button" v-on:click="deleteSendAddress">删除</el-button>
+                    <el-button class="last-button" v-on:click="deleteSendAddress(index)">删除</el-button>
                   </el-container>
                 </el-container>
               </div>
               <div v-else>
                 <h2>这里什么也没有，快去添加发货地址吧~</h2>
               </div>
+              <el-button @click="sendAddressFormVisible=true" type="primary">添加</el-button>
             </el-tab-pane>
           </el-tabs>
         </el-container>
@@ -816,6 +820,10 @@ export default {
       this.$router.push('/login')
     },
     deleteAddress (index) {
+      console.log('delete')
+      console.log(index)
+      console.log(this.address[index].id)
+      console.log(this.address)
       if (this.address.length > 1) {
         this.$axios.post('login0/delete_address/', this.$qs.stringify({
           addr_id: this.address[index].id
@@ -975,6 +983,12 @@ export default {
         if (response.data.status === '200') {
           this.$message.success(response.data.message)
           this.sendAddressFormVisible = false
+          // this.sendAddress.push({
+          //   name: this.sendAddressFromData.name,
+          //   region: this.sendAddressFromData.region,
+          //   address: this.sendAddressFromData.address,
+          //   phone: this.sendAddressFromData.phone
+          // })
           this.reload()
         } else {
           this.$message.error(response.data.message)

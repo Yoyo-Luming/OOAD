@@ -96,7 +96,7 @@
             <div v-if="goodsList.length">
               <el-container class="whole-order" v-for="(item, index) in goodsList" :key="index">
                 <el-container class="good-photo">
-                  <el-image :src="item.photo" fit="contain" :alt="item.name"></el-image>
+                  <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.name"></el-image>
                 </el-container>
                 <el-container class="good-name">{{item.name}}</el-container>
                 <el-container class="good-detail">被{{item.favouriteNumber}}人喜欢</el-container>
@@ -375,10 +375,9 @@ div {
 .good-name {
   width: 150px;
   overflow: hidden;
-  font-size: 30px;
+  font-size: 20px;
   align-items: center;
   justify-content: space-evenly;
-  font-family: 黑体;
 }
 
 .good-detail {

@@ -96,7 +96,7 @@
                 <el-container class="whole-order" v-for="(item, index) in taskList" :key="index">
                   <el-container style="display: flex;">
                     <el-container class="order-name">{{item.taskName}}</el-container>
-                    <el-container class="order-detail">DDL: {{item.ddlTime}}</el-container>
+                    <el-container class="order-price">DDL: {{item.ddlTime}}</el-container>
                     <el-container class="order-detail">从{{item.startRegion}}到{{item.endRegion}}</el-container>
                     <el-container class="order-price">¥{{item.price}}</el-container>
                     <el-container class="order-pay">
@@ -104,7 +104,7 @@
                     </el-container>
                   </el-container>
                   <el-container style="display: flex;">
-                    <el-container style="margin-top: 5px;" class="order-detail">{{item.description}}</el-container>
+                    <el-container style="margin-top: 5px;color: #8cc5ff;" class="order-detail">{{item.description}}</el-container>
                   </el-container>
                 </el-container>
               </div>
@@ -342,10 +342,9 @@ export default {
 
 .order-name {
   width: 150px;
-  font-size: 30px;
+  font-size: 20px;
   align-items: center;
   justify-content: space-evenly;
-  font-family: 黑体;
 }
 
 .order-detail {

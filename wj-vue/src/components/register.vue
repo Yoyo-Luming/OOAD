@@ -90,10 +90,12 @@ export default {
           { validator: verifyEmail, trigger: 'blur' }
         ],
         password: [
-          { validator: verifyPassword1, trigger: 'blur' }
+          { validator: verifyPassword1, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ],
         verifyPassword: [
-          { validator: verifyPassword2, trigger: 'blur' }
+          { validator: verifyPassword2, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ]
       }
     }

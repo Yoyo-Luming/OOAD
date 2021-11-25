@@ -97,10 +97,10 @@
                 <el-container class="single-good" v-for="(user, index) in usersList" :key="index">
                   <el-container class="good-image">
                     <div v-if="user.hasPhoto">
-                      <el-image :src="user.photo" fit="contain"  title="前往用户页面" style="cursor:pointer;" v-on:click="toUserPage(index)" :alt="user.name"></el-image>
+                      <el-image :src="user.photo" fit="fill" style="height: 100%;width: 100%;cursor:pointer;" title="前往用户页面" v-on:click="toUserPage(index)" :alt="user.name"></el-image>
                     </div>
                     <div v-else>
-                      <el-image :src="defult_photo" fit="contain"  title="前往用户页面" style="cursor:pointer;" v-on:click="toUserPage(index)" :alt="user.name"></el-image>
+                      <el-image :src="defult_photo" fit="fill" style="height: 100%;width: 100%;cursor:pointer;" title="前往用户页面" v-on:click="toUserPage(index)" :alt="user.name"></el-image>
                     </div>
                   </el-container>
                   <el-container class="good-describe">
@@ -367,7 +367,6 @@ div {
   align-items: center;
   height: 100px;
   width: 100px;
-  border: 2px solid #eaeaea;
 }
 
 .good-describe {

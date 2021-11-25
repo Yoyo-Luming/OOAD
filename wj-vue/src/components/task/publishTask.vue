@@ -95,7 +95,7 @@
               <div v-if="shipList.length">
                 <el-container class="whole-order" v-for="(item, index) in shipList" :key="index">
                   <el-container class="order-photo">
-                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                    <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.goodsName"></el-image>
                   </el-container>
                   <el-container class="order-name">{{item.goodsName}}</el-container>
                   <el-container class="order-detail">发货地址：{{item.sendAddress}}</el-container>
@@ -115,19 +115,19 @@
         </el-container>
         <el-dialog style="margin: auto;" :visible.sync="otherTaskVisible" :modal-append-to-body="false">
           <el-form :model="otherTaskForm" label-width="200px" label-position="left" :rules="rules">
-            <el-form-item label="任务名称" prop="taskName">
+            <el-form-item label="任务名称" prop="name">
               <el-input v-model="otherTaskForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="价格" prop="taskPrice">
+            <el-form-item label="价格" prop="price">
               <el-input v-model="otherTaskForm.price"></el-input>
             </el-form-item>
-            <el-form-item label="最晚取货时间" prop="taskDDL">
+            <el-form-item label="最晚取货时间" prop="ddlTime">
               <el-date-picker v-model="otherTaskForm.ddlTime" type="datetime" placeholder="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionLater" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
             </el-form-item>
-            <el-form-item label="任务描述" prop="taskDes">
+            <el-form-item label="任务描述" prop="description">
               <el-input v-model="otherTaskForm.description"></el-input>
             </el-form-item>
-            <el-form-item label="领货地址" prop="taskSendAddress">
+            <el-form-item label="领货地址" prop="senderAddressId">
               <el-select v-model="otherTaskForm.senderAddressId" placeholder="请选择领货地址">
                 <el-option
                   v-for="item in sendAddressList"
@@ -137,7 +137,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="收货地址" prop="taskReceAddress">
+            <el-form-item label="收货地址" prop="receiveAddressId">
               <el-select v-model="otherTaskForm.receiveAddressId" placeholder="请选择收货地址">
                 <el-option
                   v-for="item in receiveAddressList"
@@ -153,16 +153,16 @@
         </el-dialog>
         <el-dialog :visible.sync="orderTaskVisible">
           <el-form :model="orderTaskForm" :rules="rules">
-            <el-form-item label="任务名称" prop="taskName2">
+            <el-form-item label="任务名称" prop="name">
               <el-input v-model="orderTaskForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="价格" prop="taskPrice2">
+            <el-form-item label="价格" prop="price">
               <el-input v-model="orderTaskForm.price"></el-input>
             </el-form-item>
-            <el-form-item label="最晚取货时间" prop="taskDDL2">
+            <el-form-item label="最晚取货时间" prop="ddlTime">
               <el-date-picker v-model="orderTaskForm.ddlTime" type="datetime" placeholder="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionLater" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
             </el-form-item>
-            <el-form-item label="任务描述" prop="taskDes2">
+            <el-form-item label="任务描述" prop="description">
               <el-input v-model="orderTaskForm.description"></el-input>
             </el-form-item>
           </el-form>
@@ -286,34 +286,22 @@ export default {
         }
       },
       rules: {
-        taskName: [
+        name: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        taskPrice: [
+        price: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        taskDDL: [
+        ddlTime: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        taskDes: [
+        description: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        taskSendAddress: [
+        senderAddressId: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        taskReceAddress: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        taskName2: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        taskPrice2: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        taskDDL2: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        taskDes2: [
+        receiveAddressId: [
           { validator: verifyEmpty, trigger: 'blur' }
         ]
       }
@@ -560,10 +548,9 @@ export default {
 
 .order-name {
   width: 150px;
-  font-size: 30px;
+  font-size: 20px;
   align-items: center;
   justify-content: space-evenly;
-  font-family: 黑体;
 }
 
 .order-detail {

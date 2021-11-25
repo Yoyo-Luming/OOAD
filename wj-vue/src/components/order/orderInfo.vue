@@ -120,13 +120,13 @@
               <div class="task-place">支付方式：{{payInfo.payMethod}}</div>
               <div class="task-place" style="display: flex;align-items: center;" v-if="payInfo.payMethod==='二维码扫码支付'">
                 <div>支付凭证：</div>
-                <el-image alt="" :src="payInfo.payProveUrl" fit="fit" style="height: 200px;width: 200px;" :preview-src-list="srcList"></el-image>
+                <el-image alt="" :src="payInfo.payProveUrl" fit="fill" style="height: 200px;width: 200px;" :preview-src-list="srcList"></el-image>
               </div>
             </el-container>
             <el-divider></el-divider>
             <el-container class="whole-order">
               <el-container class="order-photo">
-                <el-image :src="goodsPhoto" fit="contain" :alt="goodsName"></el-image>
+                <el-image :src="goodsPhoto" fit="fill" style="height: 100%;width: 100%;" :alt="goodsName"></el-image>
               </el-container>
               <el-container class="order-name">{{goodsName}}</el-container>
               <el-container class="order-price">商品价格：¥{{goodsPrice}}</el-container>
@@ -170,16 +170,16 @@
         </el-container>
         <el-dialog title="评价" :visible.sync="commentVisible" center>
           <el-form ref="form" label-width="200px" :rules="rules">
-            <el-form-item class="form-item-class" label="商品评价：" prop="rating">
+            <el-form-item class="form-item-class" label="商品评价：" prop="comment1">
               <el-rate style="align-items: center" v-model="comment1"></el-rate>
             </el-form-item>
-            <el-form-item class="form-item-class" label="服务评价：" prop="comment1">
+            <el-form-item class="form-item-class" label="服务评价：" prop="comment2">
               <el-rate style="align-items: center" v-model="comment2"></el-rate>
             </el-form-item>
-            <el-form-item class="form-item-class" label="运输评价：" prop="comment2">
+            <el-form-item class="form-item-class" label="运输评价：" prop="comment3">
               <el-rate style="align-items: center" v-model="comment3"></el-rate>
             </el-form-item>
-            <el-form-item class="form-item-class" label="评论：" prop="comment3">
+            <el-form-item class="form-item-class" label="评论：" prop="commentText">
               <el-input style="align-items: center" v-model="commentText"></el-input>
             </el-form-item>
           </el-form>
@@ -190,10 +190,10 @@
         </el-dialog>
         <el-dialog style="margin: auto;" :visible.sync="handleProblemVisible" :modal-append-to-body="false">
           <el-form ref="form" label-width="200px" :rules="rules">
-            <el-form-item label="回复:" prop="reply">
+            <el-form-item label="回复:" prop="superuserLog">
               <el-input v-model="handleProblemForm.superuserLog"></el-input>
             </el-form-item>
-            <el-form-item label="问题方:" prop="question">
+            <el-form-item label="问题方:" prop="problemRole">
               <el-radio v-model="handleProblemForm.problemRole" label="1">买方</el-radio>
               <el-radio v-model="handleProblemForm.problemRole" label="2">卖方</el-radio>
             </el-form-item>
@@ -208,7 +208,7 @@
             <div v-if="payMethod===1">
               <el-form ref="form" label-width="200px" :rules="rules">
                 <el-form-item label="支付密码:" prop="payPassword">
-                  <el-input v-model="payPassword"></el-input>
+                  <el-input v-model="payPassword" show-password></el-input>
                 </el-form-item>
               </el-form>
               <div slot="footer" class="dialog-footer">
@@ -219,7 +219,7 @@
             <div v-else-if="payMethod===2">
               <el-form ref="form" label-width="200px" :rules="rules">
                 <img :src="QRCodeUrl">
-                <el-form-item label="上传支付凭证:" prop="payCheck">
+                <el-form-item label="上传支付凭证:">
                   <el-upload
                     action="auto"
                     :http-request="uploadPaySectionFile"
@@ -257,7 +257,7 @@
         </el-dialog>
         <el-dialog style="margin: auto;" :visible.sync="problemFromVisible" :modal-append-to-body="false">
           <el-form ref="form" label-width="200px" :rules="rules">
-            <el-form-item class="form-item-class" label="问题类型：" prop="questionType">
+            <el-form-item class="form-item-class" label="问题类型：" prop="problemType">
               <el-select v-model="problemForm.problemType">
                 <el-option
                   v-for="item in problemOptions"
@@ -424,7 +424,7 @@ export default {
         '8号门',
         '其它'],
       rules: {
-        rating: [
+        commentText: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
         comment1: [
@@ -436,31 +436,23 @@ export default {
         comment3: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        reply: [
+        superuserLog: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        question: [
+        problemRole: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
         payPassword: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        payCheck: [
-          { validator: verifyEmpty, trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ],
         payMethod: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        questionType: [
+        problemType: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
         description: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        transport: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        comment4: [
           { validator: verifyEmpty, trigger: 'blur' }
         ]
       }
@@ -982,10 +974,9 @@ export default {
 .order-name {
   width: 150px;
   overflow: hidden;
-  font-size: 30px;
+  font-size: 20px;
   align-items: center;
   justify-content: space-evenly;
-  font-family: 黑体;
 }
 
 .order-price {

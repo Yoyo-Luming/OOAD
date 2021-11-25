@@ -93,7 +93,7 @@
               <div v-if="problemList.length">
                 <el-container class="whole-order" v-for="(item, index) in problemList" :key="index">
                   <el-container class="order-photo">
-                    <el-image :src="item.orderUrl" fit="contain" :alt="item.problemType"></el-image>
+                    <el-image :src="item.orderUrl" fit="fill" style="height: 100%;width: 100%;" :alt="item.problemType"></el-image>
                   </el-container>
                   <el-container class="order-name">{{item.problemType}}</el-container>
                   <el-container class="order-detail">{{item.problemDescription}}</el-container>
@@ -306,9 +306,8 @@ export default {
 .order-name {
   width: 150px;
   overflow: hidden;
-  font-size: 30px;
+  font-size: 20px;
   align-items: center;
-  font-family: 黑体;
   justify-content: left;
 }
 

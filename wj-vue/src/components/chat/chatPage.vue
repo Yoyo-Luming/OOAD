@@ -483,6 +483,22 @@ export default {
   width: 90%;
 }
 
+.menu-buttons {
+  display: block;
+  margin: auto;
+  text-align: center;
+  align-items: center;
+}
+
+.inside-button {
+  margin-top: 5px;
+  border: 0;
+  text-align: center;
+  align-items: center;
+  background-color: #545c64;
+  color: #ffffff;
+}
+
 div {
   display: block;
 }

@@ -94,7 +94,7 @@
               <div v-if="payList.length">
                 <el-container class="whole-order" v-for="(item, index) in payList" :key="index">
                   <el-container class="order-photo">
-                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                    <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.goodsName"></el-image>
                   </el-container>
                   <el-container class="order-name">{{item.goodsName}}</el-container>
                   <el-container class="order-detail">{{item.description}}</el-container>
@@ -113,7 +113,7 @@
               <div v-if="shipList.length">
                 <el-container class="whole-order" v-for="(item, index) in shipList" :key="index">
                   <el-container class="order-photo">
-                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                    <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.goodsName"></el-image>
                   </el-container>
                   <el-container class="order-name">{{item.goodsName}}</el-container>
                   <el-container class="order-detail">{{item.description}}</el-container>
@@ -132,7 +132,7 @@
               <div v-if="receiveList.length">
                 <el-container class="whole-order" v-for="(item, index) in receiveList" :key="index">
                   <el-container class="order-photo">
-                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                    <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.goodsName"></el-image>
                   </el-container>
                   <el-container class="order-name">{{item.goodsName}}</el-container>
                   <el-container class="order-detail">{{item.description}}</el-container>
@@ -151,7 +151,7 @@
               <div v-if="evaluateList.length">
                 <el-container class="whole-order" v-for="(item, index) in evaluateList" :key="index">
                   <el-container class="order-photo">
-                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                    <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.goodsName"></el-image>
                   </el-container>
                   <el-container class="order-name">{{item.goodsName}}</el-container>
                   <el-container class="order-detail">{{item.description}}</el-container>
@@ -170,7 +170,7 @@
               <div v-if="completeList.length">
                 <el-container class="whole-order" v-for="(item, index) in completeList" :key="index">
                   <el-container class="order-photo">
-                    <el-image :src="item.photo" fit="contain" :alt="item.goodsName"></el-image>
+                    <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.goodsName"></el-image>
                   </el-container>
                   <el-container class="order-name">{{item.goodsName}}</el-container>
                   <el-container class="order-detail">{{item.description}}</el-container>
@@ -477,10 +477,9 @@ export default {
 .order-name {
   width: 150px;
   overflow: hidden;
-  font-size: 30px;
+  font-size: 20px;
   align-items: center;
   justify-content: space-evenly;
-  font-family: 黑体;
 }
 
 .order-detail {

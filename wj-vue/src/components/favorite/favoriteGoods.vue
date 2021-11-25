@@ -95,8 +95,10 @@
             <div v-if="goodsList.length">
               <el-container class="marking-goods">
                 <el-container class="single-good" v-for="(item, index) in goodsList" :key="index">
-                  <el-container class="good-image">
-                    <el-image :src="item.photo" fit="contain" title="前往商品页面" style="cursor:pointer;"  v-on:click="toGoodsPage(index)" :alt="item.name"></el-image>
+                  <el-container>
+                    <div title="前往商品页面" class="good-image" style="display: flex;cursor:pointer;align-items: center;" v-on:click="toGoodsPage(item)">
+                      <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.name"></el-image>
+                    </div>
                   </el-container>
                   <el-container class="good-describe">
                     <div class="good-name">{{item.name}}</div>
@@ -352,7 +354,6 @@ div {
 .good-image {
   height: 100px;
   width: 100px;
-  border: 2px solid #eaeaea;
   align-items: center;
 }
 

@@ -90,7 +90,9 @@
           <el-container class="pane-content">
             <el-container class="good-photos">
               <el-container class="big-photo">
-                <el-image :src="goodsPhoto" fit="contain" :alt="goodsName"></el-image>
+                <div style="display: flex;align-items: center;height: 100%;width: 100%;">
+                  <el-image :src="goodsPhoto" fit="fill" style="height: 100%;width: 100%;" :alt="goodsName"></el-image>
+                </div>
               </el-container>
             </el-container>
             <el-container class="good-others">
@@ -126,7 +128,7 @@
             <div v-if="payMethod===1">
               <el-form ref="form" label-width="200px" :rules="rules">
                 <el-form-item label="支付密码:" prop="payPassword">
-                  <el-input v-model="payPassword"></el-input>
+                  <el-input v-model="payPassword" show-password></el-input>
                 </el-form-item>
               </el-form>
               <div slot="footer" class="dialog-footer">
@@ -137,7 +139,7 @@
             <div v-else>
               <el-form ref="form" label-width="200px" :rules="rules">
                 <img :src="QRCodeUrl">
-                <el-form-item label="上传支付凭证:" prop="payCheck">
+                <el-form-item label="上传支付凭证:">
                   <el-upload
                     action="auto"
                     :http-request="uploadPaySectionFile"
@@ -318,10 +320,8 @@ export default {
           { validator: verifyEmpty, trigger: 'blur' }
         ],
         payPassword: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        payCheck: [
-          { validator: verifyEmpty, trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ],
         payMethod: [
           { validator: verifyEmpty, trigger: 'blur' }
@@ -571,7 +571,6 @@ export default {
 .big-photo {
   height: 400px;
   width: 400px;
-  border: 2px solid #eaeaea;
 }
 
 .contents {
@@ -590,15 +589,14 @@ export default {
   margin-top: 10px;
   display: flex;
   text-align: left;
-  font-size: 30px;
+  font-size: 20px;
   color: #000;
-  font-family: 黑体;
 }
 
 .good-price {
   align-items: center;
   margin-top: 20px;
-  font-size: 10px;
+  font-size: 20px;
   text-align: left;
   display: flex;
 }
@@ -606,7 +604,7 @@ export default {
 .good-deliverPrice {
   align-items: center;
   margin-top: 20px;
-  font-size: 10px;
+  font-size: 20px;
   text-align: left;
   display: flex;
 }
@@ -614,7 +612,7 @@ export default {
 .good-totalprice {
   align-items: center;
   margin-top: 20px;
-  font-size: 15px;
+  font-size: 20px;
   text-align: left;
   display: flex;
   color: red;

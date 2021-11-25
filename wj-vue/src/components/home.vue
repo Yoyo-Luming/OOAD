@@ -114,8 +114,10 @@
             <div v-if="recommendList.length">
               <el-container class="marking-goods">
                 <el-container class="single-good" v-for="(item, index) in recommendList" :key="index">
-                  <el-container class="good-image">
-                    <el-image :src="item.photo" title="前往商品页面" style="cursor:pointer;" fit="contain"  v-on:click="toGoodsPage(item)" :alt="item.name"></el-image>
+                  <el-container>
+                    <div title="前往商品页面" class="good-image" style="display: flex;cursor:pointer;align-items: center;" v-on:click="toGoodsPage(item)">
+                      <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.name"></el-image>
+                    </div>
                   </el-container>
                   <el-container class="good-describe">
                     <div class="good-name">{{item.name}}</div>
@@ -534,8 +536,6 @@ export default {
 .good-image {
   height: 100px;
   width: 100px;
-  border: 2px solid #eaeaea;
-  align-items: center;
 }
 
 .good-describe {
@@ -554,13 +554,13 @@ export default {
 }
 
 .good-price {
-  font-size: 15px;
+  font-size: 20px;
   color: #ff006e;
   overflow: hidden;
 }
 
 .good-number {
-  font-size: 15px;
+  font-size: 20px;
   overflow: hidden;
 }
 

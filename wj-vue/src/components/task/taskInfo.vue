@@ -104,19 +104,19 @@
               <el-container class="user-photo-container">
                 <div v-if="currentUserIsUploder && active > 0">
                   <div v-if="receiverHasPhoto">
-                    <el-image class="user-photo" :src="receiverPhoto" fit="contain" :alt="senderName"></el-image>
+                    <el-image class="user-photo" :src="receiverPhoto" fit="fill" style="height: 100%;width: 100%;" :alt="receiverName"></el-image>
                   </div>
                   <div v-else>
-                    <el-image class="user-photo" :src="defult_photo" fit="contain" alt=""></el-image>
+                    <el-image class="user-photo" :src="defult_photo" fit="fill" style="height: 100%;width: 100%;" alt=""></el-image>
                   </div>
                   <div class="user-name">{{receiverName}}</div>
                 </div>
                 <div v-else>
                   <div v-if="uploaderHasPhoto">
-                    <el-image class="user-photo" :src="uploaderPhoto" fit="contain" :alt="uploaderName"></el-image>
+                    <el-image class="user-photo" :src="uploaderPhoto" fit="contain" style="height: 100%;width: 100%;" :alt="uploaderName"></el-image>
                   </div>
                   <div v-else>
-                    <el-image class="user-photo" :src="defult_photo" fit="contain" alt=""></el-image>
+                    <el-image class="user-photo" :src="defult_photo" fit="contain" style="height: 100%;width: 100%;" alt=""></el-image>
                   </div>
                   <div class="user-name">{{uploaderName}}</div>
                 </div>
@@ -152,10 +152,10 @@
         </el-container>
         <el-dialog style="margin: auto;" :visible.sync="commentVisible" :modal-append-to-body="false">
           <el-form ref="form" label-width="200px" :rules="rules">
-            <el-form-item class="form-item-class" label="服务评分：" prop="rating">
+            <el-form-item class="form-item-class" label="服务评分：" prop="commentRate">
               <el-rate v-model="commentRate"></el-rate>
             </el-form-item>
-            <el-form-item class="form-item-class" label="评论：" prop="comments">
+            <el-form-item class="form-item-class" label="评论：" prop="commentText">
               <el-input v-model="commentText"></el-input>
             </el-form-item>
           </el-form>
@@ -292,10 +292,10 @@ export default {
       ddlTime: '',
       searchContent: undefined,
       rules: {
-        rating: [
+        commentRate: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        comments: [
+        commentText: [
           { validator: verifyEmpty, trigger: 'blur' }
         ]
       }
@@ -625,9 +625,8 @@ export default {
 
 .task-place {
   margin-top: 30px;
-  font-size: 15px;
+  font-size: 20px;
   text-align: left;
-  font-family: 黑体;
   color: #000000;
 }
 
@@ -635,7 +634,6 @@ export default {
   margin-top: 30px;
   font-size: 20px;
   text-align: left;
-  font-family: 黑体;
   color: #8d99ae;
 }
 

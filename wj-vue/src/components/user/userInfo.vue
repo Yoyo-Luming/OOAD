@@ -92,10 +92,10 @@
               <el-container class="info-contents">
                 <el-container class="avatar-container">
                   <div v-if="hasPhoto">
-                    <el-image class="user-photo" :src="photo" fit="contain" :alt="userName"></el-image>
+                    <el-image class="user-photo" :src="photo" fit="fill" :alt="userName"></el-image>
                   </div>
                   <div v-else>
-                    <el-image class="user-photo" :src="defult_photo" fit="contain" alt=""></el-image>
+                    <el-image class="user-photo" :src="defult_photo" fit="fill" alt=""></el-image>
                   </div>
                 </el-container>
                 <el-container class="user-info">
@@ -103,7 +103,7 @@
                   <div class="user-rate">用户评分：{{rate}}</div>
                   <div class="user-rate">用户信誉：{{credit}}</div>
                   <div class="user-describe">用户简介：{{selfDescription}}</div>
-                  <div class="user-describe">被{{favoriteNumber}}喜欢</div>
+                  <div class="user-describe">被{{favoriteNumber}}人喜欢</div>
                   <el-button class="cart-button" v-on:click="collect">收藏用户</el-button>
                   <el-button class="buy-button" v-on:click="chatSeller">联系卖家</el-button>
                 </el-container>
@@ -115,8 +115,10 @@
               <el-divider></el-divider>
               <el-container class="goods-contents">
                 <el-container class="single-good" v-for="(item, index) in sellingList" :key="index">
-                  <el-container class="good-image">
-                    <el-image :src="item.photo" fit="contain" title="前往商品页面" style="cursor:pointer;"  v-on:click="toGoodsPage(index)" :alt="item.name"></el-image>
+                  <el-container>
+                    <div title="前往商品页面" class="good-image" style="display: flex;cursor:pointer;align-items: center;" v-on:click="toGoodsPage(index)">
+                      <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.name"></el-image>
+                    </div>
                   </el-container>
                   <el-container class="good-describe">
                     <div class="good-name">{{item.name}}</div>
@@ -481,11 +483,8 @@ export default {
 .user-describe {
   display: block;
   height: 30px;
-  width: 100px;
   font-size: 15px;
   margin-top: 20px;
-  word-wrap: anywhere;
-  word-break: normal;
 }
 
 .goods-contents {

@@ -33,15 +33,15 @@
       </el-container>
     </el-container>
     <el-dialog :visible.sync="dialogFormVisible" :modal-append-to-body="false">
-      <el-form ref="form" :model="changeForm" label-width="80px">
-        <el-form-item label="邮箱" >
+      <el-form ref="form" :model="changeForm" label-width="200px" :rules="rules">
+        <el-form-item label="邮箱" prop="mailBox">
           <el-input v-model="changeForm.mailBox"></el-input>
         </el-form-item>
-        <el-form-item label="新密码" >
-          <el-input v-model="changeForm.newPassword"></el-input>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input v-model="changeForm.newPassword" show-password></el-input>
         </el-form-item>
-        <el-form-item label="验证码" >
-          <el-input v-model="changeForm.changeCode"></el-input>
+        <el-form-item label="验证码" prop="changeCode">
+          <el-input v-model="changeForm.changeCode" show-password></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -63,6 +63,24 @@ export default {
     this.$global.webSocket.close()
   },
   data () {
+    const regEmail = /^([a-zA-Z0-9_-])+@((mail.sustech.edu.cn)|(sustech.edu.cn))+$/
+    const verifyEmail = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入邮箱'))
+      } else {
+        if (!regEmail.test(this.registerForm.email)) {
+          callback(new Error('请输入正确格式'))
+        }
+        callback()
+      }
+    }
+    const verifyEmpty = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('此项不能为空'))
+      } else {
+        callback()
+      }
+    }
     const verifyUsername = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入用户名'))
@@ -90,7 +108,18 @@ export default {
           { validator: verifyUsername, trigger: 'blur' }
         ],
         password: [
-          { validator: verifyPassword, trigger: 'blur' }
+          { validator: verifyPassword, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
+        ],
+        mailBox: [
+          { validator: verifyEmail, trigger: 'blur' }
+        ],
+        newPassword: [
+          { validator: verifyEmpty, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
+        ],
+        changeCode: [
+          { validator: verifyEmpty, trigger: 'blur' }
         ]
       },
       changeForm: {

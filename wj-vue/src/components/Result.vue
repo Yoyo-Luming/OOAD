@@ -493,8 +493,6 @@ export default {
 .good-image {
   height: 100px;
   width: 100px;
-  border: 2px solid #eaeaea;
-  align-items: center;
 }
 
 .good-describe {

@@ -91,16 +91,16 @@
           <el-container class="pane-content">
             <el-container class="good-photos">
               <el-container class="big-photo">
-                <el-image :src="big_photo" fit="contain" :alt="goodsInfo.name"></el-image>
+                <el-image :src="big_photo" fit="fill" style="height: 100%;width: 100%;" :alt="goodsInfo.name"></el-image>
               </el-container>
               <el-container class="small-photo">
                 <el-container class="single-photo" v-for="(link, index) in goodsInfo.url" :key="index">
-                  <el-image :src="link" fit="contain" style="border: 2px solid #eaeaea;" :alt="goodsInfo.name"></el-image>
+                  <el-image :src="link" fit="fill" style="width: 70px;" :alt="goodsInfo.name" @mouseover="mouseOver(link)"></el-image>
                 </el-container>
               </el-container>
               <el-container class="mark_chars">
                 <el-button v-on:click="collect">
-                  <i class="el-icon-star-on" ></i>收藏商品
+                  <i class="el-icon-star-on"></i>收藏商品
                 </el-button>
                 <div style="margin-left: 10px;">收藏量：{{goodsInfo.favourite_number}}</div>
                 <div style="margin-left: 10px;">浏览量：{{goodsInfo.views_number}}</div>
@@ -111,7 +111,8 @@
                 <div class="good-name">{{goodsInfo.name}}</div>
                 <div class="good-description">{{goodsInfo.description}}</div>
                 <div class="good-description">分类：{{goodsInfo.kind}}</div>
-                <div class="good-price">售价: ¥<span style="margin-left: 5px;font-size: 30px">{{goodsInfo.price}}</span></div>
+                <div class="good-description">使用程度：{{goodsInfo.newStatus}}</div>
+                <div class="good-price">售价: ¥<span style="margin-left: 5px;font-size: 20px">{{goodsInfo.price}}</span></div>
                 <div class="good-price">邮费: ¥<span style="margin-left: 5px;font-size: 20px">{{goodsInfo.deliverPrice}}</span></div>
                 <div class="seller-name" style="align-items: center;cursor:pointer;" title="前往卖家页面" v-on:click="toUserPage">
                   <div style="display: flex;">卖家：</div>
@@ -307,6 +308,9 @@ export default {
         }
       })
     },
+    mouseOver (link) {
+      this.big_photo = link
+    },
     toUserPage () {
       this.$store.commit('setToUserPage', this.goodsInfo.posterId)
       this.$router.push('/user/userInfo')
@@ -471,7 +475,6 @@ export default {
 .big-photo {
   height: 400px;
   width: 400px;
-  border: 2px solid #eaeaea;
 }
 
 .small-photo {
@@ -487,6 +490,7 @@ export default {
 }
 
 .mark_chars {
+  display: flex;
   margin-left: 10px;
   align-items: center;
   font-size: 15px;
@@ -501,16 +505,14 @@ export default {
   margin-top: 10px;
   display: flex;
   text-align: left;
-  font-size: 30px;
+  font-size: 20px;
   color: #000;
-  font-family: 黑体;
 }
 
 .good-description {
   margin-top: 30px;
   font-size: 20px;
   text-align: left;
-  font-family: 黑体;
   color: #8d99ae;
 }
 

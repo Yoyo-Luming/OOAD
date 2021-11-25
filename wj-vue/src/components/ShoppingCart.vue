@@ -105,7 +105,9 @@
                     <tr v-for="(item,index) in goods" :key="item.select">
                       <td><input type="checkbox" :checked="item.select" v-on:click="chooseOne(index)"></td>
                       <td>{{item.name}}</td>
-                      <td><img :src="item.photo" alt=""></td>
+                      <td><div class="good-image" style="display: flex;margin: auto;align-items: center;height: 100px;width: 100px;">
+                        <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.name"></el-image>
+                      </div></td>
                       <td>{{item.price}} 元</td>
                       <td><el-button type="danger" v-on:click="deleteItem(index)" round>移除</el-button></td>
                     </tr>
@@ -144,7 +146,7 @@
         <el-dialog style="margin: auto;" :visible.sync="payVisible" :modal-append-to-body="false">
           <el-form ref="form" label-width="200px" :rules="rules">
             <el-form-item class="form-item-class" label="支付密码：" prop="password">
-              <el-input v-model="payPassword"></el-input>
+              <el-input v-model="payPassword" show-password></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -176,7 +178,7 @@ export default {
     }
     return {
       goods: [
-        // {name: 'name', photo: '', price: '', select: false}
+        // {name: 'name', photo: 'http://store2.sustech.xyz/api/commodity/download/?key=eyJtZXJfaWQiOjE3LCJkYXRlIjoiMjAyMS0xMS0yNSAwMTo0NjoxNy45MDYwMDAiLCJwYXRoIjoiXFxob21lXFxTVVNUZWNoU3RvcmVcXGltYWdlU3RvcmVcXHVzZXJfM3VzZXJfM19tZXJ1cGxvYWRfbWVyY2hhbmRpc2VfMl90aW1lXzIwMjEtMTEtMjVfMDA1NzQ0LjEyMTgwMl8xNjM3NzczMDU3Nzk1LmpwZyJ9:1mpwLZ:e4pqRECE-oA54X_BYMKL0cycroCvDhdKxPKIrgXte3o', price: '', select: false}
       ],
       totalCost: 0,
       addressId: '',
@@ -218,7 +220,8 @@ export default {
       payPassword: '',
       rules: {
         password: [
-          { validator: verifyPassword, trigger: 'blur' }
+          { validator: verifyPassword, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ],
         recAddress: [
           { validator: verifyAddress, trigger: 'blur' }

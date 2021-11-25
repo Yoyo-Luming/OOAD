@@ -130,6 +130,14 @@
             <!--          receive-pane-->
             <el-tab-pane label="收货地址" class="whole-pane" name="second">
               <div v-if="address.length">
+                <el-container class="whole-order" style="margin-bottom: 5px;color:#000000;">
+                  <el-container class="order-name">收货人</el-container>
+                  <el-container class="order-road">收货区域</el-container>
+                  <el-container class="order-road">详细地址</el-container>
+                  <el-container class="order-detail">电话</el-container>
+                  <el-container class="order-pay">
+                  </el-container>
+                </el-container>
                 <el-container class="whole-order" v-for="(item, index) in address" :key="index">
                   <el-container class="order-name">{{item.name}}</el-container>
                   <el-container class="order-road">{{item.region}}</el-container>
@@ -148,6 +156,14 @@
             <!--          evaluate-pane-->
             <el-tab-pane label="发货地址" class="whole-pane" name="third">
               <div v-if="sendAddress.length">
+                <el-container class="whole-order" style="margin-bottom: 5px;color:#000000;">
+                  <el-container class="order-name">发货人</el-container>
+                  <el-container class="order-road">发区域</el-container>
+                  <el-container class="order-road">详细地址</el-container>
+                  <el-container class="order-detail">电话</el-container>
+                  <el-container class="order-pay">
+                  </el-container>
+                </el-container>
                 <el-container class="whole-order" v-for="(item, index) in sendAddress" :key="index">
                   <el-container class="order-name">{{item.name}}</el-container>
                   <el-container class="order-road">{{item.region}}</el-container>
@@ -223,10 +239,10 @@
             </el-select>
           </el-form-item>
           <el-form-item label="支付密码" prop="payPassword">
-            <el-input v-model="activeFromData.payPassword" placeholder="请输入支付密码"></el-input>
+            <el-input v-model="activeFromData.payPassword" placeholder="请输入支付密码" show-password></el-input>
           </el-form-item>
           <el-form-item label="确认支付密码" prop="activeFromDataPayPassword">
-            <el-input v-model="activeFromData.activeFromDataPayPassword" placeholder="请再次输入支付密码"></el-input>
+            <el-input v-model="activeFromData.activeFromDataPayPassword" placeholder="请再次输入支付密码" show-password></el-input>
           </el-form-item>
           <el-form-item label="默认收货地址">
             <el-form-item label="收货人姓名" prop="consigneeName" style="margin-top: 15px;">
@@ -257,10 +273,10 @@
       </el-dialog>
       <el-dialog title="编辑收货地址" :visible.sync="addressFormVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" :model="fromData" label-width="200px" label-position="left" :rules="rules">
-          <el-form-item label="收件人姓名" prop="recName">
+          <el-form-item label="收件人姓名" prop="name">
             <el-input v-model="addressFromData.name" placeholder="请输入收件人姓名"></el-input>
           </el-form-item>
-          <el-form-item label="收货区域" prop="recRegion">
+          <el-form-item label="收货区域" prop="region">
             <el-select v-model="addressFromData.region" placeholder="请选择收货区域">
               <el-option
                 v-for="item in areaOptions"
@@ -270,10 +286,10 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="详细地址" prop="recAddress">
+          <el-form-item label="详细地址" prop="address">
             <el-input v-model="addressFromData.address" placeholder="请输入详细收货地址"></el-input>
           </el-form-item>
-          <el-form-item label="电话号码" prop="recPhone">
+          <el-form-item label="电话号码" prop="phone">
             <el-input v-model="addressFromData.phone" placeholder="请输入电话号码"></el-input>
           </el-form-item>
         </el-form>
@@ -312,13 +328,13 @@
       <el-dialog title="忘记密码" :visible.sync="LoginPassWordVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" label-width="200px" label-position="left" :rules="rules">
           <el-form-item label="旧登录密码"  prop="oldLoginPassword">
-            <el-input v-model="oldLoginPassword" placeholder="请输入旧登录密码"></el-input>
+            <el-input v-model="oldLoginPassword" placeholder="请输入旧登录密码" show-password></el-input>
           </el-form-item>
           <el-form-item label="新登录密码" prop="newLoginPassword">
-            <el-input v-model="newLoginPassword" placeholder="请输入新登录密码"></el-input>
+            <el-input v-model="newLoginPassword" placeholder="请输入新登录密码" show-password></el-input>
           </el-form-item>
           <el-form-item label="新登录密码" prop="verifyNewLoginPassword">
-            <el-input v-model="verifyNewLoginPassword" placeholder="请再次输入新登录密码"></el-input>
+            <el-input v-model="verifyNewLoginPassword" placeholder="请再次输入新登录密码" show-password></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -329,13 +345,13 @@
       <el-dialog title="修改支付密码" :visible.sync="PayPassWordVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" label-width="200px" label-position="left" :rules="rules">
           <el-form-item label="旧支付密码" prop="oldPayPassword">
-            <el-input v-model="oldPayPassword" placeholder="请输入旧支付密码"></el-input>
+            <el-input v-model="oldPayPassword" placeholder="请输入旧支付密码" show-password></el-input>
           </el-form-item>
           <el-form-item label="新支付密码" prop="newPayPassword">
-            <el-input v-model="newPayPassword" placeholder="请输入新支付密码"></el-input>
+            <el-input v-model="newPayPassword" placeholder="请输入新支付密码" show-password></el-input>
           </el-form-item>
           <el-form-item label="新支付密码" prop="verifyNewPayPassword">
-            <el-input v-model="verifyNewPayPassword" placeholder="请再次输入新支付密码"></el-input>
+            <el-input v-model="verifyNewPayPassword" placeholder="请再次输入新支付密码" show-password></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -346,10 +362,10 @@
       <el-dialog title="忘记支付密码" :visible.sync="forgetVisible" center width="700px" :modal-append-to-body="false">
         <el-form ref="form" label-width="200px" label-position="left" :rules="rules">
           <el-form-item label="新支付密码" prop="">
-            <el-input v-model="newPayPassword" placeholder="请输入新支付密码"></el-input>
+            <el-input v-model="newPayPassword" placeholder="请输入新支付密码" show-password></el-input>
           </el-form-item>
           <el-form-item label="新支付密码" prop="verifyNewPayPassword">
-            <el-input v-model="verifyNewPayPassword" placeholder="请再次输入新支付密码"></el-input>
+            <el-input v-model="verifyNewPayPassword" placeholder="请再次输入新支付密码" show-password></el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="checkCode">
             <el-input v-model="changeCode" placeholder="请输入验证码"></el-input>
@@ -382,7 +398,7 @@
           <el-form-item label="电话号码" prop="sellerPhone">
             <el-input v-model="activeSellFromData.phone" placeholder="请输入电话号码"></el-input>
           </el-form-item>
-          <el-form-item label="收款二维码" prop="sellerQR">
+          <el-form-item label="收款二维码">
             <el-upload
               action="auto"
               :http-request="uploadQRCodeSectionFile"
@@ -700,11 +716,9 @@ export default {
         realName: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        userType2: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
         payPassword: [
-          { validator: verifyEmpty, trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ],
         consigneeName: [
           { validator: verifyEmpty, trigger: 'blur' }
@@ -718,68 +732,39 @@ export default {
         phone: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        recName: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        recRegion: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        recAddress: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        recPhone: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        senName: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        senRegion: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        senAddress: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        senPhone: [
+        name: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
         oldLoginPassword: [
-          { validator: verifyEmpty, trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ],
         newLoginPassword: [
-          { validator: verifyEmpty, trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ],
         oldPayPassword: [
-          { validator: verifyEmpty, trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ],
         newPayPassword: [
-          { validator: verifyEmpty, trigger: 'blur' }
+          { validator: verifyEmpty, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ],
         checkCode: [
           { validator: verifyEmpty, trigger: 'blur' }
         ],
-        sellerName: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        sellerRegion: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        sellerAddress: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        sellerPhone: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
-        sellerQR: [
-          { validator: verifyEmpty, trigger: 'blur' }
-        ],
         activeFromDataPayPassword: [
-          { validator: verifyActiveFromDataPayPassword, trigger: 'blur' }
+          { validator: verifyActiveFromDataPayPassword, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ],
         verifyNewPayPassword: [
-          { validator: verifyNewPayPassword, trigger: 'blur' }
+          { validator: verifyNewPayPassword, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ],
         verifyNewLoginPassword: [
-          { validator: verifyNewLoginPassword, trigger: 'blur' }
+          { validator: verifyNewLoginPassword, trigger: 'blur' },
+          { min: 6, max: 16, message: '密码长度只能6-16位', trigger: 'blur' }
         ]
       }
     }
@@ -1379,10 +1364,9 @@ export default {
 
 .order-name {
   width: 150px;
-  font-size: 30px;
+  font-size: 20px;
   align-items: center;
   justify-content: space-evenly;
-  font-family: 黑体;
 }
 
 .order-road {

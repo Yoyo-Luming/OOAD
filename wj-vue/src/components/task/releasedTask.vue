@@ -516,10 +516,9 @@ export default {
 .order-name {
   width: 150px;
   overflow: hidden;
-  font-size: 30px;
+  font-size: 20px;
   align-items: center;
   justify-content: space-evenly;
-  font-family: 黑体;
 }
 
 .order-road {

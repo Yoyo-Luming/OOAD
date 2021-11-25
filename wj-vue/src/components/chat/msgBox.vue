@@ -6,8 +6,10 @@
     </el-avatar>
     <span class="uname" style="margin-right: 5px;margin-left: 5px;">{{uname}}</span>
     <span>：</span>
-      <img :src="url" v-if="isPhoto" alt="">
-      <div v-else>{{content}}</div>
+    <el-image :src="url" v-if="isPhoto" alt="" style="margin-right: 5px;margin-left: 5px;"></el-image>
+    <div v-else style="margin-right: 5px;margin-left: 5px;">
+      {{content}}
+    </div>
   </div>
 </template>
 

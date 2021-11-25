@@ -140,8 +140,6 @@ export default {
   // Done
   name: 'sellingGoods',
   mounted () {
-    this.isSeller = (this.$store.state.userStatus >= 2)
-    console.log(this.$global.userStatus)
     this.$axios.post('login0/on_sailing/').then(response => {
       console.log(response.data)
       let len = response.data.return_merchandise.length
@@ -160,154 +158,7 @@ export default {
   data () {
     return {
       goodsList: [],
-      searchContent: undefined,
-      addressList: [],
-      isSeller: false,
-      regionList: [ '荔园',
-        '创园',
-        '慧园',
-        '欣园',
-        '学生宿舍',
-        '湖畔',
-        '九华精舍',
-        '教师公寓',
-        '专家公寓',
-        '风雨操场',
-        '润扬体育馆',
-        '工学院',
-        '南科大中心',
-        '第一科研楼',
-        '第二科研楼',
-        '第一教学楼',
-        '第二教学楼',
-        '台州楼',
-        '检测中心',
-        '行政楼',
-        '琳恩图书馆',
-        '1号门',
-        '2号门',
-        '3号门',
-        '4号门',
-        '5号门',
-        '6号门',
-        '7号门',
-        '8号门',
-        '其它'],
-      uploadFile: [],
-      options: [{
-        value: 1,
-        label: '运动户外',
-        children: [{
-          value: 1,
-          label: '运动服'
-        }, {
-          value: 2,
-          label: '运动鞋'
-        }]
-      }, {
-        value: 2,
-        label: '生活用品',
-        children: [{
-          value: 3,
-          label: '五金用品'
-        }, {
-          value: 4,
-          label: '办公用品'
-        }, {
-          value: 5,
-          label: '办公设备'
-        }]
-      }, {
-        value: 3,
-        label: '电器',
-        children: [{
-          value: 6,
-          label: '大家电'
-        }, {
-          value: 7,
-          label: '厨房电器'
-        }, {
-          value: 8,
-          label: '生活电器'
-        }]
-      }, {
-        value: 4,
-        label: '数码',
-        children: [{
-          value: 9,
-          label: '电脑'
-        }, {
-          value: 10,
-          label: '电脑配件'
-        }, {
-          value: 11,
-          label: '智能设备'
-        }, {
-          value: 12,
-          label: '手机'
-        }, {
-          value: 13,
-          label: '相机'
-        }]
-      }, {
-        value: 5,
-        label: '服装',
-        children: [{
-          value: 14,
-          label: '上衣'
-        }, {
-          value: 15,
-          label: '外套'
-        }]
-      }, {
-        value: 6,
-        label: '美妆',
-        children: [{
-          value: 16,
-          label: '美容护肤'
-        }, {
-          value: 17,
-          label: '彩妆'
-        }, {
-          value: 18,
-          label: '香水'
-        }]
-      }, {
-        value: 7,
-        label: '家具',
-        children: [{
-          value: 19,
-          label: '家具饰品'
-        }, {
-          value: 20,
-          label: '住宅家具'
-        }]
-      }, {
-        value: 8,
-        label: '玩具',
-        children: [{
-          value: 21,
-          label: '模型'
-        }, {
-          value: 22,
-          label: '手办'
-        }]
-      }],
-      newOptions: [
-        {
-          value: 1,
-          label: '全新'
-        }, {
-          value: 2,
-          label: '几乎全新'
-        }, {
-          value: 3,
-          label: '轻微使用痕迹'
-        }, {
-          value: 4,
-          label: '明显使用痕迹'
-        }
-      ]
+      searchContent: undefined
     }
   },
   methods: {
@@ -404,6 +255,10 @@ export default {
       this.$router.push('/addgoods')
     },
     searchTop () {
+      if (this.searchContent === undefined || this.searchContent === '') {
+        this.$message.error('请输入搜索内容')
+        return
+      }
       this.$store.commit('setToSearchPage', {
         searchContent: this.searchContent,
         labels: undefined,

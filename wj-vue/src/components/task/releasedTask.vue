@@ -236,8 +236,8 @@ export default {
         this.waitGetTaskList.push({
           taskName: list[i].name,
           price: list[i].price,
-          startRegion: this.regionList[list[i].sender_addr.user_region],
-          endRegion: this.regionList[list[i].receive_addr.user_region],
+          startRegion: this.regionList[list[i].sender_addr.user_region - 1],
+          endRegion: this.regionList[list[i].receive_addr.user_region - 1],
           description: list[i].description,
           detail: list[i]
         })
@@ -253,8 +253,8 @@ export default {
         this.waitGetObjectList.push({
           taskName: list[i].name,
           price: list[i].price,
-          startRegion: this.regionList[list[i].sender_addr.user_region],
-          endRegion: this.regionList[list[i].receive_addr.user_region],
+          startRegion: this.regionList[list[i].sender_addr.user_region - 1],
+          endRegion: this.regionList[list[i].receive_addr.user_region - 1],
           description: list[i].description,
           detail: list[i]
         })
@@ -269,8 +269,8 @@ export default {
         this.waitSendList.push({
           taskName: list[i].name,
           price: list[i].price,
-          startRegion: this.regionList[list[i].sender_addr.user_region],
-          endRegion: this.regionList[list[i].receive_addr.user_region],
+          startRegion: this.regionList[list[i].sender_addr.user_region - 1],
+          endRegion: this.regionList[list[i].receive_addr.user_region - 1],
           description: list[i].description,
           detail: list[i]
         })
@@ -285,8 +285,8 @@ export default {
         this.waitConfirmList.push({
           taskName: list[i].name,
           price: list[i].price,
-          startRegion: this.regionList[list[i].sender_addr.user_region],
-          endRegion: this.regionList[list[i].receive_addr.user_region],
+          startRegion: this.regionList[list[i].sender_addr.user_region - 1],
+          endRegion: this.regionList[list[i].receive_addr.user_region - 1],
           description: list[i].description,
           detail: list[i]
         })
@@ -301,8 +301,8 @@ export default {
         this.waitCommentList.push({
           taskName: list[i].name,
           price: list[i].price,
-          startRegion: this.regionList[list[i].sender_addr.user_region],
-          endRegion: this.regionList[list[i].receive_addr.user_region],
+          startRegion: this.regionList[list[i].sender_addr.user_region - 1],
+          endRegion: this.regionList[list[i].receive_addr.user_region - 1],
           description: list[i].description,
           detail: list[i]
         })
@@ -317,8 +317,8 @@ export default {
         this.successList.push({
           taskName: list[i].name,
           price: list[i].price,
-          startRegion: this.regionList[list[i].sender_addr.user_region],
-          endRegion: this.regionList[list[i].receive_addr.user_region],
+          startRegion: this.regionList[list[i].sender_addr.user_region - 1],
+          endRegion: this.regionList[list[i].receive_addr.user_region - 1],
           description: list[i].description,
           detail: list[i]
         })
@@ -424,6 +424,10 @@ export default {
       this.$router.push('/addgoods')
     },
     searchTop () {
+      if (this.searchContent === undefined || this.searchContent === '') {
+        this.$message.error('请输入搜索内容')
+        return
+      }
       this.$store.commit('setToSearchPage', {
         searchContent: this.searchContent,
         labels: undefined,

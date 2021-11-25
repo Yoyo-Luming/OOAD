@@ -11,10 +11,12 @@ import router from './router'
 // 设置反向代理，前端请求默认发送到 http://localhost:8443/api
 var axios = require('axios')
 axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'http://10.17.63.176/api'
+// axios.defaults.baseURL = 'http://10.17.63.176/api'
 // axios.defaults.baseURL = 'http://10.21.127.84/api'
-// axios.defaults.baseURL = 'http://store2.sustech.xyz/api'
+axios.defaults.baseURL = 'http://store.sustech.xyz/api'
 // axios.defaults.baseURL = 'http://192.168.208.212/api'
+// axios.defaults.baseURL = 'http://10.16.18.244/api'
+
 // axios.defaults.baseURL = '/api'
 // 全局注册，之后可在其他组件中通过 this.$axios 发送数据
 Vue.prototype.$qs = qs

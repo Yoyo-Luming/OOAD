@@ -141,14 +141,14 @@
             <el-button @click="submit">确认订单</el-button>
           </div>
         </el-dialog>
-        <el-dialog style="margin: auto;" :visible.sync="chooseAddressVisible" :modal-append-to-body="false">
+        <el-dialog style="margin: auto;" :visible.sync="payVisible" :modal-append-to-body="false">
           <el-form ref="form" label-width="200px" :rules="rules">
             <el-form-item class="form-item-class" label="支付密码：" prop="password">
               <el-input v-model="payPassword"></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible=false">取消</el-button>
+            <el-button @click="payVisible=false">取消</el-button>
             <el-button @click="pay">确认</el-button>
           </div>
         </el-dialog>
@@ -260,12 +260,15 @@ export default {
   },
   methods: {
     deleteItem (index) {
-      this.$confirm('Warning, you can not repeal the delete!', 'Warning', {
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
-        type: 'info'
-      }).then(() => {
-        this.goods.splice(index, 1)
+      this.$axios.post('/login0/cart_del', this.$qs.stringify({
+        mer_id: this.goods[index].id
+      })).then(response => {
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.goods.splice(index, 1)
+        } else {
+          this.$message.error(response.data.message)
+        }
       })
     },
     checkAll () {
@@ -300,6 +303,10 @@ export default {
       this.$router.push('/addgoods')
     },
     searchTop () {
+      if (this.searchContent === undefined || this.searchContent === '') {
+        this.$message.error('请输入搜索内容')
+        return
+      }
       this.$store.commit('setToSearchPage', {
         searchContent: this.searchContent,
         labels: undefined,
@@ -333,10 +340,11 @@ export default {
                 identify_code: this.identifyCode,
                 rec_address_id: this.addressId
               })).then(response2 => {
-                this.$message.info(response2.data.message)
                 if (response2.data.status === '200') {
                   this.chooseAddressVisible = false
                   this.payVisible = true
+                } else {
+                  this.$message.error(response2.data.message)
                 }
               })
             }

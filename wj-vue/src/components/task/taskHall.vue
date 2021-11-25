@@ -183,8 +183,8 @@ export default {
           taskName: returnList[i].name,
           price: returnList[i].price,
           ddlTime: returnList[i].ddl_time,
-          startRegion: this.regionList[returnList[i].sender_addr.user_region],
-          endRegion: this.regionList[returnList[i].receive_addr.user_region],
+          startRegion: this.regionList[returnList[i].sender_addr.user_region - 1],
+          endRegion: this.regionList[returnList[i].receive_addr.user_region - 1],
           description: returnList[i].description,
           taskId: returnList[i].task_id,
           detail: returnList[i]
@@ -252,6 +252,10 @@ export default {
       this.$router.push('/addgoods')
     },
     searchTop () {
+      if (this.searchContent === undefined || this.searchContent === '') {
+        this.$message.error('请输入搜索内容')
+        return
+      }
       this.$store.commit('setToSearchPage', {
         searchContent: this.searchContent,
         labels: undefined,

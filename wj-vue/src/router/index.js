@@ -25,6 +25,7 @@ import sellingGoods from '../components/goods/sellingGoods'
 import handleProblem from '../components/problem/handleProblem'
 import home from '../components/home'
 import ShoppingCart from '../components/ShoppingCart'
+import browsedGoods from '../components/goods/browsedGoods'
 
 Vue.use(Router)
 
@@ -166,6 +167,11 @@ export default new Router({
       path: '/cart',
       name: 'shoppingCart',
       component: ShoppingCart
+    },
+    {
+      path: '/browsedGoods',
+      name: 'browsedGoods',
+      component: browsedGoods
     }
   ]
 })

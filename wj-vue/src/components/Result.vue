@@ -114,23 +114,22 @@
             <div v-if="goodsList.length">
               <el-container class="marking-goods">
                 <el-container class="single-good" v-for="(item, index) in goodsList" :key="index">
-                  <el-container class="good-image">
-                    <el-image :src="item.photo" fit="contain" title="前往商品页面" style="cursor:pointer;"  v-on:click="toGoodsPage(item)" :alt="item.name"></el-image>
+                  <el-container>
+                    <div title="前往商品页面" class="good-image" style="display: flex;cursor:pointer;align-items: center;" v-on:click="toGoodsPage(item)">
+                      <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.name"></el-image>
+                    </div>
                   </el-container>
-                  <el-container class="good-describe">
-                    <div class="good-name">{{item.name}}</div>
-                    <div class="good-price">¥{{item.price}}</div>
-                    <div class="good-number">共有{{item.favourite_number}}人喜欢</div>
-                  </el-container>
+                    <el-container class="good-describe">
+                      <div class="good-name">{{item.name}}</div>
+                      <div class="good-price">¥{{item.price}}</div>
+                      <div class="good-number">共有{{item.favourite_number}}人喜欢</div>
+                    </el-container>
                 </el-container>
               </el-container>
             </div>
             <div v-else>
               <h2>这里还没有结果！</h2>
             </div>
-            <!--          <div>-->
-            <!--            <goods-box v-for="(item, index) of goodsList " :key="index+Math.random()" :name="item.name" :price="item.price" :photo="item.photo" :favourite_number="item.favourite_number" :mer_id="item.mer_id"></goods-box>-->
-            <!--          </div>-->
           </el-container>
         </el-container>
       </el-main>
@@ -345,12 +344,6 @@ export default {
       this.$router.push('/login')
     },
     search () {
-      // this.goodsList.push({
-      //   name: '汉堡',
-      //   price: 22,
-      //   photo: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'
-      // })
-      // console.log(this.labels[0])
       this.goodsList = []
       const chineseChecker = /[\u4e00-\u9fa5]/
       if (this.labels === undefined && this.status === undefined && this.orderMethod === undefined && this.searchContent !== undefined && chineseChecker.test(this.searchContent)) {
@@ -398,8 +391,6 @@ export default {
           fineness_id: newStatus,
           search_str: this.searchContent
         })).then(response => {
-          console.log('search_result')
-          console.log(response.data)
           let len = response.data.return_list.length
           let list = response.data.return_list
           for (let i = 0; i < len; ++i) {

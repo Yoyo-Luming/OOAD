@@ -31,6 +31,9 @@ export default {
     if (this.$store.state.userName !== '') {
       this.$global.initWebSocket()
     }
+  },
+  destroyed () {
+    this.$global.webSocket.close()
   }
 }
 </script>

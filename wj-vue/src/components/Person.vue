@@ -53,7 +53,8 @@
             <el-button class="inside-button" v-on:click="forgetVisible=true">忘记支付密码</el-button><br>
             <el-button class="inside-button" v-on:click="rechargeVisible=true">充值</el-button><br>
             <div v-if="$store.state.userStatus < 2"><el-button class="inside-button" v-on:click="activeSellFromVisible=true" >成为卖家</el-button><br></div>
-<!--            <div v-if="$store.state.userStatus >= 2"><el-button class="inside-button" v-on:click="uploadQRCodeVisble=true">上传收款二维码</el-button><br></div>-->
+<!--            <div v-if="$store.state.userStatus >= 2"><el-button class="inside-button" v-on:click="uploadQRCodeVisible=true">上传收款二维码</el-button><br></div>-->
+            <div v-if="$store.state.userStatus > 2"><el-button class="inside-button" v-on:click="$router.push('/handleproblem')" >申诉处理</el-button><br></div>
           </el-submenu>
           <el-submenu class="menu-buttons" index="2">
             <template slot="title">
@@ -64,6 +65,7 @@
             <el-button class="inside-button" v-on:click="goBuyOrder">买到的商品</el-button><br>
             <el-button class="inside-button" v-on:click="goPostGoods">发布的商品</el-button><br>
             <el-button class="inside-button" v-on:click="goNewGoods">上架新商品</el-button><br>
+            <el-button class="inside-button" v-on:click="goBrowsedGoods">历史浏览商品</el-button><br>
           </el-submenu>
           <el-submenu class="menu-buttons" index="3">
             <template slot="title">
@@ -112,8 +114,8 @@
             <!--          pay-pane-->
             <el-tab-pane label="个人信息" class="whole-pane" name="first">
               <el-container class="user-info">
-                <div v-if="hasPhoto"><el-image class="big-photo" :src="userInfo.photo" fit="contain" :alt="userInfo.name"></el-image></div>
-                <div v-else><el-image class="big-photo" :src="defaultPhoto" fit="contain" :alt="userInfo.name"></el-image></div>
+                <div v-if="hasPhoto"><el-image class="big-photo" :src="userInfo.photo" fit="contain" :alt="userInfo.name" @click="toShowPage"></el-image></div>
+                <div v-else><el-image class="big-photo" :src="defaultPhoto" fit="contain" :alt="userInfo.name" @click="toShowPage"></el-image></div>
                 <el-container class="contents">
                   <div class="user-name">用户名：{{userInfo.name}}</div>
                   <div class="user-describe">用户类型：{{userInfo.userType}}</div>
@@ -121,6 +123,7 @@
                   <div class="user-describe">用户描述：{{userInfo.description}}</div>
                   <div class="user-describe">用户真名：{{userInfo.realName}}</div>
                   <div class="user-describe">用户余额：{{userInfo.balance}}</div>
+                  <div class="user-describe">用户信誉：{{userInfo.credit}}</div>
                 </el-container>
               </el-container>
             </el-tab-pane>
@@ -194,6 +197,7 @@
           list-type="picture-card"
           class = "contentImgStyle"
           :limit="1"
+          accept=".jpg"
           :on-exceed="handleExceed"
           :before-remove="handleHeaderRemove">
           <i class="el-icon-plus" ></i>
@@ -386,6 +390,7 @@
               class = "contentImgStyle"
               :limit="1"
               :on-exceed="handleExceed"
+              accept=".jpg"
               :before-remove="handleQRCodeRemove">
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -396,7 +401,7 @@
           <el-button type="primary" @click="activateSell">提交</el-button>
         </div>
       </el-dialog>
-      <el-dialog :visible.sync="uploadQRCodeVisble" title="上传支付二维码">
+      <el-dialog :visible.sync="uploadQRCodeVisible" title="上传支付二维码">
         <el-upload
           action="auto"
           :http-request="uploadQRCodeSectionFile"
@@ -404,11 +409,12 @@
           class = "contentImgStyle"
           :limit="1"
           :on-exceed="handleExceed"
+          accept=".jpg"
           :before-remove="handleQRCodeRemove">
           <i class="el-icon-plus"></i>
         </el-upload>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="uploadQRCodeVisble=false">取消</el-button>
+          <el-button @click="uploadQRCodeVisible=false">取消</el-button>
           <el-button type="primary" @click="uploadQRcode">提交</el-button>
         </div>
       </el-dialog>
@@ -470,7 +476,8 @@ export default {
         description: '',
         realName: '',
         photo: '',
-        balance: 123
+        balance: 0,
+        credit: 10
       },
       searchContent: '',
       // 激活卖家功能表单数据
@@ -485,7 +492,8 @@ export default {
       addressFormVisible: false,
       sendAddressFormVisible: false,
       rechargeVisible: false,
-      uploadQRCodeVisble: false,
+      uploadQRCodeVisible: false,
+      PayPassWordVisible: false,
       // 信息编辑表单数据
       fromData: {
         userType: '',
@@ -550,7 +558,7 @@ export default {
         label: '九华精舍'
       }, {
         value: '8',
-        label: '九华精舍'
+        label: '教师公寓'
       }, {
         value: '9',
         label: '专家公寓'
@@ -796,6 +804,7 @@ export default {
             this.userInfo.balance = response.data.user_details.money
             this.userInfo.description = response.data.user_details.self_description
             this.hasPhoto = response.data.user_details.has_header_photo
+            this.userInfo.credit = response.data.user_details.credit_points
           }
         })
       this.$axios.post('/login0/get_address_list/', this.$qs.stringify({
@@ -826,7 +835,7 @@ export default {
       this.$router.go(0)
     },
     homePage () {
-      this.$router.push('/')
+      this.$router.push('/home')
     },
     cartPage () {
       this.$router.push('/cart')
@@ -1100,6 +1109,10 @@ export default {
       this.$router.push('/buyorder')
     },
     searchTop () {
+      if (this.searchContent === undefined || this.searchContent === '') {
+        this.$message.error('请输入搜索内容')
+        return
+      }
       this.$store.commit('setToSearchPage', {
         searchContent: this.searchContent,
         labels: undefined,
@@ -1173,6 +1186,10 @@ export default {
               this.$store.commit('setUserStatus', 2)
               // this.$store.state.userStatus = 2
               this.activeSellFromVisible = false
+              this.$message.success(response.data.message)
+              this.reload()
+            } else {
+              this.$message.error(response.data.message)
             }
           })
         } else {
@@ -1190,11 +1207,14 @@ export default {
         data: photoForm}).then(response => {
         if (response.data.status === '200') {
           this.$message.success(response.data.message)
-          this.uploadQRCodeVisble = false
+          this.uploadQRCodeVisible = false
         } else {
           this.$message.error(response.data.message)
         }
       })
+    },
+    goBrowsedGoods () {
+      this.$router.push('/browsedgoods')
     },
     goFavoriteUser () {
       this.$router.push('/favoriteusers')
@@ -1291,6 +1311,10 @@ export default {
           this.$message.info(response.data.message)
         }
       })
+    },
+    toShowPage () {
+      this.$store.commit('setToUserPage', this.$store.state.userId)
+      this.$router.push('/user/userInfo')
     }
   }
 }

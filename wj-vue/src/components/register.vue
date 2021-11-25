@@ -116,6 +116,10 @@ export default {
         this.$message.error('两次输入的密码不相同！')
         return
       }
+      if (this.registerForm.password.length < 6 || this.registerForm.password.length > 12) {
+        this.$message.error('密码长度必须为6-12位！')
+        return
+      }
       this.$axios.post('login0/register/', this.$qs.stringify({
         status: 1,
         code: this.registerForm.code,

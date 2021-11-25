@@ -185,9 +185,9 @@ export default {
     this.uploaderHasPhoto = this.detail.upload_user.has_header_photo
     this.taskPrice = this.detail.price
     this.taskDescription = this.detail.description
-    this.taskSendRegion = this.regionList[this.detail.sender_addr.user_region]
+    this.taskSendRegion = this.regionList[this.detail.sender_addr.user_region - 1]
     this.taskSendAddress = this.detail.sender_addr.user_addr
-    this.taskReceiveRegion = this.regionList[this.detail.receive_addr.user_region]
+    this.taskReceiveRegion = this.regionList[this.detail.receive_addr.user_region - 1]
     this.taskReceiveAddress = this.detail.receive_addr.user_addr
     if (this.uploaderHasPhoto) {
       this.uploaderPhoto = this.detail.upload_user.header_photo_url
@@ -446,6 +446,10 @@ export default {
       this.$router.push('/addgoods')
     },
     searchTop () {
+      if (this.searchContent === undefined || this.searchContent === '') {
+        this.$message.error('请输入搜索内容')
+        return
+      }
       this.$store.commit('setToSearchPage', {
         searchContent: this.searchContent,
         labels: undefined,

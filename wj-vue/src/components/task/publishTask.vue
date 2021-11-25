@@ -210,8 +210,8 @@ export default {
         if (!orderList[i].has_task) {
           this.shipList.push({
             goodsName: orderList[i].merchandise_name,
-            receiveAddress: this.regionList[orderList[i].receiver_location.user_region] + orderList[i].receiver_location.user_addr,
-            sendAddress: this.regionList[orderList[i].sender_location.user_region] + orderList[i].sender_location.user_addr,
+            receiveAddress: this.regionList[orderList[i].receiver_location.user_region - 1] + ' ' + orderList[i].receiver_location.user_addr,
+            sendAddress: this.regionList[orderList[i].sender_location.user_region - 1] + ' ' + orderList[i].sender_location.user_addr,
             photo: orderList[i].merchandise_info.mer_img_url,
             orderDetail: orderList[i]
           })
@@ -463,6 +463,10 @@ export default {
       this.$router.push('/addgoods')
     },
     searchTop () {
+      if (this.searchContent === undefined || this.searchContent === '') {
+        this.$message.error('请输入搜索内容')
+        return
+      }
       this.$store.commit('setToSearchPage', {
         searchContent: this.searchContent,
         labels: undefined,

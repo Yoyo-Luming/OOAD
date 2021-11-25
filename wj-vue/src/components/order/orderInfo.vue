@@ -226,6 +226,7 @@
                     list-type="picture-card"
                     class = "contentImgStyle"
                     :limit="1"
+                    accept=".jpg"
                     :on-exceed="handleExceed">
                     <i class="el-icon-plus"></i>
                   </el-upload>
@@ -278,81 +279,11 @@
       </el-main>
     </el-container>
   </el-container>
-  <!--  <el-container>-->
-  <!--    <el-row>-->
-  <!--      <el-col><el-steps :active="active" :space="200" finish-status="success">-->
-  <!--        <el-step title="待付款"></el-step>-->
-  <!--        <el-step title="待发货"></el-step>-->
-  <!--        <el-step title="待收货"></el-step>-->
-  <!--        <el-step title="待评价"></el-step>-->
-  <!--        <el-step title="已完成"></el-step>-->
-  <!--      </el-steps></el-col>-->
-  <!--      <el-col>-->
-  <!--        <el-divider></el-divider>-->
-  <!--      </el-col>-->
-  <!--      <el-col>-->
-  <!--        发货人：{{sender}}-->
-  <!--        <br/>-->
-  <!--        发货地址：{{sendAddress}}-->
-  <!--      </el-col>-->
-  <!--      <el-col>-->
-  <!--        <el-divider></el-divider>-->
-  <!--      </el-col>-->
-  <!--      <el-col>-->
-  <!--        收货人：{{receiver}}-->
-  <!--        <br/>-->
-  <!--        收货地址：{{receiveAddress}}-->
-  <!--      </el-col>-->
-  <!--      <el-col>-->
-  <!--        <el-divider></el-divider>-->
-  <!--      </el-col>-->
-  <!--      <el-col>-->
-  <!--        <img :src="url">-->
-  <!--        <br/>-->
-  <!--        商品图片：<img :src="goodsPhoto"><br/>-->
-  <!--        商品名称：{{goodsName}}<br/>-->
-  <!--        商品价格：{{goodsPrice}}<br/>-->
-  <!--        邮费: {{postage}}<br/>-->
-  <!--        <el-button type="text" class="button" @click="toGoodsPage">查看商品</el-button>-->
-  <!--        <el-button type="text" class="button" @click="toSellerPage">查看卖家</el-button>-->
-  <!--      </el-col>-->
-  <!--      <el-col>-->
-  <!--        <el-divider></el-divider>-->
-  <!--      </el-col>-->
-  <!--      <el-col>-->
-  <!--        实际付款：{{payment}}<br/>-->
-  <!--        <el-button type="text" class="button" @click="callSender"><div v-if="currentUserIsSeller">联系买家</div><div v-else>联系卖家</div></el-button>-->
-  <!--        <el-button v-if="buyButton" type="text" class="button" @click="payFormVisible=true">付款</el-button>-->
-  <!--        <el-button v-if="cancelButton" type="text" class="button" @click="cancel">取消订单</el-button>-->
-  <!--        <el-button v-if="commentButton" type="text" class="button" @click="commentVisible=true">评价</el-button>-->
-  <!--        <el-button v-if="sendButton" @click="confirmSend">确认发货</el-button>-->
-  <!--        <el-button v-if="receiveButton" @click="confirmReceive">确认收货</el-button>-->
-  <!--      </el-col>-->
-  <!--      <div v-if="hasTask">-->
-  <!--        222-->
-  <!--        <el-col>-->
-  <!--          <el-button @click="goTaskPage">查看关联跑腿任务</el-button>-->
-  <!--        </el-col>-->
-  <!--      </div>-->
-  <!--    </el-row>-->
-  <!--    <el-dialog title="评价" :visible.sync="commentVisible" center>-->
-  <!--      商品评价：<el-rate v-model="comment1"></el-rate>-->
-  <!--      服务评价：<el-rate v-model="comment2"></el-rate>-->
-  <!--      运输评价：<el-rate v-model="comment3"></el-rate>-->
-  <!--      评论：<el-input v-model="commentText"></el-input>-->
-  <!--      <el-button @click="submitComment">提交评价</el-button>-->
-  <!--    </el-dialog>-->
-  <!--    <el-dialog :visible="payFormVisible">-->
-  <!--      支付密码:<el-input v-model="payPassword"></el-input>-->
-  <!--      <el-button @click="payFormVisible=false">取消</el-button>-->
-  <!--      <el-button @click="buy">确认</el-button>-->
-  <!--    </el-dialog>-->
-  <!--  </el-container>-->
 </template>
 <!--查看商品、查看卖家、联系卖家、取消订单、待付款可以跳转付款页面，待评价可以跳转评价页面。-->
 <script>
 export default {
-  // TODO need check
+  inject: ['reload'],
   name: 'orderInfo',
   data () {
     const verifyEmpty = (rule, value, callback) => {
@@ -419,6 +350,9 @@ export default {
         label: '恶意未发货'
       }, {
         value: 5,
+        label: '恶意评价'
+      }, {
+        value: 6,
         label: '其他'
       }],
       problemTypes: [
@@ -426,6 +360,7 @@ export default {
         '线下交易冲突',
         '二维码未收款',
         '恶意未发货',
+        '恶意评价',
         '其他'
       ],
       payMethod: '',
@@ -531,10 +466,13 @@ export default {
       }
     }
   },
+  destroyed () {
+    this.$store.commit('setToOrderPage', {orderDetail: this.$store.state.toOrderPage.orderDetail, from: ''})
+  },
   mounted () {
     // TEST
     // this.$store.commit('setUserStatus', 2)
-    if (this.$store.state.toOrderPage.from === 'handleProblem') {
+    if (this.$store.state.toOrderPage.from === 'handleProblem' && this.$store.state.userStatus === 3) {
       this.isHandleProblem = true
     }
     this.info = this.$store.state.toOrderPage.orderDetail
@@ -613,20 +551,20 @@ export default {
       // this.$router.push({name: 'userInfo', params: {userId: this.senderId}})
     },
     callSender () {
+      let chatName = ''
+      let chatId = ''
+      if (this.currentUserIsSeller) {
+        chatName = this.receiver
+        chatId = this.receiverId
+      } else {
+        chatName = this.sender
+        chatId = this.senderId
+      }
       this.$axios.post('dialogue/start_dialogue/', this.$qs.stringify({
-        business_id: this.senderId
+        business_id: chatId
       })).then(response => {
         console.log(response.data)
         if (response.data.status === '200' || response.data.status === '201') {
-          let chatName = ''
-          let chatId = ''
-          if (this.currentUserIsSeller) {
-            chatName = this.receiver
-            chatId = this.receiverId
-          } else {
-            chatName = this.sender
-            chatId = this.senderId
-          }
           this.$store.commit('setToChatPage', {name: chatName, id: chatId, dialogueId: response.data.dialogue_id})
           this.$router.push('/chatPage')
           // this.$router.push({name: 'chatPage', params: {name: chatName, id: chatId, dialogueId: response.data.dialogue_id}})
@@ -740,6 +678,7 @@ export default {
         if (response.data.status === '200') {
           this.problemFromVisible = false
           this.$message.success(response.data.message)
+          this.reload()
         } else {
           this.$message.info(response.data.message)
         }
@@ -764,6 +703,7 @@ export default {
         if (response.data.status === '200') {
           this.handleProblemVisible = false
           this.$message.success(response.data.message)
+          this.$router.push('handleproblem')
         } else {
           this.$message.error(response.data.message)
         }
@@ -868,6 +808,10 @@ export default {
       this.$router.push('/addgoods')
     },
     searchTop () {
+      if (this.searchContent === undefined || this.searchContent === '') {
+        this.$message.error('请输入搜索内容')
+        return
+      }
       this.$store.commit('setToSearchPage', {
         searchContent: this.searchContent,
         labels: undefined,
@@ -988,7 +932,7 @@ export default {
 
 .task-place {
   margin-top: 30px;
-  font-size: 20px;
+  font-size: 16px;
   color: #000000;
 }
 

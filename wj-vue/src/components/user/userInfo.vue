@@ -99,8 +99,9 @@
                   </div>
                 </el-container>
                 <el-container class="user-info">
-                  <div class="user-name">用户名： {{userName}}</div>
-                  <div class="user-rate">用户评分： {{rate}}</div>
+                  <div class="user-name">用户名：{{userName}}</div>
+                  <div class="user-rate">用户评分：{{rate}}</div>
+                  <div class="user-rate">用户信誉：{{credit}}</div>
                   <div class="user-describe">用户简介：{{selfDescription}}</div>
                   <div class="user-describe">被{{favoriteNumber}}喜欢</div>
                   <el-button class="cart-button" v-on:click="collect">收藏用户</el-button>
@@ -200,6 +201,7 @@ export default {
       userName: '',
       photo: '',
       rate: '',
+      credit: '',
       searchContent: undefined,
       selfDescription: '未填写',
       favoriteNumber: '',
@@ -224,6 +226,7 @@ export default {
         this.photo = info.header_photo_url
       }
       this.rate = info.total_star
+      this.credit = info.credit_points
       this.userName = info.user_name
       this.favoriteNumber = info.as_favorite_business_number
       if (info.self_description != null) {
@@ -282,7 +285,7 @@ export default {
       })
     },
     toGoodsPage (index) {
-      this.$store.commit('setToGoodsPage', this.goodsList[index].goodsId)
+      this.$store.commit('setToGoodsPage', this.sellingList[index].mer_id)
       this.$router.push('/goods/goodsInfo')
       // this.$router.push({name: 'goodsInfo', params: {mer_id: this.sellingList[index].goodsId}})
     },

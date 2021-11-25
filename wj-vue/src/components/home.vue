@@ -357,7 +357,7 @@ export default {
           name: list[i].mer_name,
           price: list[i].mer_price,
           photo: list[i].mer_img_url,
-          favourite_number: list[i].as_favourite_number,
+          favourite_number: list[i].favourite_number,
           mer_id: list[i].mer_id
         })
       }

@@ -144,6 +144,7 @@
                     list-type="picture-card"
                     class = "contentImgStyle"
                     :limit="1"
+                    accept=".jpg"
                     :on-exceed="handleExceed">
                     <i class="el-icon-plus"></i>
                   </el-upload>
@@ -213,12 +214,14 @@ export default {
       this.goodsName = response.data.mer_name
       this.deliverPrice = response.data.mer_deliver_price
       this.goodsPrice = response.data.mer_price
-      this.totalPrice = this.deliverPrice + this.goodsPrice
+      this.totalPrice = parseInt(this.deliverPrice) + parseInt(this.goodsPrice)
       this.goodsPhoto = response.data.mer_image1_url
       this.senderId = response.data.mer_upload_user_id
       this.$axios.post('login0/get_QR_Code/', this.$qs.stringify({
         user_id: this.senderId
       })).then(response => {
+        console.log('qrcode')
+        console.log(response.data)
         this.QRCodeUrl = response.data.QR_code_url[0]
       })
     })
@@ -443,6 +446,10 @@ export default {
       this.$router.push('/sellinggoods')
     },
     searchTop () {
+      if (this.searchContent === undefined || this.searchContent === '') {
+        this.$message.error('请输入搜索内容')
+        return
+      }
       this.$store.commit('setToSearchPage', {
         searchContent: this.searchContent,
         labels: undefined,

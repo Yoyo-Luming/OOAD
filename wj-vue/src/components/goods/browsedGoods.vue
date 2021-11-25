@@ -90,25 +90,23 @@
         <el-container class="mid-content">
           <el-container class="pane-content">
             <el-container class="page-title">
-              <span style="margin-left: 10px">收藏的商品</span>
+              <span style="margin-left: 10px">历史浏览的商品</span>
             </el-container>
             <div v-if="goodsList.length">
-              <el-container class="marking-goods">
-                <el-container class="single-good" v-for="(item, index) in goodsList" :key="index">
-                  <el-container class="good-image">
-                    <el-image :src="item.photo" fit="contain" title="前往商品页面" style="cursor:pointer;"  v-on:click="toGoodsPage(index)" :alt="item.name"></el-image>
-                  </el-container>
-                  <el-container class="good-describe">
-                    <div class="good-name">{{item.name}}</div>
-                    <div class="good-price">¥{{item.price}}</div>
-                    <div class="good-number">共有{{item.favouriteNumber}}人喜欢</div>
-                    <el-button type="danger" class="good-button" v-on:click="deleteFavoriteGoods(index)">删除收藏</el-button>
-                  </el-container>
+              <el-container class="whole-order" v-for="(item, index) in goodsList" :key="index">
+                <el-container class="good-photo">
+                  <el-image :src="item.photo" fit="fill" style="height: 100%;width: 100%;" :alt="item.name"></el-image>
+                </el-container>
+                <el-container class="good-name">{{item.name}}</el-container>
+                <el-container class="good-detail">被{{item.favouriteNumber}}人喜欢</el-container>
+                <el-container class="good-price">¥{{item.price}}</el-container>
+                <el-container class="good-button">
+                  <el-button class="last-button-one" v-on:click="toGoodsPage(index)">查看详情</el-button>
                 </el-container>
               </el-container>
             </div>
             <div v-else>
-              <h2>这里什么也没有，快去收藏一些吧~</h2>
+              <h2>这里什么也没有，快去浏览商品吧</h2>
             </div>
           </el-container>
         </el-container>
@@ -119,30 +117,12 @@
 
 <script>
 export default {
-  // Done
-  name: 'favoriteGoods',
+  name: 'browsedGoods',
   mounted () {
-    // has_next: "False"
-    // is_empty: "False"
-    // message: "查询成功"
-    // return_info: Array(1)
-    // 0:
-    //   allow_face_trade: true
-    //   as_favorite_number: 1
-    //   browse_number: 6
-    //   deliver_price: 1
-    //   favourite_number: 0
-    //   mer_description: "123"
-    //   mer_id: "Nw:1mn3zb:SJOQDkwlgphIcYz1ArCUT1cYPjXQrD4dhpiCt57y-to"
-    //   mer_img_url: "http://store.sustech.xyz:8080/api/commodity/download/?key=eyJtZXJfaWQiOjcsImRhdGUiOiIyMDIxLTExLTE3IDAzOjE5OjQzLjA5NjgxOSIsInBhdGgiOiJcXG1udFxcY1xccHljaGFybVxcT09BRFxcRmluYWxfcHJvamVjdFxcRmluYWxfUHJvamVjdDFcXGltYWdlU3RvcmVcXHVzZXJfNnVzZXJfNl90aHVtYnVwbG9hZF9tZXJjaGFuZGlzZV8yX3RpbWVfMjAyMS0xMS0xNV8yMjUwNDMuMDY5MjIzX3RodW1iLnBuZyJ9:1mn3zb:Pn6p3NPxMZueOo7SY428sOy9Gq_00LpzKE029FRk64E"
-    //   mer_name: "pen"
-    //   mer_price: 1
-    //   mer_status: 1
-    //   mer_upload_user_id: "Ng:1mn3zb:jeNo-Fxkt-IcbP6dlhRh7xUgb-VlVz_BvUTTdbD0o0Y"
-    //   mer_upload_user_name: "oy2"
-    this.$axios.post('login0/all_user_favorite_merchandise/').then(response => {
-      let len = response.data.return_info.length
-      let list = response.data.return_info
+    this.$axios.post('commodity/history_browsing_mer/').then(response => {
+      console.log(response.data)
+      let len = response.data.return_list.length
+      let list = response.data.return_list
       for (let i = 0; i < len; ++i) {
         this.goodsList.push({
           name: list[i].mer_name,
@@ -152,13 +132,12 @@ export default {
           goodsId: list[i].mer_id
         })
       }
-      console.log(response.data)
     })
   },
   data () {
     return {
       goodsList: [],
-      searchContent: ''
+      searchContent: undefined
     }
   },
   methods: {
@@ -167,24 +146,8 @@ export default {
       this.$router.push('/goods/goodsInfo')
       // this.$router.push({name: 'goodsInfo', params: {mer_id: this.goodsList[index].goodsId}})
     },
-    deleteFavoriteGoods (index) {
-      // this.$message.info(index)
-      this.$axios.post('commodity/favorite_merchandise_cancel_handler/', this.$qs.stringify({
-        mer_id: this.goodsList[index].goodsId
-      })).then(response => {
-        if (response.data.status === '200') {
-          this.goodsList.splice(index, 1)
-          this.$message.success(response.data.message)
-        } else {
-          this.$message.error(response.data.message)
-        }
-      })
-    },
     myPage () {
       this.$router.push('/person')
-    },
-    goNoticePage () {
-      this.$router.push('/notice')
     },
     homePage () {
       this.$router.push('/home')
@@ -203,11 +166,17 @@ export default {
       this.$store.commit('setLogout')
       this.$router.push('/login')
     },
+    addGood () {
+      this.$router.push('/addgoods')
+    },
     goReleasedTask () {
       this.$router.push('/releasedtask')
     },
     goReceivedTask () {
       this.$router.push('/receivedtask')
+    },
+    goNoticePage () {
+      this.$router.push('/notice')
     },
     goTaskHall () {
       this.$router.push('/taskhall')
@@ -331,58 +300,82 @@ div {
   margin-left: 20px;
   margin-right: 20px;
   border-bottom: #e5e5e5 3px solid;
-}
-
-.marking-goods {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 70px;
-}
-
-.single-good {
-  display: block;
-  margin: 60px;
-  height: 100px;
-  width: 100px;
-  position: relative;
-  flex: none;
-}
-
-.good-image {
-  height: 100px;
-  width: 100px;
-  border: 2px solid #eaeaea;
+  justify-content: space-between;
   align-items: center;
 }
 
-.good-describe {
-  text-align: center;
-  display: block;
-  height: 30px;
-  width: 100px;
-  font-size: 20px;
-  margin-top: 10px;
+.whole-order {
+  display: flex;
+  justify-content: space-evenly;
+  border-bottom: #e5e5e5 1px solid;
+}
+
+.good-photo {
+  height: 150px;
+  width: 150px;
+  margin: 10px 10px 10px 10px;
+  justify-content: space-evenly;
 }
 
 .good-name {
-  font-size: 20px;
-  color: black;
+  width: 150px;
   overflow: hidden;
+  font-size: 20px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.good-detail {
+  width: 150px;
+  overflow: hidden;
+  font-size: 20px;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .good-price {
-  font-size: 15px;
+  width: 150px;
+  font-size: 20px;
   color: #ff006e;
-  overflow: hidden;
-}
-
-.good-number {
-  font-size: 15px;
-  overflow: hidden;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .good-button {
-  font-size: 10px;
+  width: 150px;
+  align-items: center;
+  display: block;
+  margin: 20px auto;
+  justify-content: space-evenly;
+}
+
+.last-button-one {
+  color: #FF0036;
+  background-color: #ffeded;
+  border: 1px solid #ff0036;
+  display: block;
+  margin: 20px auto;
+  width: 100px;
+  justify-content: space-evenly;
+}
+
+.last-button-two {
+  background-color: #ff0036;
+  border: 1px solid #ff0036;
+  display: block;
+  margin: 20px auto;
+  width: 100px;
+  color: #fff;
+  justify-content: space-evenly;
+}
+
+.add-button {
+  align-items: center;
+  width: 150px;
+  height: 40px;
+  font-size: 15px;
+  background-color: #00bbf9;
+  border: 1px solid #000000;
+  color: #000000;
 }
 </style>

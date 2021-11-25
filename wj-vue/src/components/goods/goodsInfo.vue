@@ -102,6 +102,8 @@
                 <el-button v-on:click="collect">
                   <i class="el-icon-star-on" ></i>收藏商品
                 </el-button>
+                <div style="margin-left: 10px;">收藏量：{{goodsInfo.favourite_number}}</div>
+                <div style="margin-left: 10px;">浏览量：{{goodsInfo.views_number}}</div>
               </el-container>
             </el-container>
             <el-container class="good-others">
@@ -111,7 +113,15 @@
                 <div class="good-description">分类：{{goodsInfo.kind}}</div>
                 <div class="good-price">售价: ¥<span style="margin-left: 5px;font-size: 30px">{{goodsInfo.price}}</span></div>
                 <div class="good-price">邮费: ¥<span style="margin-left: 5px;font-size: 20px">{{goodsInfo.deliverPrice}}</span></div>
-                <div class="seller-name" title="前往卖家页面" style="cursor:pointer;" v-on:click="toUserPage">卖家：{{goodsInfo.poster}}</div>
+                <div class="seller-name" style="align-items: center;cursor:pointer;" title="前往卖家页面" v-on:click="toUserPage">
+                  <div style="display: flex;">卖家：</div>
+<!--                  <el-image :src="uploaderPhoto" v-if="uploaderHasPhoto" :fit="fit"></el-image>-->
+                  <el-avatar :size="60" fit="fill">
+                    <el-image style="height: 100%;width: 100%;" :src="uploaderPhoto" fit="fill" v-if="uploaderHasPhoto"></el-image>
+                    <el-image style="height: 100%;width: 100%;" src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" fit="fill" v-else></el-image>
+                  </el-avatar>
+                  <div style="display: flex; margin-left:5px;">{{goodsInfo.poster}}</div>
+                </div>
                 <el-button class="cart-button" v-on:click="addCart">加入购物车</el-button>
                 <el-button class="buy-button" v-on:click="buy">立即购买</el-button>
               </el-container>
@@ -121,25 +131,11 @@
       </el-main>
     </el-container>
   </el-container>
-  <!--  <div>-->
-  <!--    商品名称<h1>{{goodsInfo.name}}</h1>-->
-  <!--    商品价格<h4>{{goodsInfo.price}}</h4>-->
-  <!--    发布者用户名<h5>{{goodsInfo.poster}}</h5>-->
-  <!--    发布日期<h5>{{goodsInfo.uploadDay}}</h5>-->
-  <!--    邮费<h5>{{goodsInfo.deliverPrice}}</h5>-->
-  <!--    <img v-for="(item, index) of url" :key="index+Math.random()" :src="item">-->
-  <!--&lt;!&ndash;    <img :src="this.$route.params.goodsurl" >&ndash;&gt;-->
-  <!--    商品描述<p1>{{description}}</p1>-->
-  <!--    <el-button type="primary" @click="collect">收藏</el-button>-->
-  <!--    <el-button @click="addCart">添加购物车</el-button>-->
-  <!--    <el-button @click="toUserPage">查看发布者</el-button>-->
-  <!--    <el-button @click="buy">购买</el-button>-->
-  <!--  </div>-->
 </template>
 
 <script>
 export default {
-  // Done
+  inject: ['reload'],
   name: 'goodsInfo',
   data () {
     return {
@@ -153,13 +149,18 @@ export default {
         id: '',
         deliverPrice: '',
         posterId: '',
-        kind: ''
+        kind: '',
+        favourite_number: 0,
+        views_number: 0,
+        newStatus: 0
       },
       searchContent: undefined,
       posterInfo: {
         name: '',
         id: ''
       },
+      uploaderHasPhoto: false,
+      uploaderPhoto: '',
       big_photo: '',
       class1: [
         '运动户外',
@@ -194,14 +195,16 @@ export default {
         '住宅家具',
         '模型',
         '手办'
+      ],
+      newStatues: [
+        '全新',
+        '几乎全新',
+        '轻微使用痕迹',
+        '明显使用痕迹'
       ]
     }
   },
   mounted () {
-    // this.name = 'food'
-    // this.price = 122
-    // this.url.push('https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png')
-    // this.goodsInfo.id = this.$route.params.mer_id
     this.goodsInfo.id = this.$store.state.toGoodsPage.merId
     console.log(this.goodsInfo.id)
     this.$axios.post('commodity/commodity_detail/', this.$qs.stringify({
@@ -240,6 +243,11 @@ export default {
       this.goodsInfo.price = response.data.mer_price
       this.goodsInfo.uploadDay = response.data.mer_update.split('T')[0]
       this.big_photo = response.data.mer_image1_url
+      this.goodsInfo.favourite_number = response.data.as_favorite_number
+      this.goodsInfo.views_number = response.data.browsing
+      // this.goodsInfo.newStatus = this.newStatues[response.data.new_status]
+      // this.goodsInfo.newStatus = this.newStatues[1]
+      this.goodsInfo.newStatus = this.newStatues[response.data.fineness - 1]
       if (response.data.img_num === '1') {
         this.goodsInfo.url.push(response.data.mer_image1_url)
       } else if (response.data.img_num === '2') {
@@ -255,16 +263,22 @@ export default {
       this.goodsInfo.posterId = response.data.mer_upload_user_id
       this.goodsInfo.poster = response.data.mer_upload_user_name
       this.goodsInfo.kind = this.class1[response.data.class_level_1 - 1] + '/' + this.class2[response.data.class_level_2 - 1]
-      let len = response.data.img_num
-      if (len >= 2) {
-        this.goodsInfo.url.push(response.data.mer_image2_url)
-        this.url.push(response.data.mer_image2_url)
-      }
-      if (len >= 3) {
-        this.goodsInfo.url.push(response.data.mer_image3_url)
-        this.url.push(response.data.mer_image3_url)
-      }
-      console.log(response.data)
+      // let len = response.data.img_num
+      // if (len >= 2) {
+      //   this.goodsInfo.url.push(response.data.mer_image2_url)
+      //   this.url.push(response.data.mer_image2_url)
+      // }
+      // if (len >= 3) {
+      //   this.goodsInfo.url.push(response.data.mer_image3_url)
+      //   this.url.push(response.data.mer_image3_url)
+      // }
+      // console.log(response.data)
+      this.$axios.post('login0/user_page/', this.$qs.stringify({
+        user_id: this.goodsInfo.posterId
+      })).then(response => {
+        this.uploaderHasPhoto = response.data.base_info.has_header_photo
+        this.uploaderPhoto = response.data.base_info.header_photo_url
+      })
     })
   },
   methods: {
@@ -273,7 +287,12 @@ export default {
       this.$axios.post('commodity/add_favorite_merchandise_handler/', this.$qs.stringify({
         mer_id: this.goodsInfo.id
       })).then(response => {
-        this.$message.info(response.data.message)
+        if (response.data.status === '200') {
+          this.$message.success(response.data.message)
+          this.reload()
+        } else {
+          this.$message.error(response.data.message)
+        }
       })
     },
     addCart () {
@@ -284,7 +303,7 @@ export default {
         if (response.data.status === '200') {
           this.$message.success('添加购物车成功')
         } else {
-          this.$message.error('添加购物车失败')
+          this.$message.error(response.data.message)
         }
       })
     },
@@ -348,6 +367,10 @@ export default {
       this.$router.push('/addgoods')
     },
     searchTop () {
+      if (this.searchContent === undefined || this.searchContent === '') {
+        this.$message.error('请输入搜索内容')
+        return
+      }
       this.$router.push({name: 'Result',
         params: {
           searchContent: this.searchContent,

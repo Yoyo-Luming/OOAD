@@ -59,6 +59,9 @@ import Vcode from 'vue-puzzle-vcode'
 export default {
   // Done
   name: 'login',
+  mounted () {
+    this.$global.webSocket.close()
+  },
   data () {
     const verifyUsername = (rule, value, callback) => {
       if (value === '') {
@@ -149,7 +152,11 @@ export default {
             }
             this.$message.success(successResponse.data.message)
             this.$global.initWebSocket()
-            this.$router.push('/home')
+            if (this.$store.state.userStatus === 0) {
+              this.$router.push('/person')
+            } else {
+              this.$router.push('/home')
+            }
           } else {
             this.$message.error(successResponse.data.message)
           }

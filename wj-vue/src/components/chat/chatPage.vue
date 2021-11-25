@@ -90,7 +90,7 @@
           <el-container class="wrapper">
             <h3>{{otherName}}</h3>
             <div class="message-panel">
-              <msg-box v-for="(item, index) of msgList" :key="index+Math.random()" :uname="item.name" :is-photo="item.isPhoto" :url="item.url" :content="item.msg" :isSelf="item.isSelf"></msg-box>
+              <msg-box v-for="(item, index) of msgList" :key="index+Math.random()" :uname="item.name" :is-photo="item.isPhoto" :url="item.url" :content="item.msg" :isSelf="item.isSelf" :hasHeader="item.hasHeader" :header="item.header"></msg-box>
             </div>
             <el-button style="margin-top: 20px;margin-bottom: 20px;align-items: center;" @click="uploadPhotoVisible=true">上传图片</el-button>
             <div class="input-area">
@@ -110,6 +110,7 @@
                 :file-list="fileList"
                 class = "contentImgStyle"
                 :limit="1"
+                accept=".jpg"
                 :on-exceed="handleExceed">
                 <i class="el-icon-plus"></i>
               </el-upload>
@@ -164,13 +165,18 @@ export default {
       content: 'hahhahaha',
       userName: '',
       userId: '',
+      userHasHeader: false,
+      userHeader: '',
+      otherName: '',
+      otherId: '',
+      otherHasHeader: false,
+      otherHeader: '',
       msg: '',
       msgList: [],
       webSocket: null,
       dialogue_id: '',
       token: '',
       searchContent: undefined,
-      otherName: '',
       dialogueId: '',
       uploadPhotoVisible: false,
       uploadFile: [],
@@ -183,11 +189,20 @@ export default {
   mounted () {
     this.userName = this.$store.state.userName
     this.userId = this.$store.state.userId
-    // this.otherName = this.$route.params.name
-    // this.otherId = this.$route.params.id
-    // this.dialogueId = this.$route.params.dialogueId
+    this.$axios.post('login0/user_page/', this.$qs.stringify({
+      user_id: this.userId
+    })).then(response => {
+      this.userHasHeader = response.data.base_info.has_header_photo
+      this.userHeader = response.data.base_info.header_photo_url
+    })
     this.otherName = this.$store.state.toChatPage.name
     this.otherId = this.$store.state.toChatPage.id
+    this.$axios.post('login0/user_page/', this.$qs.stringify({
+      user_id: this.otherId
+    })).then(response => {
+      this.otherHasHeader = response.data.base_info.has_header_photo
+      this.otherHeader = response.data.base_info.header_photo_url
+    })
     this.dialogueId = this.$store.state.toChatPage.dialogueId
     this.$store.commit('setIsChatting', true)
     console.log(this.dialogueId)
@@ -208,6 +223,8 @@ export default {
         if (list[i].data_type === 1) {
           this.msgList.push({
             name: list[i].my_name === this.userName ? '我' : list[i].my_name,
+            hasHeader: list[i].my_name === this.userName ? this.userHasHeader : this.otherHasHeader,
+            header: list[i].my_name === this.userName ? this.userHeader : this.otherHeader,
             msg: list[i].information,
             isSelf: list[i].my_name === this.userName,
             url: '',
@@ -216,6 +233,8 @@ export default {
         } else {
           this.msgList.push({
             name: list[i].my_name === this.userName ? '我' : list[i].my_name,
+            hasHeader: list[i].my_name === this.userName ? this.userHasHeader : this.otherHasHeader,
+            header: list[i].my_name === this.userName ? this.userHeader : this.otherHeader,
             msg: '',
             isSelf: list[i].my_name === this.userName,
             url: list[i].information,
@@ -246,6 +265,8 @@ export default {
         info: this.msg
       }
       this.msgList.push({
+        hasHeader: this.userHasHeader,
+        header: this.userHeader,
         isPhoto: false,
         url: '',
         name: '我',
@@ -262,18 +283,20 @@ export default {
       if (data.info.status === 2) {
         return
       }
+      if (this.otherName === this.$store.state.userName) {
+        return
+      }
       if (data.info.my_name !== this.otherName) {
         console.log('11111111111111')
         this.$message.info('您有来自' + data.info.my_name + '的消息！')
         // this.$message.info('您收到其他人的消息！')
         return
       }
-      if (this.otherName === this.$store.state.userName) {
-        return
-      }
       if (data.info.data_type === 2) {
         this.msgList.push({
           name: data.info.my_name,
+          hasHeader: this.otherHasHeader,
+          header: this.otherHeader,
           msg: '',
           isSelf: false,
           url: data.info.info,
@@ -282,6 +305,8 @@ export default {
       } else {
         this.msgList.push({
           name: data.info.my_name,
+          hasHeader: this.otherHasHeader,
+          header: this.otherHeader,
           msg: data.info.info,
           isSelf: false,
           url: '',
@@ -325,6 +350,8 @@ export default {
         this.$global.webSocket.send(JSON.stringify(data))
         console.log(imgUrl)
         this.msgList.push({
+          hasHeader: this.userHasHeader,
+          header: this.userHeader,
           isPhoto: true,
           url: imgUrl,
           name: '我',
@@ -386,6 +413,10 @@ export default {
       this.$router.push('/addgoods')
     },
     searchTop () {
+      if (this.searchContent === undefined || this.searchContent === '') {
+        this.$message.error('请输入搜索内容')
+        return
+      }
       this.$store.commit('setToSearchPage', {
         searchContent: this.searchContent,
         labels: undefined,
